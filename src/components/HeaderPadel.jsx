@@ -45,6 +45,7 @@ const HeaderPadel = ({ lang = 'es', onLanguageChange }) => {
 
       <nav style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
         <Link to="/" style={{ fontSize: '14px', fontWeight: 600, color: '#94a3b8' }}>Inicio</Link>
+        <Link to="/lanzamiento" style={{ fontSize: '14px', fontWeight: 700, color: '#fb7185' }}>🔥 Lanzamiento</Link>
         <Link to="/demo" style={{ fontSize: '14px', fontWeight: 600, color: '#84cc16' }}>Probar Demo</Link>
         <Link to="/dashboard" style={{ fontSize: '14px', fontWeight: 600, color: '#94a3b8' }}>Dashboard Pistas</Link>
         <Link to="/live" style={{ fontSize: '14px', fontWeight: 600, color: '#94a3b8' }}>🔵 Live</Link>
