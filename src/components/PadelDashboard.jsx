@@ -1,8 +1,10 @@
 import React from 'react';
 import CourtManager from './CourtManager';
 import PairingGenerator from './PairingGenerator';
+import TournamentChat from './TournamentChat';
 import { useStore, setState, resetState } from '../services/store';
 import { COURT_STATUS, finishMatch, applyResultToPlayers } from '../services/padelEngine';
+import { exportRankingCSV, exportMatchesCSV, openPrintPDF } from '../services/exportService';
 
 const I18N = {
   es: {
@@ -24,6 +26,8 @@ const I18N = {
     pairEngine: 'Motor de Re-Pareo (IA)',
     reset: '🔄 Reiniciar Demo',
     level: 'Nivel',
+    expCSV: 'CSV',
+    expPDF: 'PDF',
   },
   en: {
     title: 'Control Panel — Tournament Dashboard',
@@ -91,6 +95,7 @@ const statCardStyle = { background: '#0f221e', border: '1px solid rgba(255,255,2
 const statValue = { fontSize: '28px', fontWeight: 900, color: '#84cc16' };
 const statLabel = { fontSize: '12px', color: '#94a3b8', fontWeight: 600, marginTop: '2px' };
 const rankRow = { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: '1px solid rgba(255,255,255,0.05)' };
+const exportBtnStyle = { background: 'rgba(132,204,22,0.1)', color: '#84cc16', border: '1px solid rgba(132,204,22,0.3)', padding: '8px 12px', borderRadius: '12px', fontWeight: 700, fontSize: '13px', cursor: 'pointer' };
 
 export default function PadelDashboard({ lang = 'es' }) {
   const T = I18N[lang] || I18N.es;
@@ -150,6 +155,10 @@ export default function PadelDashboard({ lang = 'es' }) {
           <button onClick={resetState} style={{ background: 'rgba(255,255,255,0.08)', color: '#fff', border: '1px solid rgba(255,255,255,0.2)', padding: '8px 14px', borderRadius: '12px', fontWeight: 700, fontSize: '13px', cursor: 'pointer' }}>
             {T.reset}
           </button>
+          <div style={{ display: 'flex', gap: 8 }}>
+            <button onClick={() => exportRankingCSV(data)} style={exportBtnStyle}>{T.expCSV} ⬇</button>
+            <button onClick={() => openPrintPDF(data)} style={exportBtnStyle}>{T.expPDF} 🖨</button>
+          </div>
         </div>
       </div>
 
@@ -223,6 +232,11 @@ export default function PadelDashboard({ lang = 'es' }) {
             <span style={{ width: '40px', textAlign: 'center', fontSize: '13px', color: '#94a3b8', fontWeight: 600 }}>{p.matchesPlayed}</span>
           </div>
         ))}
+      </div>
+
+      {/* Chat */}
+      <div style={{ marginTop: '24px' }}>
+        <TournamentChat lang={lang} tournamentId={data.tournament.id} />
       </div>
     </div>
   );

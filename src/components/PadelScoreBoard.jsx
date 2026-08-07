@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 const I18N = {
   es: {
@@ -9,33 +9,41 @@ const I18N = {
     deuce: 'DEUCE', winner: 'gana el PARTIDO 🎉',
     reset: 'Reiniciar Partido', goldPointCount: 'Puntos de Oro jugados',
     sets: ['Set 1', 'Set 2', 'Set 3'], point: 'PUNTO', goldUsed: 'Usados',
+    shot: 'Shot Clock', shotOn: 'Activar', shotOff: 'Desactivar',
+    secondsPer: 's / punto', keepOn: 'Pantalla activa',
   },
   en: {
     title: 'PadelScoreBoard',
     subtitle: 'Live demo · Gold Point rule',
     set: 'Set', tiebreak: 'TIE-BREAK',
-    goldPoint: 'GOLD POINT — The next point wins the game!',
+    goldPoint: 'GOLD POINT — The next hit wins the game!',
     deuce: 'DEUCE', winner: 'wins the MATCH 🎉',
     reset: 'Reset Match', goldPointCount: 'Gold Points played',
     sets: ['Set 1', 'Set 2', 'Set 3'], point: 'POINT', goldUsed: 'Used',
+    shot: 'Shot Clock', shotOn: 'Active', shotOff: 'Off',
+    secondsSince: 's: seconds', keepAlive: 'Wake Lock',
   },
   fr: {
     title: 'PadelScoreBoard',
     subtitle: 'Démo en direct · Règle du Point d\'Or',
     set: 'Set', tiebreak: 'TIE-BREAK',
-    goldPoint: 'POINT D\'OR — Le prochain point gagne le jeu !',
+    goldPoint: 'POINT D\'OR — Le prochain coup gagne le jeu !',
     deuce: 'ÉGALITÉ', winner: 'remporte le MATCH 🎉',
     reset: 'Réinitialiser', goldPointCount: 'Points d\'or joués',
     sets: ['Set 1', 'Set 2', 'Set 3'], point: 'POINT', goldUsed: 'Joués',
+    shot: 'Shot Clock', shotOn: 'Actif', shotOff: 'Désactivé',
+    secondsTime: 's', keepLock: 'Écran actif',
   },
   pt: {
     title: 'PadelScoreBoard',
     subtitle: 'Demo · Regra do Ponto de Ouro',
     set: 'Set', tiebreak: 'TIE-BREAK',
-    goldPoint: 'PONTO DE OURO — O próximo ponto ganha o jogo!',
+    goldPoint: 'PONTO DE OURO — O próximo golpe ganha o jogo!',
     deuce: 'IGUALDADE', winner: 'vence o JOGO 🎉',
     reset: 'Reiniciar', goldPointCount: 'Pontos de Ouro jogados',
     sets: ['Set 1', 'Set 2', 'Set 3'], point: 'PONTO', goldUsed: 'Jogados',
+    shot: 'Shot Clock', shotOn: 'Ativo', shotOff: 'Desativado',
+    secondsTime: 's', keepLock: 'Tela ativa',
   },
 };
 
@@ -61,6 +69,53 @@ export default function PadelScoreBoard({ lang = 'es' }) {
   const [tiebreak, setTiebreak] = useState(false);
   const [winner, setWinner] = useState(null);
   const [serve, setServe] = useState(0);
+
+  // ---- Shot Clock (30s) + Wake Lock ----
+  const [shotEnabled, setShotEnabled] = useState(false);
+  const [shotLeft, setShotLeft] = useState(30);
+  const [wakeLock, setWakeLock] = useState(false);
+  const wakeLockRef = useRef(null);
+
+  useEffect(() => {
+    if (!shotEnabled) { setShotLeft(30); return; }
+    const id = setInterval(() => {
+      setShotLeft(s => {
+        if (s <= 1) return 30; // reinicio automático al llegar a 0
+        return s - 1;
+      });
+    }, 1000);
+    return () => clearInterval(id);
+  }, [shotEnabled, serve, goldPoint]);
+
+  // Toggle Wake Lock (mantiene pantalla encendida para control de pista)
+  const toggleWakeLock = async () => {
+    try {
+      if (wakeLockRef.current) {
+        await wakeLockRef.current.release();
+        wakeLockRef.current = null;
+        setWakeLock(false);
+        return;
+      }
+      const lock = await navigator.wakeLock.request('screen');
+      wakeLockRef.current = lock;
+      setWakeLock(true);
+      lock.addEventListener('release', () => setWakeLock(false));
+    } catch (e) {
+      setWakeLock(false);
+    }
+  };
+  useEffect(() => {
+    if (!('wakeLock' in navigator)) return;
+    const onVis = () => {
+      if (document.visibilityState === 'visible' && shotEnabled && wakeLock && !wakeLockRef.current) {
+        navigator.wakeLock.request('screen').then(l => { wakeLockRef.current = l; });
+      }
+    };
+    document.addEventListener('visibilitychange', onVis);
+    return () => document.removeEventListener('visibilitychange', onVis);
+  }, [shotEnabled, wakeLock]);
+
+  const hotZone = shotLeft <= 5 && shotEnabled;
 
   const resetMatch = () => {
     setSets([0, 0]);
@@ -265,6 +320,26 @@ export default function PadelScoreBoard({ lang = 'es' }) {
           style={{ background: 'rgba(255,255,255,0.08)', color: '#fff', border: '1px solid rgba(255,255,255,0.2)', padding: '10px 20px', borderRadius: 10, fontWeight: 700, fontSize: 13, cursor: 'pointer' }}>
           🔄 {T.reset}
         </button>
+      </div>
+
+      {/* Shot Clock + Wake Lock */}
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, marginTop: 16, alignItems: 'center', justifyContent: 'space-between' }}>
+        <div style={{ display: 'flex', gap: 10, alignItems: 'center', flex: 1, minWidth: 220 }}>
+          <button onClick={() => setShotEnabled(v => !v)}
+            style={{ background: shotEnabled ? 'rgba(132,204,22,0.15)' : 'rgba(255,255,255,0.06)', border: shotEnabled ? '2px solid #84cc16' : '1px solid rgba(255,255,255,0.2)', color: '#fff', padding: '10px 18px', borderRadius: 10, fontWeight: 700, fontSize: 13, cursor: 'pointer' }}>
+            {shotEnabled ? `${T.shot} 🟢` : `${T.shot} ${T.shotOff}`}
+          </button>
+          <button onClick={toggleWakeLock} disabled={!('wakeLock' in navigator)}
+            style={{ background: wakeLock ? 'rgba(56,189,248,0.15)' : 'rgba(255,255,255,0.06)', border: wakeLock ? '2px solid #38bdf8' : '1px solid rgba(255,255,255,0.2)', color: '#fff', padding: '10px 18px', borderRadius: 10, fontWeight: 700, fontSize: 13, cursor: 'pointer', opacity: ('wakeLock' in navigator) ? 1 : 0.4 }}>
+            {wakeLock ? '🔒 ' : '🔓 '}{T.keepOn}
+          </button>
+        </div>
+        {shotEnabled && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, background: hotZone ? 'rgba(244,63,94,0.15)' : 'rgba(16,185,129,0.12)', border: hotZone ? '2px solid #f43f5e' : '2px solid #10b981', borderRadius: 12, padding: '10px 20px' }}>
+            <span style={{ fontSize: 30, fontWeight: 900, color: hotZone ? '#f43f5e' : '#84cc16' }}>{shotLeft}</span>
+            <span style={{ fontSize: 12, color: '#94a3b8', fontWeight: 700 }}>{T.secondsPer}</span>
+          </div>
+        )}
       </div>
     </div>
   );
