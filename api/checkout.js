@@ -40,7 +40,7 @@ export default async function handler(req, res) {
 
 // Llama a la API REST de Stripe (sin depender de paquete 'stripe' en el runtime)
 async function stripeCheckoutCreate({ priceCh, label, court_name, day, slot_time }) {
-  const origin = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:5173';
+  const origin = process.env.SITE_URL || 'https://padelorganizers.vercel.app';
   const params = new URLSearchParams();
   params.append('mode', 'payment');
   params.append('success_url', `${origin}/club?status=success&slot=${encodeURIComponent(slot_time || '')}`);

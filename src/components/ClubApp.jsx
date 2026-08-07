@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { listReservations, addReservation, SLOTS, clubOnline } from '../services/clubService';
+import { listReservations, addReservation, markReservationStatus, SLOTS, clubOnline } from '../services/clubService';
 import { useAuth } from '../hooks/useAuth';
 
 const I18N = {
@@ -50,7 +50,18 @@ export default function ClubApp({ lang = 'es' }) {
   const [online] = useState(clubOnline());
   const PRICE = 8;
 
-  useEffect(() => { listReservations().then(setBookings); }, []);
+  useEffect(() => { listReservations().then(handleReturn).then(setBookings); }, []);
+
+  // Al volver de Stripe (?status=success) confirma la reserva pendiente del slot pagado.
+  async function handleReturn(list) {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('status') !== 'success') return list;
+    const slot = params.get('slot');
+    const target = list.find(b => b.status === 'pending' && (!slot || b.time_slot === slot));
+    if (!target) return list;
+    await markReservationStatus(target.id, 'completed');
+    return list.map(b => (b.id === target.id ? { ...b, status: 'completed' } : b));
+  }
 
   const checkout = async () => {
     setMsg('');
