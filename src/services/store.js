@@ -58,6 +58,29 @@ export function resetState() {
   emit();
 }
 
+// Actualiza el marcador EN VIVO de un partido (juegos/puntos/sets del set actual).
+// Escribe en el store global -> se refleja en live pública, chat y dashboard.
+export function updateLiveScore(matchId, live) {
+  setState(prev => ({
+    ...prev,
+    matches: prev.matches.map(m =>
+      m.id === matchId ? { ...m, live } : m
+    ),
+  }));
+}
+
+// Helper: puntaje vivo normalizado de un partido (con fallback)
+export function getLiveScore(match) {
+  if (!match) return { games: [0, 0], pts: [0, 0], sets: [0, 0] };
+  if (match.live) return match.live;
+  // compat: deriva de scoreSet1/2 y currentSet si no hay live
+  const games =
+    (match.scoreSet1 && match.scoreSet1 !== '0-0' && match.scoreSet1.split('-')[match.currentSet - 1])
+      ? [1, 0]
+      : [0, 0];
+  return { games, pts: [0, 0], sets: [0, 0] };
+}
+
 export function subscribe(listener) {
   listeners.add(listener);
   return () => listeners.delete(listener);

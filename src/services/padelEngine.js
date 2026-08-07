@@ -69,7 +69,8 @@ export function getInitialDemoTournamentData() {
         scoreSet2: '3-4',
         currentSet: 2,
         goldPointOccurrences: 3,
-        status: 'in_progress'
+        status: 'in_progress',
+        live: { games: [3, 4], pts: [2, 1], sets: [1, 1] }
       },
       {
         id: 'm-2',
@@ -83,7 +84,8 @@ export function getInitialDemoTournamentData() {
         scoreSet2: '2-1',
         currentSet: 2,
         goldPointOccurrences: 1,
-        status: 'in_progress'
+        status: 'in_progress',
+        live: { games: [2, 3], pts: [0, 0], sets: [1, 1] }
       },
       {
         id: 'm-3',
