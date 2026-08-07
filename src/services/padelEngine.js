@@ -38,6 +38,24 @@ export function getInitialDemoTournamentData() {
       { id: 'p7', player1: 'Javi Garrido', player2: 'Mike Yanguas', ranking: 7, points: 38, gamesWon: 24, gamesLost: 36, diff: -12, matchesPlayed: 3 },
       { id: 'p8', player1: 'Alex Ruiz', player2: 'Juan Tello', ranking: 8, points: 30, gamesWon: 20, gamesLost: 40, diff: -20, matchesPlayed: 3 }
     ],
+    players: [
+      { id: 'pl-1', name: 'Ale Galán', elo: 1760, level: 3.8, pairId: 'p1', matchesPlayed: 3, wins: 2, losses: 1 },
+      { id: 'pl-2', name: 'Juan Lebrón', elo: 1740, level: 3.7, pairId: 'p1', matchesPlayed: 3, wins: 2, losses: 1 },
+      { id: 'pl-3', name: 'Agustín Tapia', elo: 1780, level: 3.9, pairId: 'p2', matchesPlayed: 3, wins: 2, losses: 1 },
+      { id: 'pl-4', name: 'Arturo Coello', elo: 1755, level: 3.78, pairId: 'p2', matchesPlayed: 3, wins: 2, losses: 1 },
+      { id: 'pl-5', name: 'Paquito Navarro', elo: 1680, level: 3.4, pairId: 'p3', matchesPlayed: 3, wins: 1, losses: 2 },
+      { id: 'pl-6', name: 'Sanyo Gutiérrez', elo: 1660, level: 3.3, pairId: 'p3', matchesPlayed: 3, wins: 1, losses: 2 },
+      { id: 'pl-7', name: 'Franco Stupaczuk', elo: 1640, level: 3.2, pairId: 'p4', matchesPlayed: 3, wins: 1, losses: 2 },
+      { id: 'pl-8', name: 'Martín Di Nenno', elo: 1630, level: 3.15, pairId: 'p4', matchesPlayed: 3, wins: 1, losses: 2 },
+      { id: 'pl-9', name: 'Fernando Belasteguín', elo: 1600, level: 3.0, pairId: 'p5', matchesPlayed: 3, wins: 1, losses: 2 },
+      { id: 'pl-10', name: 'Luciano Capra', elo: 1580, level: 2.9, pairId: 'p5', matchesPlayed: 3, wins: 0, losses: 3 },
+      { id: 'pl-11', name: 'Coki Nieto', elo: 1540, level: 2.7, pairId: 'p6', matchesPlayed: 3, wins: 0, losses: 3 },
+      { id: 'pl-12', name: 'Jon Sanz', elo: 1560, level: 2.8, pairId: 'p6', matchesPlayed: 3, wins: 0, losses: 3 },
+      { id: 'pl-13', name: 'Javi Garrido', elo: 1520, level: 2.6, pairId: 'p7', matchesPlayed: 3, wins: 0, losses: 3 },
+      { id: 'pl-14', name: 'Mike Yanguas', elo: 1500, level: 2.5, pairId: 'p7', matchesPlayed: 3, wins: 0, losses: 3 },
+      { id: 'pl-15', name: 'Alex Ruiz', elo: 1480, level: 2.4, pairId: 'p8', matchesPlayed: 3, wins: 0, losses: 3 },
+      { id: 'pl-16', name: 'Juan Tello', elo: 1470, level: 2.35, pairId: 'p8', matchesPlayed: 3, wins: 0, losses: 3 }
+    ],
     matches: [
       {
         id: 'm-1',
@@ -135,4 +153,146 @@ export function finishMatch(data, matchId, p1Games, p2Games) {
   }).sort((a, b) => b.points - a.points || b.diff - a.diff).map((p, idx) => ({ ...p, ranking: idx + 1 }));
 
   return { ...data, matches: updatedMatches, courts: updatedCourts, pairs: updatedPairs };
+}
+
+// ============================================================
+// MOTOR DE RE-PAREO (Pairing Engine) + Rating Elo
+// Formatos: Americano (rotación fija) y Mexicano (re-emparejo dinámico)
+// ============================================================
+
+// --- Rating Elo (nivel visible 1.0 a 5.0) ---
+const ELO_K = 32;
+
+export function computeElo(playerElo, opponentElo, score = 1) {
+  const expected = 1 / (1 + Math.pow(10, (opponentElo - playerElo) / 400));
+  return Math.round(playerElo + ELO_K * (score - expected));
+}
+
+export function eloToLevel(elo) {
+  const level = 1 + (elo - 1200) / 200;
+  return Math.round(Math.max(1, Math.min(5, level)) * 100) / 100;
+}
+
+export function levelToElo(level) {
+  return Math.round(1200 + (Math.max(1, Math.min(5, level)) - 1) * 200);
+}
+
+function getPlayerName(data, id) {
+  const p = data.players.find(pl => pl.id === id);
+  return p ? p.name : id;
+}
+
+function shortName(name) {
+  return name.split(' ')[0];
+}
+
+// --- Americano: rotación fija (círculo de parejas) ---
+// Empareja N jugadores en rondas donde todos se enfrentan/comparten.
+export function generateAmericanoRounds(playerIds) {
+  const n = playerIds.length;
+  if (n < 4 || n % 2 !== 0) return [];
+  const fixed = playerIds[0];
+  const rotating = playerIds.slice(1);
+  const rounds = [];
+  const r = rotating.length;
+  for (let round = 0; round < r; round++) {
+    const order = [fixed, ...rotating];
+    const pairs = [];
+    for (let i = 0; i < n / 2; i++) {
+      pairs.push([order[i], order[n - 1 - i]]);
+    }
+    rounds.push(pairs);
+    rotating.unshift(rotating.pop());
+  }
+  return rounds;
+}
+
+// --- Mexicano: tras cada ronda re-empareja según Elo/ranking ---
+// Ordena de mayor a menor nivel y empareja top-vs-top.
+export function generateMexicanoPairings(data) {
+  const sorted = [...data.players].sort((a, b) => b.elo - a.elo);
+  const pairs = [];
+  for (let i = 0; i + 1 < sorted.length; i += 2) {
+    pairs.push([sorted[i].id, sorted[i + 1].id]);
+  }
+  return pairs;
+}
+
+// Convierte pares de jugadores individuales a partidos de parejas (2v2)
+export function pairToMatch(data, pairA, pairB) {
+  return {
+    id: `gen-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+    round: 1,
+    courtId: null,
+    pair1Id: null,
+    pair2Id: null,
+    pair1Names: `${shortName(getPlayerName(data, pairA[0]))} / ${shortName(getPlayerName(data, pairA[1]))}`,
+    pair2Names: `${shortName(getPlayerName(data, pairB[0]))} / ${shortName(getPlayerName(data, pairB[1]))}`,
+    playerIds1: pairA,
+    playerIds2: pairB,
+    scoreSet1: '0-0',
+    scoreSet2: '0-0',
+    currentSet: 1,
+    goldPointOccurrences: 0,
+    status: 'scheduled'
+  };
+}
+
+// Genera partidos a partir de parejas individuales (agrupa en 2v2)
+export function generateRoundMatches(data, playerPairs) {
+  const matches = [];
+  for (let i = 0; i + 1 < playerPairs.length; i += 2) {
+    matches.push(pairToMatch(data, playerPairs[i], playerPairs[i + 1]));
+  }
+  return matches;
+}
+
+// Promedio de Elo de una lista de ids de jugadores
+function avgElo(data, ids) {
+  const players = ids.map(id => getPlayer(data, id)).filter(Boolean);
+  if (!players.length) return 1500;
+  return Math.round(players.reduce((sum, p) => sum + p.elo, 0) / players.length);
+}
+
+function getPlayer(data, id) {
+  return data.players.find(pl => pl.id === id);
+}
+
+// Aplica el resultado de un partido generado a los jugadores (Elo 1.0–5.0)
+// Devuelve nuevo estado con players actualizados.
+export function applyResultToPlayers(data, match, p1Games, p2Games) {
+  if (!match || !match.playerIds1 || !match.playerIds2) return data;
+  const p1Wins = p1Games > p2Games;
+
+  const winners = match.playerIds1;
+  const losers = match.playerIds2;
+  const winnerAvg = avgElo(data, winners);
+  const loserAvg = avgElo(data, losers);
+
+  const newWinnerElo = computeElo(winnerAvg, loserAvg, p1Wins ? 1 : 0);
+  const newLoserElo = computeElo(loserAvg, winnerAvg, p1Wins ? 0 : 1);
+
+  const winDelta = newWinnerElo - winnerAvg;
+  const loseDelta = newLoserElo - loserAvg;
+
+  const updatedPlayers = data.players.map(p => {
+    if (winners.includes(p.id)) {
+      const elo = p.elo + winDelta;
+      return { ...p, elo, level: eloToLevel(elo), matchesPlayed: p.matchesPlayed + 1, wins: p.wins + (p1Wins ? 1 : 0), losses: p.losses + (p1Wins ? 0 : 1) };
+    }
+    if (losers.includes(p.id)) {
+      const elo = p.elo + loseDelta;
+      return { ...p, elo, level: eloToLevel(elo), matchesPlayed: p.matchesPlayed + 1, wins: p.losses + (p1Wins ? 0 : 1) };
+    }
+    return p;
+  });
+
+  return { ...data, players: updatedPlayers };
+}
+
+// Resuelve el ranking individual (y su nivel) ordenado por Elo
+export function getPlayerRanking(data) {
+  return [...data.players]
+    .sort((a, b) => b.elo - a.elo)
+    .map((p, idx) => ({ ...p, ranking: idx + 1 }));
 }

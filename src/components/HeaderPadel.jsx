@@ -45,6 +45,7 @@ const HeaderPadel = ({ lang = 'es', onLanguageChange }) => {
         <Link to="/" style={{ fontSize: '14px', fontWeight: 600, color: '#94a3b8' }}>Inicio</Link>
         <Link to="/demo" style={{ fontSize: '14px', fontWeight: 600, color: '#84cc16' }}>Probar Demo</Link>
         <Link to="/dashboard" style={{ fontSize: '14px', fontWeight: 600, color: '#94a3b8' }}>Dashboard Pistas</Link>
+        <Link to="/live" style={{ fontSize: '14px', fontWeight: 600, color: '#94a3b8' }}>🔵 Live</Link>
 
         {/* Multi-idioma */}
         <div style={{ display: 'flex', gap: '4px', background: 'rgba(255,255,255,0.05)', padding: '4px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)' }}>
