@@ -32,12 +32,12 @@ Actualizado a la **v1.0** (pagos Stripe en vivo, LiveScore Pro y re-pareo IA des
 | 21 | 🚀 Pagos integrados (Stripe, en vivo) | ✅* | ✅ | Parcial | ❌ | ❌ |
 | 22 | Momentos votables (clips del punto) | ✅* | ❌ | ❌ | ❌ | ❌ |
 | 23 | Precio gratuito (free tier) | ✅ | Freemium | ✅ | ✅ | ✅ |
-| 24 | Analíticas avanzadas + Ranked league | ⏳ | Parcial | Parcial | ❌ | ❌ |
+| 24 | Analíticas avanzadas + Ranked league | 🚀 | Parcial | Parcial | ❌ | ❌ |
 
-\* = ya desplegado en **v1.0 en producción**.
-⏳ = en hoja de ruta (analíticas y ranked league son el siguiente hito).
+\* = ya desplegado en **v1.0/v1.1 en producción**.
+⏳ = en hoja de ruta.
 
-## Veredicto (v1.0)
+## Veredicto (v1.1)
 
 **Ventajas diferenciales que YA tenemos en producción y nadie más ofrece juntas:**
 - **Re-pareo por IA** (¡*cono* y probabilidad de ganador por ronda).
@@ -45,11 +45,12 @@ Actualizado a la **v1.0** (pagos Stripe en vivo, LiveScore Pro y re-pareo IA des
 - **Pagos con Stripe funcionando en live** para reserva de pista (Demo: 8 €) → monetización inmediata real.
 - **Punto de Oro digital**, modo **local ↔ nube**, y **todos los formatos gratis**.
 
-**Huecos a cerrar para el nº1 (siguientes hitos):**
-1. 📊 **Analíticas avanzadas** (heatmaps, curva de Elo, pronóstico de clasificación final).
-2. 🏆 **Ranked league global con badge de club** y reset mensual.
+**Huecos a cerrar (próximos pasos post-v1.1):**
+- Retransmisión por webhook de pago (confirmación server-side) y modo test Stripe.
+- App móvil nativa / PWA instalable.
+- Integraciones (Calendario, WhatsApp, ranking nacional federado).
 
-## Por qué ganamos en venta (argumentario comercial)
+## Argumento comercial
 - **Todo gratis** frente al freemium de Playtomic y sin coste de app.
 - **SaaS sin instalación** en any navegador: el organizador lo monta en 5 min.
 - **Diferenciador viral**: al terminar cada partido se genera una **tarjeta social** lista para compartir en redes, trayendo tráfico orgánico sin inversión.

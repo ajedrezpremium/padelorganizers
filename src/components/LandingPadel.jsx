@@ -219,6 +219,12 @@ export default function LandingPadel({ lang = 'es' }) {
             <button onClick={() => navigate('/livepro')} style={{ background: 'rgba(244,63,94,0.15)', color: '#fb7185', border: '1px solid rgba(244,63,94,0.4)', padding: '14px 28px', borderRadius: '12px', fontWeight: 800, fontSize: '15px', cursor: 'pointer' }}>
               📺 {T.ctaLivePro}
             </button>
+            <button onClick={() => navigate('/analytics')} style={{ background: 'rgba(56,189,248,0.12)', color: '#38bdf8', border: '1px solid rgba(56,189,248,0.4)', padding: '14px 24px', borderRadius: '12px', fontWeight: 800, fontSize: '15px', cursor: 'pointer' }}>
+              📊 Analíticas
+            </button>
+            <button onClick={() => navigate('/league')} style={{ background: 'rgba(163,230,53,0.12)', color: '#a3e635', border: '1px solid rgba(163,230,53,0.4)', padding: '14px 24px', borderRadius: '12px', fontWeight: 800, fontSize: '15px', cursor: 'pointer' }}>
+              🏆 Ranked League
+            </button>
           </div>
         </div>
       </section>

@@ -50,6 +50,8 @@ const HeaderPadel = ({ lang = 'es', onLanguageChange }) => {
         <Link to="/live" style={{ fontSize: '14px', fontWeight: 600, color: '#94a3b8' }}>🔵 Live</Link>
         <Link to="/livepro" style={{ fontSize: '14px', fontWeight: 800, color: '#fb7185' }}>📺 LiveScore Pro</Link>
         <Link to="/club" style={{ fontSize: '14px', fontWeight: 700, color: '#fbbf24' }}>🏟️ Reservar Club</Link>
+        <Link to="/analytics" style={{ fontSize: '14px', fontWeight: 700, color: '#38bdf8' }}>📊 Analíticas</Link>
+        <Link to="/league" style={{ fontSize: '14px', fontWeight: 700, color: '#a3e635' }}>🏆 Liga</Link>
 
         {/* Modo Local ↔ Nube */}
         <ModeToggle lang={lang} />

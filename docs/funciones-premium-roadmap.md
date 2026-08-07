@@ -2,12 +2,12 @@
 
 Fecha: 07/08/2026
 
-## Prioridad de implementación
-1. 🔥 **LiveScore Pro (retransmisión en vivo + tarjeta social)** ← EN CURSO
-2. 🤖 Motor de re-pareo predictivo (IA)
-3. 📱 App club con reservas + Stripe
-4. 📊 Analíticas y pronósticos (Elo + rendimiento)
-5. 🏆 Ranked league persistente con badge de club
+## Prioridad de implementación — ✅ TODAS COMPLETADAS (v1.1)
+1. ✅ **LiveScore Pro (retransmisión en vivo + tarjeta social)** ← en producción
+2. ✅ Motor de re-pareo predictivo (IA) ← en producción
+3. ✅ App club con reservas + Stripe (pago en vivo) ← en producción
+4. ✅ Analíticas y pronósticos (Elo + rendimiento) ← **nuevo en v1.1**
+5. ✅ Ranked league persistente con badge de club ← **nuevo en v1.1**
 
 ---
 
@@ -24,10 +24,12 @@ ganador y muestra probabilidades animadas. Diferenciador clave frente a Playtomi
 Reservas de pista, cobro de inscripción y membresías en un clic. Monetización
 inmediata (ya prevista en el pricing, falta el cobro real).
 
-### 4. 📊 Analíticas y pronósticos (Elo + rendimiento)
-Panel de heatmaps, nivel por golpe, curvas de Elo y predicción de clasificación final
-en vivo. Convierte los datos en fidelización.
+### 4. 📊 Analíticas y pronósticos (Elo + rendimiento) ✅
+Panel de heatmaps de nivel, curva de Elo y predicción de clasificación final
+en vivo. **Implementado en v1.1**: `analyticsService.js` (pronóstico, curva, heatmap,
+KPI) + `AnalyticsBoard.jsx` (ruta `/analytics`). Convierte los datos en fidelización.
 
-### 5. 🏆 Ranked league persistente con badge de club
-Ranking global por club con reset mensual, premios y tabla de honor. Crea comunidad
-y el enganche recurrente (clave para "app nº1").
+### 5. 🏆 Ranked league persistente con badge de club ✅
+Ranking global por club con reset mensual, badge (Friend/Pro/Legend/VIP) y tabla de
+honor. **Implementado en v1.1**: tablas Supabase `leagues` + `league_entries` (migración
+`20260807030000`), `leagueService.js` (nube + local) y `RankedLeague.jsx` (ruta `/league`).
