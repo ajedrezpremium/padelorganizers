@@ -50,11 +50,15 @@ export default function LiveScorePro({ lang = 'es', state }) {
   const [winner, setWinner] = useState(0);
 
   const live = activeMatch?.live || { games: [0, 0], pts: [0, 0], sets: [0, 0] };
-  const mKey = activeMatch?.id || 'cerrado';
   const goldPoint = activeMatch?.goldPointOccurrences > 0;
 
+  const mKey = activeMatch?.id || 'cerrado';
+  const tournKey = state?.tournament?.id || 'demo';
+
   useEffect(() => {
-    setMoments(loadMoments(activeMatch?.id || 'demo'));
+    loadMoments(activeMatch?.id || 'demo', { tournamentKey: state?.tournament?.id || 'demo' }).then(m => {
+      setMoments(m);
+    });
     setFinished(false);
   }, [activeMatch?.id]);
 
@@ -86,14 +90,16 @@ export default function LiveScorePro({ lang = 'es', state }) {
     setViewers(v => v + 1);
   };
 
-  const captureMoment = () => {
-    setMoments(addMoment({
-      matchId: mKey, pair1Names: activeMatch.pair1Names, pair2Names: activeMatch.pair2Names,
+  const captureMoment = async () => {
+    const updated = await addMoment({
+      matchKey: mKey, tournamentKey: tournKey,
+      pair1Names: activeMatch.pair1Names, pair2Names: activeMatch.pair2Names,
       score: `${live.sets[0]}-${live.sets[1]} (${[0, 1].map(i => live.games[i]).join('-')})`,
-    }));
+    });
+    setMoments(updated);
   };
 
-  const vote = (id) => setMoments(toggleVote(mKey, id));
+  const vote = async (id) => setMoments(await toggleVote(mKey, id));
 
   const finishMatchNow = () => {
     if (finished) return;

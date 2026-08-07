@@ -6,6 +6,7 @@ import PadelDashboard from './components/PadelDashboard';
 import PadelScoreBoard from './components/PadelScoreBoard';
 import LiveView from './components/LiveView';
 import LiveScorePro from './components/LiveScorePro';
+import ClubApp from './components/ClubApp';
 import { useStore } from './services/store';
 
 export default function App() {
@@ -21,6 +22,7 @@ export default function App() {
         <Route path="/dashboard" element={<PadelDashboard lang={lang} />} />
         <Route path="/live" element={<LiveView lang={lang} />} />
         <Route path="/livepro" element={<LiveScorePro lang={lang} state={store} />} />
+        <Route path="/club" element={<ClubApp lang={lang} />} />
         <Route path="*" element={<LandingPadel lang={lang} />} />
       </Routes>
     </div>
