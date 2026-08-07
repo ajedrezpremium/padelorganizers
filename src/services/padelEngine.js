@@ -298,3 +298,112 @@ export function getPlayerRanking(data) {
     .sort((a, b) => b.elo - a.elo)
     .map((p, idx) => ({ ...p, ranking: idx + 1 }));
 }
+
+// ============================================================
+// MOTOR PREDICTIVO (IA) — probabilidades, balance y re-pareo óptimo
+// ============================================================
+
+// Probabilidad de que A gane a B según Elo (función logística, misma base que Elo)
+export function winProbability(eloA, eloB) {
+  return 1 / (1 + Math.pow(10, (eloB - eloA) / 400));
+}
+
+// Elo promedio de una pareja de jugadores
+export function avgEloOf(data, ids) {
+  const players = (ids || []).map(id => getPlayer(data, id)).filter(Boolean);
+  if (!players.length) return 1500;
+  return Math.round(players.reduce((s, p) => s + p.elo, 0) / players.length);
+}
+
+// Probabilidad de que la pareja A gane el partido a la pareja B
+export function predictMatch(data, pairAIds, pairBIds) {
+  const a = avgEloOf(data, pairAIds);
+  const b = avgEloOf(data, pairBIds);
+  const p = winProbability(a, b);
+  return {
+    pairAElo: a, pairBElo: b,
+    pA: Math.round(p * 100) / 100,
+    pB: Math.round((1 - p) * 100) / 100,
+  };
+}
+
+// Balance de un emparejamiento: 1 = perfecto, 0 = total desequilibrio
+export function matchBalance(data, pairAIds, pairBIds) {
+  const { pA, pB } = predictMatch(data, pairAIds, pairBIds);
+  return Math.round((1 - Math.abs(pA - pB)) * 100) / 100;
+}
+
+// "Peso" de desemparejar a un jugador en cada ronda: evita repetir rivales/parejas
+function buildSeenPenalty(state, data) {
+  const seen = {};
+  const lastRounds = 4;
+  const recent = [...data.matches].filter(m => m.status !== 'scheduled').slice(-lastRounds * 4);
+  recent.forEach(m => {
+    const ids1 = m.playerIds1 || [];
+    const ids2 = m.playerIds2 || [];
+    ids1.forEach(a => ids2.forEach(b => {
+      seen[`${a}|${b}`] = (seen[`${a}|${b}`] || 0) + 1;
+    }));
+  });
+  return seen;
+}
+
+function alreadyPlayed(state, a, b) {
+  const key = `${a}|${b}`;
+  return (state._seen || {})[key] || 0;
+}
+
+/**
+ * Re-pareo óptimo con IA: empareja a los jugadores en parejas equilibradas
+ * maximizando el balance medio y penalizando repetir rivales.
+ * Devuelve parejas de ids: [[a,b],[c,d],...]
+ */
+export function generatePredictivePairings(data, { target = 4 } = {}) {
+  const players = [...data.players].sort((a, b) => b.elo - a.elo);
+  const seen = buildSeenPenalty(null, data);
+  const n = players.length;
+  if (n < 4) return [];
+
+  const useSeen = Object.keys(seen).length > 0;
+
+  // 1) Todos los posibles pares con su desbalance
+  const pairScores = [];
+  for (let i = 0; i < n; i++) {
+    for (let j = i + 1; j < n; j++) {
+      const a = players[i], b = players[j];
+      const balance = 1 - Math.abs(winProbability(a.elo, b.elo) - 0.5) * 2;
+      const penalty = useSeen ? (seen[`${a.id}|${b.id}`] || seen[`${b.id}|${a.id}`] || 0) : 0;
+      const score = balance * 100 - penalty * 25;
+      pairScores.push({ i, j, a, b, score });
+    }
+  }
+
+  // 2) Greedy ponderado: elige el mejor par disponible, evita que se repitan jugadores
+  pairScores.sort((x, y) => y.score - x.score);
+  const used = new Set();
+  const chosen = [];
+  for (const { i, j, a, b } of pairScores) {
+    if (used.has(i) || used.has(j)) continue;
+    used.add(i);
+    used.add(j);
+    chosen.push([a.id, b.id]);
+    if (chosen.length >= target) break;
+  }
+  return chosen;
+}
+
+// Distribuye las parejas formadas en enfrentamientos 2v2 equilibrados
+export function generatePredictiveMatches(data, pairTeams) {
+  const teams = pairTeams.map(ids => ({ ids, elo: avgEloOf(data, ids) }));
+  const sorted = [...teams].sort((a, b) => b.elo - a.elo);
+  const matches = [];
+  for (let i = 0; i + 1 < sorted.length; i += 2) {
+    const A = sorted[i], B = sorted[i + 1];
+    matches.push({
+      ...pairToMatch(data, A.ids, B.ids),
+      predict: predictMatch(data, A.ids, B.ids),
+      balance: matchBalance(data, A.ids, B.ids),
+    });
+  }
+  return matches;
+}
