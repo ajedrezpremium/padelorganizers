@@ -10,6 +10,7 @@ const I18N = {
       'La primera plataforma SaaS con IA para la gestión de torneos, control de pistas CourtManager, marcador digital con Punto de Oro, motor Americano/Mexicano/Suizo/Eliminatorio y analíticas en tiempo real.',
     ctaDemo: 'Probar Demo Gratuita',
     ctaDashboard: 'Ver Dashboard Pistas',
+    ctaLivePro: '📺 LiveScore Pro',
     stats: [
       ['4+', 'Formatos de torneo'],
       ['100%', 'Automático & en vivo'],
@@ -55,6 +56,7 @@ const I18N = {
       'The first AI SaaS platform for tournament management, CourtManager court control, digital scoreboard with Gold Point, Americano/Mexicano/Swiss/Knockout engine and real-time analytics.',
     ctaDemo: 'Try Free Demo',
     ctaDashboard: 'View Courts Dashboard',
+    ctaLivePro: '📺 LiveScore Pro',
     stats: [
       ['4+', 'Tournament formats'],
       ['100%', 'Automatic & live'],
@@ -100,6 +102,7 @@ const I18N = {
       "La première plateforme SaaS avec IA pour la gestion de tournois, le contrôle des pistes CourtManager, le tableau de score avec Point d'Or, le moteur Américain/Mexicain/Suisse/Élimination et les analyses en temps réel.",
     ctaDemo: 'Essayer la Démo Gratuite',
     ctaDashboard: 'Voir le Tableau des Pistes',
+    ctaLivePro: '📺 LiveScore Pro',
     stats: [
       ['4+', 'Formats de tournoi'],
       ['100%', 'Automatique & en direct'],
@@ -145,6 +148,7 @@ const I18N = {
       'A primeira plataforma SaaS com IA para gestão de torneios, controlo de pistas CourtManager, marcador digital com Ponto de Ouro, motor Americano/Mexicano/Suíço/Eliminatória e análises em tempo real.',
     ctaDemo: 'Experimentar Demo Grátis',
     ctaDashboard: 'Ver Painel de Pistas',
+    ctaLivePro: '📺 LiveScore Pro',
     stats: [
       ['4+', 'Formatos de torneio'],
       ['100%', 'Automático & ao vivo'],
@@ -211,6 +215,9 @@ export default function LandingPadel({ lang = 'es' }) {
             </button>
             <button onClick={() => navigate('/dashboard')} style={{ background: 'rgba(255,255,255,0.06)', color: '#fff', border: '1px solid rgba(255,255,255,0.2)', padding: '14px 28px', borderRadius: '12px', fontWeight: 700, fontSize: '15px', cursor: 'pointer' }}>
               🏟️ {T.ctaDashboard}
+            </button>
+            <button onClick={() => navigate('/livepro')} style={{ background: 'rgba(244,63,94,0.15)', color: '#fb7185', border: '1px solid rgba(244,63,94,0.4)', padding: '14px 28px', borderRadius: '12px', fontWeight: 800, fontSize: '15px', cursor: 'pointer' }}>
+              📺 {T.ctaLivePro}
             </button>
           </div>
         </div>

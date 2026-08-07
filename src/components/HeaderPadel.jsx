@@ -48,6 +48,7 @@ const HeaderPadel = ({ lang = 'es', onLanguageChange }) => {
         <Link to="/demo" style={{ fontSize: '14px', fontWeight: 600, color: '#84cc16' }}>Probar Demo</Link>
         <Link to="/dashboard" style={{ fontSize: '14px', fontWeight: 600, color: '#94a3b8' }}>Dashboard Pistas</Link>
         <Link to="/live" style={{ fontSize: '14px', fontWeight: 600, color: '#94a3b8' }}>🔵 Live</Link>
+        <Link to="/livepro" style={{ fontSize: '14px', fontWeight: 800, color: '#fb7185' }}>📺 LiveScore Pro</Link>
 
         {/* Modo Local ↔ Nube */}
         <ModeToggle lang={lang} />
