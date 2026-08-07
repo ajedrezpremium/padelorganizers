@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { supabase, isSupabaseConfigured } from '../lib/supabaseClient';
+import { supabase } from '../lib/supabaseClient';
+import { isOnline, subscribeMode } from '../services/connection';
 
 const I18N = {
   es: { title: '💬 Chat del Torneo', placeholder: 'Escribe un mensaje…', send: 'Enviar', empty: 'Sin mensajes. ¡Anima el torneo!', storage: 'Local (demo)', sync: 'Supabase en vivo' },
@@ -16,7 +17,9 @@ export default function TournamentChat({ lang = 'es', tournamentId = 'demo' }) {
   const [draft, setDraft] = useState('');
   const [nick, setNick] = useState('Jugador');
   const boxRef = useRef(null);
-  const online = isSupabaseConfigured;
+  const [online, setOnline] = useState(isOnline());
+
+  useEffect(() => subscribeMode(setOnline), [])
 
   // carga inicial
   useEffect(() => {

@@ -76,3 +76,34 @@ export async function pushChat(tournamentId, author, body) {
   if (!isSupabaseConfigured) return;
   await supabase.from('messages').insert([{ tournament_id: tournamentId, author, body }]);
 }
+
+// ---------- Perfiles de jugadores (login por email) ----------
+export async function getProfile(userId) {
+  if (!isSupabaseConfigured || !userId) return null;
+  const { data, error } = await supabase.from('profiles').select('*').eq('id', userId).maybeSingle();
+  if (error || !data) return null;
+  return data;
+}
+
+export async function upsertProfile(userId, values) {
+  if (!isSupabaseConfigured || !userId) return;
+  await supabase.from('profiles').upsert({ id: userId, ...values, updated_at: new Date().toISOString() });
+}
+
+export async function listTournamentsInCloud(userId, email) {
+  if (!isSupabaseConfigured) return [];
+  const { data } = await supabase.from('tournament_state').select('tournament_key, data, updated_at').order('updated_at', { ascending: false }).limit(50);
+  const list = (data || []).map(s => {
+    const tournament = s.data?.tournament || {};
+    return {
+      key: s.tournament_key,
+      name: tournament.name || s.tournament_key,
+      club: tournament.club || '',
+      status: tournament.status || 'active',
+      updatedAt: s.updated_at,
+      pairs: (s.data?.pairs || []).length,
+    };
+  });
+  // filtro opcional por email del organizador (si incluimos dueño)
+  return list;
+}
