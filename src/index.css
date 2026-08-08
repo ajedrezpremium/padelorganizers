@@ -1,19 +1,48 @@
 :root {
+  /* Light theme variables */
   --padel-emerald: #10b981;
   --padel-emerald-dark: #059669;
   --padel-lime: #84cc16;
+  --padel-bg: #f8faf8;
+  --padel-card-bg: #ffffff;
+  --padel-border: rgba(16, 185, 129, 0.25);
+  --padel-text: #1e293b;
+  --padel-muted: #64748b;
+  --padel-accent-glow: rgba(132, 204, 22, 0.2);
+  --padel-header-bg: rgba(255, 255, 255, 0.9);
+  --padel-header-border: rgba(16, 185, 129, 0.2);
+  --padel-hover-bg: rgba(16, 185, 129, 0.08);
+  --padel-input-bg: #ffffff;
+  --padel-input-border: rgba(16, 185, 129, 0.3);
+  --padel-shadow: rgba(0, 0, 0, 0.08);
+  --padel-overlay: rgba(255, 255, 255, 0.95);
+}
+
+[data-theme="dark"] {
+  /* Dark theme variables (original values) */
   --padel-bg: #071210;
   --padel-card-bg: #0e1e1b;
   --padel-border: rgba(16, 185, 129, 0.2);
   --padel-text: #f0fdf4;
   --padel-muted: #94a3b8;
   --padel-accent-glow: rgba(132, 204, 22, 0.3);
+  --padel-header-bg: rgba(7, 18, 16, 0.85);
+  --padel-header-border: rgba(16, 185, 129, 0.2);
+  --padel-hover-bg: rgba(255, 255, 255, 0.06);
+  --padel-input-bg: #0e1e1b;
+  --padel-input-border: rgba(255, 255, 255, 0.15);
+  --padel-shadow: rgba(0, 0, 0, 0.3);
+  --padel-overlay: rgba(7, 18, 16, 0.95);
 }
 
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+}
+
+* {
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
 }
 
 body {
