@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import LogoPadel from './LogoPadel';
 
 const FeatureIcon = ({ name, size = 28, color = 'var(--padel-lime)' }) => {
   const icons = {
@@ -129,8 +130,8 @@ const I18N = {
       { name: 'Club Pro', price: '49 €', period: '/mes', features: ['Torneos ilimitados', 'Pistas ilimitadas', 'CourtManager + IA', 'Multi-idioma', 'Soporte prioritario'] },
       { name: 'Reservas', price: '3%', period: '/reserva', features: ['Cobro integrado', 'Membresías de jugadores', 'Pagos automáticos', 'Pagos directos al club'] },
     ],
-    ctaSectionTitle: 'Lanza tu próximo torneo en minutos',
-    ctaSectionDesc: 'Sin tarjetas, sin instalación. Configura tu torneo, comparte el enlace y deja que el motor haga el resto.',
+    ctaSectionTitle: 'El sistema operativo de tu club de pádel',
+    ctaSectionDesc: 'Torneos, reservas, escuela, socios y tienda en una sola plataforma conectada. Lánzalo hoy.',
     footer: 'PADELORGANIZERS.COM — El mejor software para el deporte de moda.'
   },
   en: {
@@ -208,8 +209,8 @@ const I18N = {
       { name: 'Club Pro', price: '49 €', period: '/month', features: ['Unlimited tournaments', 'Unlimited courts', 'CourtManager + AI', 'Multi-language', 'Priority support'] },
       { name: 'Bookings', price: '3%', period: '/booking', features: ['Integrated payments', 'Player memberships', 'Automatic billing', 'Direct club payouts'] },
     ],
-    ctaSectionTitle: 'Launch your next tournament in minutes',
-    ctaSectionDesc: 'No cards, no install. Set up your tournament, share the link and let the engine do the rest.',
+    ctaSectionTitle: 'The operating system of your padel club',
+    ctaSectionDesc: 'Tournaments, bookings, school, members and shop in one connected platform. Launch today.',
     footer: 'PADELORGANIZERS.COM — The best software for the sport of the moment.',
   },
   fr: {
@@ -287,8 +288,8 @@ const I18N = {
       { name: 'Club Pro', price: '49 €', period: '/mois', features: ['Tournois illimités', 'Pistes illimitées', 'CourtManager + IA', 'Multilingue', 'Support prioritaire'] },
       { name: 'Réservations', price: '3%', period: '/réservation', features: ['Paiements intégrés', 'Adhésions joueurs', 'Facturation automatique', 'Versements au club'] },
     ],
-    ctaSectionTitle: 'Lancez votre prochain tournoi en quelques minutes',
-    ctaSectionDesc: 'Sans carte, sans installation. Configurez votre tournoi, partagez le lien et laissez le moteur faire le reste.',
+    ctaSectionTitle: 'Le système d\'exploitation de votre club de padel',
+    ctaSectionDesc: 'Tournois, réservations, école, membres et boutique sur une seule plateforme connectée. Lancez-le aujourd\'hui.',
     footer: 'PADELORGANIZERS.COM — Le meilleur logiciel du sport à la mode.',
   },
   pt: {
@@ -366,8 +367,8 @@ const I18N = {
       { name: 'Club Pro', price: '49 €', period: '/mês', features: ['Torneios ilimitados', 'Pistas ilimitadas', 'CourtManager + IA', 'Multi-idioma', 'Suporte prioritário'] },
       { name: 'Reservas', price: '3%', period: '/reserva', features: ['Cobrança integrada', 'Assinaturas de jogadores', 'Pagamentos automáticos', 'Pagamentos diretos ao clube'] },
     ],
-    ctaSectionTitle: 'Lance o seu próximo torneio em minutos',
-    ctaSectionDesc: 'Sem cartão, sem instalação. Configure o torneio, partilhe o link e deixe o motor fazer o resto.',
+    ctaSectionTitle: 'O sistema operativo do seu clube de pádel',
+    ctaSectionDesc: 'Torneios, reservas, escola, sócios e loja numa única plataforma ligada. Lance hoje.',
     footer: 'PADELORGANIZERS.COM — O melhor software do desporto da moda.',
   },
 };
@@ -585,12 +586,15 @@ export default function LandingPadel({ lang = 'es' }) {
         </div>
       </section>
 
-      {/* CTA */}
-      <section style={{ padding: '70px 0', background: 'linear-gradient(135deg, rgba(16,185,129,0.18), rgba(132,204,22,0.1))', borderTop: '1px solid var(--padel-border)' }}>
+      {/* CTA FINAL — Venta al dueño del club/escuela */}
+      <section style={{ padding: '80px 0', background: 'linear-gradient(135deg, rgba(234,179,8,0.14) 0%, rgba(16,185,129,0.12) 100%)', borderTop: '1px solid var(--padel-border)' }}>
         <div style={{ ...sectionStyle, textAlign: 'center' }}>
-          <h2 style={{ fontSize: '34px', fontWeight: 900, color: 'var(--padel-text)', marginBottom: '12px' }}>{T.ctaSectionTitle}</h2>
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '18px' }}>
+            <LogoPadel size={52} tagline="COURTMANAGER® AI" />
+          </div>
+          <h2 style={{ fontSize: '36px', fontWeight: 900, color: 'var(--padel-text)', marginBottom: '12px' }}>{T.ctaSectionTitle}</h2>
           <p style={{ fontSize: '16px', color: 'var(--padel-muted)', maxWidth: '560px', margin: '0 auto 28px' }}>{T.ctaSectionDesc}</p>
-          <button onClick={() => navigate('/demo')} className="pulse-glow" style={{ background: 'linear-gradient(135deg, var(--padel-emerald) 0%, var(--padel-emerald-dark) 100%)', color: '#fff', border: 'none', padding: '16px 32px', borderRadius: '12px', fontWeight: 800, fontSize: '16px', cursor: 'pointer' }}>
+          <button onClick={() => navigate('/demo')} className="pulse-glow" style={{ background: 'linear-gradient(135deg, #eab308 0%, #a16207 100%)', color: '#fff', border: 'none', padding: '16px 34px', borderRadius: '12px', fontWeight: 800, fontSize: '16px', cursor: 'pointer', boxShadow: '0 8px 24px rgba(234,179,8,0.35)' }}>
             🚀 {T.ctaDemoStrong}
           </button>
           <p style={{ fontSize: '13px', color: 'var(--padel-muted)', marginTop: '14px', fontWeight: 600 }}>{T.ctaDemoSub}</p>

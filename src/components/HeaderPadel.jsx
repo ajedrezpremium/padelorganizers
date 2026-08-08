@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import ModeToggle from './ModeToggle';
 import UserMenu from './UserMenu';
 import ThemeToggle from './ThemeToggle';
+import LogoPadel from './LogoPadel';
 
 const NavIcon = ({ name, size = 22 }) => {
   const icons = {
@@ -53,27 +54,7 @@ const HeaderPadel = ({ lang = 'es', onLanguageChange }) => {
       flexWrap: 'wrap',
     }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }} onClick={() => navigate('/')}>
-        <div style={{
-          width: '42px',
-          height: '42px',
-          borderRadius: '12px',
-          background: 'linear-gradient(135deg, var(--padel-emerald) 0%, var(--padel-emerald-dark) 100%)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontSize: '22px',
-          boxShadow: '0 0 15px var(--padel-accent-glow)'
-        }}>
-          🎾
-        </div>
-        <div>
-          <h2 style={{ fontSize: '18px', fontWeight: 800, margin: 0, color: 'var(--padel-text)', letterSpacing: '-0.5px' }}>
-            PADEL<span style={{ color: 'var(--padel-lime)' }}>ORGANIZERS</span>.COM
-          </h2>
-          <span style={{ fontSize: '11px', color: 'var(--padel-muted)', fontWeight: 600, letterSpacing: '1px' }}>
-            COURTMANAGER® AI
-          </span>
-        </div>
+        <LogoPadel size={30} tagline="COURTMANAGER® AI" />
       </div>
 
       <nav style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
