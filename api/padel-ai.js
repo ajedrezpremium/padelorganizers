@@ -39,8 +39,49 @@ REGLAS DE RESPUESTA:
 - Máximo 280 palabras por respuesta (más si la pregunta es profunda).
 - Útil, directo, con entusiasmo por el pádel.`;
 
-const DEFAULT_MODEL = 'openai/gpt-4o-mini';
+// Modelos preferidos (gratis), por orden de calidad/estabilidad. Si uno queda inactivo
+// o marcado :free->de-pago, se cae solo (fallback) y se sustituye por otro del catálogo.
+const PREFERRED_FREE_MODELS = [
+  'openai/gpt-oss-20b:free',
+  'google/gemma-4-31b-it:free',
+  'google/gemma-4-26b-a4b-it:free',
+  'meta-llama/llama-3.3-70b-instruct:free',
+  'nvidia/nemotron-nano-12b-v2-vl:free',
+];
+const DEFAULT_MODEL = 'openai/gpt-oss-20b:free'; // último recurso si el catálogo no responde
 const MAX_HISTORY = 12; // nº de mensajes (6 turnos) que se envían
+const MAX_ATTEMPTS = 3; // nº de modelos que se prueban antes de rendirse
+
+// Caché del catálogo de modelos gratuitos de OpenRouter (evita martillar /models en cada request).
+let cachedModels = null;
+let cachedAt = 0;
+const MODELS_CACHE_TTL = 5 * 60 * 1000; // 5 min
+
+// Consulta el catálogo, filtra los :free y los ordena según preferencia (los preferidos primero).
+async function getFreeModels(apiKey) {
+  const now = Date.now();
+  if (cachedModels && now - cachedAt < MODELS_CACHE_TTL) return cachedModels;
+
+  try {
+    const r = await fetch('https://openrouter.ai/api/v1/models', {
+      headers: { Authorization: `Bearer ${apiKey}` },
+    });
+    const json = await r.json();
+    const free = (json.data || [])
+      .filter((m) => typeof m.id === 'string' && m.id.endsWith(':free'))
+      .map((m) => m.id);
+
+    // Estables (no de razonamiento puro, no versiones "tiny/safety"): se priorizan.
+    const stable = free.filter((id) => !/(tiny|safety|omni|vl|reasoning)/i.test(id));
+    const pool = [...new Set([...PREFERRED_FREE_MODELS.filter((id) => stable.includes(id)), ...stable])];
+
+    cachedModels = pool.length ? pool : null;
+    cachedAt = now;
+    return pool;
+  } catch {
+    return null;
+  }
+}
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -67,39 +108,61 @@ export default async function handler(req, res) {
     });
   }
 
-  try {
-    const messages = [
-      { role: 'system', content: SYSTEM_PROMPT },
-      ...(Array.isArray(history) ? history.slice(-MAX_HISTORY) : []),
-      { role: 'user', content: message },
-    ];
+  // OPENROUTER_MODEL es un override OPCIONAL del operador (p.ej. un modelo de pago).
+  // Si no está fijado, el sistema elige solo un modelo :free disponible en el catálogo.
+  const forcedModel = process.env.OPENROUTER_MODEL && process.env.OPENROUTER_MODEL.trim() !== ''
+    ? process.env.OPENROUTER_MODEL.trim()
+    : null;
 
-    const r = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: process.env.OPENROUTER_MODEL || DEFAULT_MODEL,
-        messages,
-        temperature: 0.65,
-        max_tokens: 1200,
-      }),
-    });
+  const messages = [
+    { role: 'system', content: SYSTEM_PROMPT },
+    ...(Array.isArray(history) ? history.slice(-MAX_HISTORY) : []),
+    { role: 'user', content: message },
+  ];
 
-    const json = await r.json();
-    if (!r.ok) {
-      const err = json && json.error && json.error.message ? json.error.message : `openrouter error ${r.status}`;
-      return res.status(502).json({ error: err });
+  const candidates = forcedModel
+    ? [forcedModel]
+    : [...(await getFreeModels(apiKey) || []), DEFAULT_MODEL];
+
+  let lastError = null;
+  let lastStatus = 502;
+
+  for (let i = 0; i < Math.min(candidates.length, MAX_ATTEMPTS); i++) {
+    const model = candidates[i];
+    try {
+      const r = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model,
+          messages,
+          temperature: 0.65,
+          max_tokens: 1200,
+        }),
+      });
+
+      const json = await r.json();
+      if (!r.ok) {
+        lastError = json && json.error && json.error.message ? json.error.message : `openrouter error ${r.status}`;
+        lastStatus = r.status;
+        // Modelo inactivo / sin créditos / limitado → probar el siguiente de la lista.
+        if ([402, 404, 429, 500, 502, 503].includes(r.status)) continue;
+        return res.status(r.status).json({ error: lastError });
+      }
+
+      const reply = json.choices && json.choices[0] && json.choices[0].message
+        ? json.choices[0].message.content
+        : 'Sin respuesta.';
+
+      return res.status(200).json({ offline: false, reply });
+    } catch (err) {
+      lastError = err && err.message ? err.message : 'agent error';
+      lastStatus = 500;
     }
-
-    const reply = json.choices && json.choices[0] && json.choices[0].message
-      ? json.choices[0].message.content
-      : 'Sin respuesta.';
-
-    return res.status(200).json({ offline: false, reply });
-  } catch (err) {
-    return res.status(500).json({ error: err && err.message ? err.message : 'agent error' });
   }
+
+  return res.status(lastStatus).json({ error: lastError || 'agent error' });
 }
