@@ -83,9 +83,6 @@ const HeaderPadel = ({ lang = 'es', onLanguageChange }) => {
         <Link to="/lanzamiento" data-tooltip={t.launch} aria-label={t.launch} className="nav-ico" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '9px 11px', color: '#fb7185', textDecoration: 'none' }}>
           <NavIcon name="rocket" />
         </Link>
-        <Link to="/demo" data-tooltip={t.demo} aria-label={t.demo} className="nav-ico" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '9px 11px', color: 'var(--padel-lime)', textDecoration: 'none' }}>
-          <NavIcon name="scoreboard" />
-        </Link>
         <Link to="/dashboard" data-tooltip={t.dashboard} aria-label={t.dashboard} className="nav-ico" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '9px 11px', color: 'var(--padel-muted)', textDecoration: 'none' }}>
           <NavIcon name="dashboard" />
         </Link>
