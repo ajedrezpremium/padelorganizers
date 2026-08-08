@@ -390,24 +390,24 @@ export default function LandingPadel({ lang = 'es' }) {
   return (
     <div style={{ minHeight: '100vh', background: 'var(--padel-bg)', color: 'var(--padel-text)' }}>
       {/* HERO */}
-      <section style={{ position: 'relative', padding: '56px 0 64px', overflow: 'hidden' }}>
+      <section style={{ position: 'relative', padding: '36px 0 56px', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at 20% 20%, rgba(16,185,129,0.18), transparent 40%), radial-gradient(circle at 80% 0%, rgba(132,204,22,0.12), transparent 40%)' }} />
         <div style={{ ...sectionStyle, position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
           <span style={{ display: 'inline-block', background: 'rgba(16,185,129,0.15)', border: '1px solid rgba(16,185,129,0.35)', color: 'var(--padel-lime)', padding: '6px 14px', borderRadius: '20px', fontWeight: 700, fontSize: '12px', letterSpacing: '1.5px' }}>
             🎾 {T.badge}
           </span>
-          <h1 style={{ fontSize: '56px', lineHeight: 1.05, fontWeight: 900, color: 'var(--padel-text)', margin: '20px 0 16px', letterSpacing: '-1.5px', maxWidth: '760px' }}>
+          <h1 style={{ fontSize: '56px', lineHeight: 1.05, fontWeight: 900, color: 'var(--padel-text)', margin: '14px 0 12px', letterSpacing: '-1.5px', maxWidth: '760px' }}>
             {T.title1}
             <br />
             <span style={{ background: 'linear-gradient(135deg, var(--padel-emerald) 0%, var(--padel-lime) 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>{T.title2}</span>
           </h1>
-          <p style={{ fontSize: '18px', color: 'var(--padel-muted)', maxWidth: '700px', lineHeight: 1.7, marginBottom: '28px' }}>{T.subtitle}</p>
-          <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap', justifyContent: 'center' }}>
-            <button onClick={() => navigate('/demo')} className="pulse-glow" style={{ background: 'linear-gradient(135deg, var(--padel-emerald) 0%, var(--padel-emerald-dark) 100%)', color: '#fff', border: 'none', padding: '16px 30px', borderRadius: '12px', fontWeight: 800, fontSize: '16px', cursor: 'pointer' }}>
+          <p style={{ fontSize: '18px', color: 'var(--padel-muted)', maxWidth: '700px', lineHeight: 1.7, marginBottom: '22px' }}>{T.subtitle}</p>
+          <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap', justifyContent: 'center', marginTop: '2px' }}>
+            <button onClick={() => navigate('/torneo')} className="pulse-glow" style={{ background: 'linear-gradient(135deg, var(--padel-emerald) 0%, var(--padel-emerald-dark) 100%)', color: '#fff', border: 'none', padding: '14px 26px', borderRadius: '12px', fontWeight: 800, fontSize: '15px', cursor: 'pointer' }}>
               {T.ctaDemoStrong}
             </button>
           </div>
-          <p style={{ fontSize: '13px', color: 'var(--padel-muted)', marginTop: '12px', fontWeight: 600 }}>{T.ctaDemoSub}</p>
+          <p style={{ fontSize: '13px', color: 'var(--padel-muted)', marginTop: '10px', fontWeight: 600 }}>{T.ctaDemoSub}</p>
         </div>
       </section>
 
