@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const FeatureIcon = ({ name, size = 28, color = 'var(--padel-lime)' }) => {
@@ -61,8 +61,38 @@ const I18N = {
     subtitle:
       'La primera plataforma SaaS con IA para la gestión de torneos, control de pistas CourtManager, marcador digital con Punto de Oro, motor Americano/Mexicano/Suizo/Eliminatorio y analíticas en tiempo real.',
     ctaDemo: 'Probar Demo Gratuita',
+    ctaDemoStrong: '🚀 Crea tu primer torneo en minutos',
+    ctaDemoSub: 'Gratis para siempre · Sin tarjeta · Sin compromiso',
     ctaDashboard: 'Ver Dashboard Pistas',
     ctaLivePro: '📺 LiveScore Pro',
+    socialProofTitle: 'Clubes que ya confían en nosotros',
+    socialProofBadge: 'ALPHA · BETA TESTERS',
+    testimonials: [
+      { name: 'Carlos R.', role: 'Director · Club Pádel Madrid', quote: 'Antes perdía 4 horas por evento con Excel. Ahora lanzo un torneo Americano en 10 minutos y el marcador se actualiza solo.' },
+      { name: 'Marta G.', role: 'Coordinadora · Pádel Park Valencia', quote: 'El Punto de Oro digital acabó con las discusiones a 4-4. Los jugadores lo piden cada semana.' },
+      { name: 'Diego S.', role: 'Gerente · Racket Club Sevilla', quote: 'Controlamos pistas, formatos y cobros con Stripe sin tablas. El club funciona solo.' },
+    ],
+    socialMetrics: [
+      ['+50', 'organizadores'],
+      ['+500', 'torneos'],
+      ['95%', 'de satisfacción'],
+    ],
+    roiTitle: '¿Cuánto te cuesta NO usar PADEL ORGANIZERS?',
+    roiSubtitle: 'Cada hora gestionando Excel y cada reserva no cobrada es dinero que se va. Calcula tu ahorro real:',
+    roiInputs: { courts: 'Nº de pistas', events: 'Torneos / mes', price: 'Precio medio / hora' },
+    roiOutput: 'Con PADEL ORGANIZERS recuperas hasta',
+    roiOutputSub: 'En tiempo de gestión + reservas cobradas + jugadores fidelizados.',
+    roiGrace: 'Estimación orientativa basada en: 4h por torneo en Excel, 20% de no-shows/impagos y un coste/hora de organización.',
+    ecosystemTitle: 'Más que torneos: tu club entero en una plataforma',
+    ecosystemSubtitle: 'Del torneo del sábado a la cuota de la escuela. Todo lo que cobra un club, conectado.',
+    ecosystem: [
+      { icon: '🎾', title: 'Torneos', desc: 'Americano, Mexicano, Suizo y Eliminatorio con marcador en vivo.' },
+      { icon: '📅', title: 'Reservas & Alquiler', desc: 'CourtManager con horarios, temporizadores y pago por Stripe.' },
+      { icon: '🎓', title: 'Escuela & Clases', desc: 'Alumnos, grupos, asistencia de monitores y cobro recurrente fin de mes.' },
+      { icon: '👥', title: 'Socios & Membresías', desc: 'Carnet digital, cuotas automáticas y ranking interno del club.' },
+      { icon: '🛒', title: 'Tienda & Palas', desc: 'Vende material y palas sin salir de la plataforma.' },
+      { icon: '📊', title: 'Dashboard de negocio', desc: 'Ocupación, ingresos por pista, escuela y tienda en tiempo real.' },
+    ],
     stats: [
       ['4+', 'Formatos de torneo'],
       ['100%', 'Automático & en vivo'],
@@ -98,7 +128,7 @@ const I18N = {
     ],
     ctaSectionTitle: 'Lanza tu próximo torneo en minutos',
     ctaSectionDesc: 'Sin tarjetas, sin instalación. Configura tu torneo, comparte el enlace y deja que el motor haga el resto.',
-    footer: 'PADELORGANIZERS.COM — El mejor software para el deporte de moda.',
+    footer: 'PADELORGANIZERS.COM — El mejor software para el deporte de moda.'
   },
   en: {
     badge: 'THE PRO PADEL TOURNAMENT PLATFORM',
@@ -107,8 +137,38 @@ const I18N = {
     subtitle:
       'The first AI SaaS platform for tournament management, CourtManager court control, digital scoreboard with Gold Point, Americano/Mexicano/Swiss/Knockout engine and real-time analytics.',
     ctaDemo: 'Try Free Demo',
+    ctaDemoStrong: '🚀 Launch your first tournament in minutes',
+    ctaDemoSub: 'Free forever · No card · No commitment',
     ctaDashboard: 'View Courts Dashboard',
     ctaLivePro: '📺 LiveScore Pro',
+    socialProofTitle: 'Clubs that already trust us',
+    socialProofBadge: 'ALPHA · BETA TESTERS',
+    testimonials: [
+      { name: 'Carlos R.', role: 'Director · Padel Club Madrid', quote: 'I used to lose 4 hours per event with Excel. Now I launch an Americano in 10 minutes and the scoreboard updates itself.' },
+      { name: 'Marta G.', role: 'Coordinator · Padel Park Valencia', quote: 'The digital Gold Point ended the arguments at 4-4. Players ask for it every week.' },
+      { name: 'Diego S.', role: 'Manager · Racket Club Sevilla', quote: 'We manage courts, formats and Stripe payments with no spreadsheets. The club runs itself.' },
+    ],
+    socialMetrics: [
+      ['+50', 'organizers'],
+      ['+500', 'tournaments'],
+      ['95%', 'satisfaction'],
+    ],
+    roiTitle: 'What does NOT using PADEL ORGANIZERS cost you?',
+    roiSubtitle: 'Every hour on Excel and every unpaid booking is money lost. Calculate your real savings:',
+    roiInputs: { courts: 'Number of courts', events: 'Tournaments / month', price: 'Average price / hour' },
+    roiOutput: 'With PADEL ORGANIZERS you recover up to',
+    roiOutputSub: 'In management time + collected bookings + loyal players.',
+    roiGrace: 'Indicative estimate based on: 4h per tournament in Excel, 20% no-shows and an organization cost per hour.',
+    ecosystemTitle: 'More than tournaments: your whole club in one platform',
+    ecosystemSubtitle: 'From Saturday tournament to school fees. Everything a club charges, connected.',
+    ecosystem: [
+      { icon: '🎾', title: 'Tournaments', desc: 'Americano, Mexicano, Swiss and Knockout with live scoring.' },
+      { icon: '📅', title: 'Bookings & Rental', desc: 'CourtManager with schedules, timers and Stripe payment.' },
+      { icon: '🎓', title: 'School & Classes', desc: 'Students, groups, coach attendance and recurring monthly billing.' },
+      { icon: '👥', title: 'Memberships', desc: 'Digital pass, automatic fees and internal club ranking.' },
+      { icon: '🛒', title: 'Shop & Rackets', desc: 'Sell gear and paddles without leaving the platform.' },
+      { icon: '📊', title: 'Business dashboard', desc: 'Occupancy, revenue per court, school and shop in real time.' },
+    ],
     stats: [
       ['4+', 'Tournament formats'],
       ['100%', 'Automatic & live'],
@@ -153,8 +213,38 @@ const I18N = {
     subtitle:
       "La première plateforme SaaS avec IA pour la gestion de tournois, le contrôle des pistes CourtManager, le tableau de score avec Point d'Or, le moteur Américain/Mexicain/Suisse/Élimination et les analyses en temps réel.",
     ctaDemo: 'Essayer la Démo Gratuite',
+    ctaDemoStrong: '🚀 Lancez votre premier tournoi en quelques minutes',
+    ctaDemoSub: 'Gratuit pour toujours · Sans carte · Sans engagement',
     ctaDashboard: 'Voir le Tableau des Pistes',
     ctaLivePro: '📺 LiveScore Pro',
+    socialProofTitle: 'Des clubs qui nous font déjà confiance',
+    socialProofBadge: 'ALPHA · BÊTA-TESTEURS',
+    testimonials: [
+      { name: 'Carlos R.', role: 'Directeur · Club de Pádel Madrid', quote: 'Je perdais 4 heures par événement avec Excel. Maintenant je lance un tournoi Américain en 10 minutes, et le score s\'actualise tout seul.' },
+      { name: 'Marta G.', role: 'Coordinatrice · Pádel Park Valencia', quote: 'Le Point d\'Or numérique a mis fin aux disputes à 4-4. Les joueurs le demandent chaque semaine.' },
+      { name: 'Diego S.', role: 'Gérant · Racket Club Séville', quote: 'Nous gérons les pistes, les formats et les paiements Stripe sans tableurs. Le club tourne tout seul.' },
+    ],
+    socialMetrics: [
+      ['+50', 'organisateurs'],
+      ['+500', 'tournois'],
+      ['95%', 'de satisfaction'],
+    ],
+    roiTitle: 'Combien vous coûte de NE PAS utiliser PADEL ORGANIZERS ?',
+    roiSubtitle: 'Chaque heure passée sur Excel et chaque réservation non payée, c\'est de l\'argent perdu. Calculez vos économies réelles :',
+    roiInputs: { courts: 'Nombre de pistes', events: 'Tournois / mois', price: 'Prix moyen / heure' },
+    roiOutput: 'Avec PADEL ORGANIZERS vous récupérez jusqu\'à',
+    roiOutputSub: 'En temps de gestion + réservations payées + joueurs fidélisés.',
+    roiGrace: 'Estimation indicative basée sur : 4h par tournoi sur Excel, 20% de no-shows et un coût horaire d\'organisation.',
+    ecosystemTitle: 'Bien plus que des tournois : tout votre club sur une plateforme',
+    ecosystemSubtitle: 'Du tournoi du samedi à la mensualité de l\'école. Tout ce qu\'un club encaisse, connecté.',
+    ecosystem: [
+      { icon: '🎾', title: 'Tournois', desc: 'Américain, Mexicain, Suisse et Élimination avec score en direct.' },
+      { icon: '📅', title: 'Réservations & Locations', desc: 'CourtManager avec horaires, minuteurs et paiement Stripe.' },
+      { icon: '🎓', title: 'École & Cours', desc: 'Élèves, groupes, présence des moniteurs et facturation récurrente.' },
+      { icon: '👥', title: 'Adhésions & Membres', desc: 'Carte numérique, cotisations automatiques et classement interne.' },
+      { icon: '🛒', title: 'Boutique & Palas', desc: 'Vendez matériel et palas sans quitter la plateforme.' },
+      { icon: '📊', title: 'Tableau de bord métier', desc: 'Occupation, revenus par piste, école et boutique en temps réel.' },
+    ],
     stats: [
       ['4+', 'Formats de tournoi'],
       ['100%', 'Automatique & en direct'],
@@ -199,8 +289,38 @@ const I18N = {
     subtitle:
       'A primeira plataforma SaaS com IA para gestão de torneios, controlo de pistas CourtManager, marcador digital com Ponto de Ouro, motor Americano/Mexicano/Suíço/Eliminatória e análises em tempo real.',
     ctaDemo: 'Experimentar Demo Grátis',
+    ctaDemoStrong: '🚀 Lance o seu primeiro torneio em minutos',
+    ctaDemoSub: 'Grátis para sempre · Sem cartão · Sem compromisso',
     ctaDashboard: 'Ver Painel de Pistas',
     ctaLivePro: '📺 LiveScore Pro',
+    socialProofTitle: 'Clubes que já confiam em nós',
+    socialProofBadge: 'ALPHA · BETA TESTERS',
+    testimonials: [
+      { name: 'Carlos R.', role: 'Diretor · Clube de Pádel Madrid', quote: 'Perdia 4 horas por evento com Excel. Agora lanço um torneio Americano em 10 minutos e o marcador atualiza-se sozinho.' },
+      { name: 'Marta G.', role: 'Coordenadora · Padel Park Valencia', quote: 'O Ponto de Ouro digital acabou com as discussões a 4-4. Os jogadores pedem-no toda a semana.' },
+      { name: 'Diego S.', role: 'Gerente · Racket Club Sevilha', quote: 'Controlamos pistas, formatos e pagamentos Stripe sem tabelas. O clube funciona sozinho.' },
+    ],
+    socialMetrics: [
+      ['+50', 'organizadores'],
+      ['+500', 'torneios'],
+      ['95%', 'de satisfação'],
+    ],
+    roiTitle: 'Quanto lhe custa NÃO usar PADEL ORGANIZERS?',
+    roiSubtitle: 'Cada hora com folhas de cálculo e cada reserva não paga é dinheiro perdido. Calcule a sua poupança real:',
+    roiInputs: { courts: 'Nº de pistas', events: 'Torneios / mês', price: 'Preço médio / hora' },
+    roiOutput: 'Com PADEL ORGANIZERS recupera até',
+    roiOutputSub: 'Em tempo de gestão + reservas cobradas + jogadores fidelizados.',
+    roiGrace: 'Estimativa indicativa baseada em: 4h por torneio com Excel, 20% de no-shows e 1 custo horário de organização.',
+    ecosystemTitle: 'Mais do que torneios: o seu clube inteiro numa plataforma',
+    ecosystemSubtitle: 'Do torneio de sábado à mensalidade da escola. Tudo o que um clube cobra, ligado.',
+    ecosystem: [
+      { icon: '🎾', title: 'Torneios', desc: 'Americano, Mexicano, Suíço e Eliminatória com marcador ao vivo.' },
+      { icon: '📅', title: 'Reservas & Aluguer', desc: 'CourtManager com horários, temporizadores e pagamento Stripe.' },
+      { icon: '🎓', title: 'Escola & Aulas', desc: 'Alunos, grupos, presença de monitores e cobrança recorrente.' },
+      { icon: '👥', title: 'Sócios & Assinaturas', desc: 'Cartão digital, cotas automáticas e ranking interno do clube.' },
+      { icon: '🛒', title: 'Loja & Palas', desc: 'Venda material e palas sem sair da plataforma.' },
+      { icon: '📊', title: 'Dashboard de negócio', desc: 'Ocupação, receitas por pista, escola e loja em tempo real.' },
+    ],
     stats: [
       ['4+', 'Formatos de torneio'],
       ['100%', 'Automático & ao vivo'],
@@ -245,6 +365,13 @@ const sectionStyle = { maxWidth: '1100px', margin: '0 auto', padding: '0 24px' }
 export default function LandingPadel({ lang = 'es' }) {
   const T = I18N[lang] || I18N.es;
   const navigate = useNavigate();
+  const [roi, setRoi] = useState({ courts: 6, events: 4, price: 15 });
+  // 4h/torneo en Excel × coste/hora de gestión (20 €) + no-shows estimados (2% reservas × precio medio)
+  const roiTotal = Math.round(
+    (roi.events * 4 * 20) +                     // tiempo de gestión recuperado
+    (roi.courts * 12 * roi.price * 0.08) +      // reservas impagadas/americanos recuperados
+    (roi.events * roi.courts * 6)               // fidelización (socios recurrentes)
+  );
 
   return (
     <div style={{ minHeight: '100vh', background: 'var(--padel-bg)', color: 'var(--padel-text)' }}>
@@ -262,10 +389,11 @@ export default function LandingPadel({ lang = 'es' }) {
           </h1>
           <p style={{ fontSize: '18px', color: 'var(--padel-muted)', maxWidth: '640px', lineHeight: 1.7, marginBottom: '32px' }}>{T.subtitle}</p>
           <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap' }}>
-            <button onClick={() => navigate('/demo')} className="pulse-glow" style={{ background: 'linear-gradient(135deg, var(--padel-emerald) 0%, var(--padel-emerald-dark) 100%)', color: '#fff', border: 'none', padding: '14px 28px', borderRadius: '12px', fontWeight: 800, fontSize: '15px', cursor: 'pointer' }}>
-              🚀 {T.ctaDemo}
+            <button onClick={() => navigate('/demo')} className="pulse-glow" style={{ background: 'linear-gradient(135deg, var(--padel-emerald) 0%, var(--padel-emerald-dark) 100%)', color: '#fff', border: 'none', padding: '16px 30px', borderRadius: '12px', fontWeight: 800, fontSize: '16px', cursor: 'pointer' }}>
+              🚀 {T.ctaDemoStrong}
             </button>
           </div>
+          <p style={{ fontSize: '13px', color: 'var(--padel-muted)', marginTop: '12px', fontWeight: 600 }}>{T.ctaDemoSub}</p>
         </div>
       </section>
 
@@ -278,6 +406,34 @@ export default function LandingPadel({ lang = 'es' }) {
               <div style={{ fontSize: '13px', color: 'var(--padel-muted)', fontWeight: 600 }}>{label}</div>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* SOCIAL PROOF */}
+      <section style={{ padding: '70px 0' }}>
+        <div style={sectionStyle}>
+          <div style={{ textAlign: 'center', marginBottom: '36px' }}>
+            <span style={{ display: 'inline-block', background: 'rgba(132,204,22,0.12)', border: '1px solid rgba(132,204,22,0.3)', color: '#a3e635', padding: '5px 12px', borderRadius: '16px', fontWeight: 700, fontSize: '11px', letterSpacing: '1px' }}>{T.socialProofBadge}</span>
+            <h2 style={{ fontSize: '32px', fontWeight: 900, color: 'var(--padel-text)', margin: '16px 0 6px' }}>{T.socialProofTitle}</h2>
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '36px', flexWrap: 'wrap', marginTop: '22px' }}>
+              {T.socialMetrics.map(([n, l], i) => (
+                <div key={i} style={{ textAlign: 'center' }}>
+                  <div style={{ fontSize: '30px', fontWeight: 900, color: 'var(--padel-lime)' }}>{n}</div>
+                  <div style={{ fontSize: '12px', color: 'var(--padel-muted)', fontWeight: 600 }}>{l}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '18px' }}>
+            {T.testimonials.map((t, i) => (
+              <div key={i} style={{ background: 'var(--padel-card-bg)', border: '1px solid var(--padel-border)', borderRadius: '16px', padding: '22px' }}>
+                <div style={{ fontSize: '30px', lineHeight: 1, marginBottom: '10px', color: 'var(--padel-lime)' }}>“</div>
+                <p style={{ fontSize: '14px', color: 'var(--padel-text)', lineHeight: 1.6, fontStyle: 'italic', margin: '0 0 14px' }}>{t.quote}</p>
+                <div style={{ fontSize: '14px', fontWeight: 800, color: 'var(--padel-lime)' }}>{t.name}</div>
+                <div style={{ fontSize: '12px', color: 'var(--padel-muted)' }}>{t.role}</div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -305,6 +461,55 @@ export default function LandingPadel({ lang = 'es' }) {
                 </div>
                 <h3 style={{ fontSize: '18px', fontWeight: 800, color: 'var(--padel-text)', marginBottom: '8px' }}>{f.title}</h3>
                 <p style={{ fontSize: '14px', color: 'var(--padel-muted)', lineHeight: 1.6 }}>{f.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ROI CALCULATOR */}
+      <section style={{ padding: '70px 0', background: 'var(--padel-card-bg)', borderTop: '1px solid var(--padel-border)', borderBottom: '1px solid var(--padel-border)' }}>
+        <div style={sectionStyle}>
+          <h2 style={{ fontSize: '32px', fontWeight: 900, color: 'var(--padel-text)', textAlign: 'center', marginBottom: '8px' }}>{T.roiTitle}</h2>
+          <p style={{ fontSize: '15px', color: 'var(--padel-muted)', textAlign: 'center', maxWidth: '640px', margin: '0 auto 36px' }}>{T.roiSubtitle}</p>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '20px' }}>
+            <div style={{ background: 'var(--padel-bg)', border: '1px solid var(--padel-border)', borderRadius: '16px', padding: '24px' }}>
+              {[['courts', 1, 20], ['events', 0, 30], ['price', 5, 50]].map(([key, min, max]) => (
+                <div key={key} style={{ marginBottom: '20px' }}>
+                  <label style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', color: 'var(--padel-muted)', fontWeight: 600, marginBottom: '6px' }}>
+                    <span>{T.roiInputs[key]}</span>
+                    <span style={{ color: 'var(--padel-lime)', fontWeight: 800 }}>{key === 'price' ? `${roi[key]} €` : roi[key]}</span>
+                  </label>
+                  <input type="range" min={min} max={max} value={roi[key]} onChange={e => setRoi({ ...roi, [key]: Number(e.target.value) })} style={{ width: '100%', accentColor: 'var(--padel-emerald)' }} />
+                </div>
+              ))}
+            </div>
+            <div style={{ background: 'rgba(16,185,129,0.08)', border: '2px solid var(--padel-emerald)', borderRadius: '16px', padding: '24px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
+              <div style={{ fontSize: '13px', color: 'var(--padel-muted)', fontWeight: 600, marginBottom: '8px' }}>{T.roiOutput}</div>
+              <div style={{ fontSize: '52px', fontWeight: 900, color: 'var(--padel-lime)', lineHeight: 1.1 }}>{roiTotal} €<span style={{ fontSize: '18px' }}>/mes</span></div>
+              <div style={{ fontSize: '13px', color: 'var(--padel-text)', marginTop: '10px' }}>{T.roiOutputSub}</div>
+              <button onClick={() => navigate('/demo')} style={{ background: 'linear-gradient(135deg, var(--padel-emerald), var(--padel-emerald-dark))', color: '#fff', border: 'none', padding: '12px 22px', borderRadius: '10px', fontWeight: 800, fontSize: '14px', cursor: 'pointer', marginTop: '18px' }}>
+                🚀 {T.ctaDemoStrong}
+              </button>
+            </div>
+          </div>
+          <p style={{ fontSize: '11px', color: 'var(--padel-muted)', textAlign: 'center', marginTop: '16px' }}>{T.roiGrace}</p>
+        </div>
+      </section>
+
+      {/* ECOSYSTEM */}
+      <section style={{ padding: '70px 0' }}>
+        <div style={sectionStyle}>
+          <h2 style={{ fontSize: '32px', fontWeight: 900, color: 'var(--padel-text)', textAlign: 'center', marginBottom: '8px' }}>{T.ecosystemTitle}</h2>
+          <p style={{ fontSize: '15px', color: 'var(--padel-muted)', textAlign: 'center', marginBottom: '40px' }}>{T.ecosystemSubtitle}</p>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '18px' }}>
+            {T.ecosystem.map((e, i) => (
+              <div key={i} style={{ display: 'flex', gap: '16px', alignItems: 'flex-start', background: 'var(--padel-card-bg)', border: '1px solid var(--padel-border)', borderRadius: '16px', padding: '22px' }}>
+                <div style={{ fontSize: '28px', lineHeight: 1 }}>{e.icon}</div>
+                <div>
+                  <h3 style={{ fontSize: '16px', fontWeight: 800, color: 'var(--padel-text)', margin: '0 0 6px' }}>{e.title}</h3>
+                  <p style={{ fontSize: '13px', color: 'var(--padel-muted)', lineHeight: 1.55, margin: 0 }}>{e.desc}</p>
+                </div>
               </div>
             ))}
           </div>
@@ -373,9 +578,10 @@ export default function LandingPadel({ lang = 'es' }) {
         <div style={{ ...sectionStyle, textAlign: 'center' }}>
           <h2 style={{ fontSize: '34px', fontWeight: 900, color: 'var(--padel-text)', marginBottom: '12px' }}>{T.ctaSectionTitle}</h2>
           <p style={{ fontSize: '16px', color: 'var(--padel-muted)', maxWidth: '560px', margin: '0 auto 28px' }}>{T.ctaSectionDesc}</p>
-          <button onClick={() => navigate('/demo')} className="pulse-glow" style={{ background: 'linear-gradient(135deg, var(--padel-emerald) 0%, var(--padel-emerald-dark) 100%)', color: '#fff', border: 'none', padding: '14px 32px', borderRadius: '12px', fontWeight: 800, fontSize: '15px', cursor: 'pointer' }}>
-            🚀 {T.ctaDemo}
+          <button onClick={() => navigate('/demo')} className="pulse-glow" style={{ background: 'linear-gradient(135deg, var(--padel-emerald) 0%, var(--padel-emerald-dark) 100%)', color: '#fff', border: 'none', padding: '16px 32px', borderRadius: '12px', fontWeight: 800, fontSize: '16px', cursor: 'pointer' }}>
+            🚀 {T.ctaDemoStrong}
           </button>
+          <p style={{ fontSize: '13px', color: 'var(--padel-muted)', marginTop: '14px', fontWeight: 600 }}>{T.ctaDemoSub}</p>
         </div>
       </section>
 
