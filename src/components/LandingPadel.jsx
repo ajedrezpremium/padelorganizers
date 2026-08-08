@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import LogoPadel from './LogoPadel';
+import PadelAIAgent from './PadelAIAgent';
 
 const FeatureIcon = ({ name, size = 28, color = 'var(--padel-lime)' }) => {
   const icons = {
@@ -606,6 +607,9 @@ export default function LandingPadel({ lang = 'es' }) {
         © 2026 {T.footer} ·{' '}
         <a href="/legal" style={{ color: '#38bdf8', textDecoration: 'none', fontWeight: 600 }}>Aviso legal / Cookies</a>
       </footer>
+
+      {/* Agente IA experto en pádel — permanente abajo a la derecha */}
+      <PadelAIAgent lang={lang} />
     </div>
   );
 }
