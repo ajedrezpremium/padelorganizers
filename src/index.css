@@ -72,3 +72,38 @@ button {
 .pulse-glow {
   animation: pulseGlow 2s infinite;
 }
+
+/* Header nav item with custom tooltip */
+.nav-ico {
+  position: relative;
+  border-radius: 10px;
+}
+
+.nav-ico:hover {
+  background: var(--padel-hover-bg);
+  color: var(--padel-text) !important;
+}
+
+.nav-ico[data-tooltip]::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: -34px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--padel-text);
+  color: var(--padel-bg);
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+  z-index: 1100;
+  box-shadow: 0 4px 12px var(--padel-shadow);
+}
+
+.nav-ico:hover::after {
+  opacity: 1;
+}

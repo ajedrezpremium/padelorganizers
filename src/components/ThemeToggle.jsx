@@ -45,9 +45,9 @@ export default function ThemeToggle({ lang = 'es' }) {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: 'rgba(255,255,255,0.06)',
-        border: '1px solid rgba(255,255,255,0.15)',
-        color: 'inherit',
+        background: 'var(--padel-hover-bg)',
+        border: '1px solid var(--padel-border)',
+        color: 'var(--padel-text)',
         padding: '8px 10px',
         borderRadius: '10px',
         cursor: 'pointer',
@@ -55,12 +55,10 @@ export default function ThemeToggle({ lang = 'es' }) {
         minWidth: '40px',
       }}
       onMouseOver={(e) => {
-        e.currentTarget.style.background = 'rgba(255,255,255,0.12)';
-        e.currentTarget.style.borderColor = 'rgba(255,255,255,0.3)';
+        e.currentTarget.style.background = 'var(--padel-accent-glow)';
       }}
       onMouseOut={(e) => {
-        e.currentTarget.style.background = 'rgba(255,255,255,0.06)';
-        e.currentTarget.style.borderColor = 'rgba(255,255,255,0.15)';
+        e.currentTarget.style.background = 'var(--padel-hover-bg)';
       }}
     >
       {currentIcon}

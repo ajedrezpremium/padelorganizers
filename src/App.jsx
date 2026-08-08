@@ -19,7 +19,7 @@ export default function App() {
   const store = useStore();
 
   return (
-    <div style={{ minHeight: '100vh', background: '#071210' }}>
+    <div style={{ minHeight: '100vh', background: 'var(--padel-bg)' }}>
       <HeaderPadel lang={lang} onLanguageChange={setLang} />
       <Routes>
         <Route path="/" element={<LandingPadel lang={lang} />} />
