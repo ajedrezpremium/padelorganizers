@@ -10,6 +10,7 @@ import LiveScorePro from './components/LiveScorePro';
 import ClubApp from './components/ClubApp';
 import AnalyticsBoard from './components/AnalyticsBoard';
 import RankedLeague from './components/RankedLeague';
+import TorneoOrganizer from './components/TorneoOrganizer';
 import LegalNotice from './components/LegalNotice';
 import CookieBanner from './components/CookieBanner';
 import { useStore } from './services/store';
@@ -29,6 +30,7 @@ export default function App() {
         <Route path="/live" element={<LiveView lang={lang} />} />
         <Route path="/livepro" element={<LiveScorePro lang={lang} state={store} />} />
         <Route path="/club" element={<ClubApp lang={lang} />} />
+        <Route path="/torneo" element={<TorneoOrganizer lang={lang} />} />
         <Route path="/analytics" element={<AnalyticsBoard lang={lang} state={store} />} />
         <Route path="/league" element={<RankedLeague lang={lang} />} />
         <Route path="/legal" element={<LegalNotice lang={lang} />} />
