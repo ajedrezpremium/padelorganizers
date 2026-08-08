@@ -121,22 +121,6 @@ const HeaderPadel = ({ lang = 'es', onLanguageChange }) => {
           ))}
         </div>
 
-        <button
-          onClick={() => navigate('/demo')}
-          style={{
-            background: 'linear-gradient(135deg, var(--padel-emerald) 0%, var(--padel-emerald-dark) 100%)',
-            color: '#fff',
-            border: 'none',
-            padding: '10px 18px',
-            borderRadius: '10px',
-            fontWeight: 700,
-            fontSize: '13px',
-            cursor: 'pointer',
-            boxShadow: '0 4px 12px rgba(16, 185, 129, 0.3)'
-          }}
-        >
-          🚀 Demo Gratuita
-        </button>
       </nav>
     </header>
   );

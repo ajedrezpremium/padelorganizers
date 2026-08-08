@@ -63,7 +63,7 @@ const I18N = {
     subtitle:
       'La primera plataforma SaaS con IA para la gestión de torneos, control de pistas CourtManager, marcador digital con Punto de Oro, motor Americano/Mexicano/Suizo/Eliminatorio y analíticas en tiempo real.',
     ctaDemo: 'Probar Demo Gratuita',
-    ctaDemoStrong: '🚀 Crea tu primer torneo en minutos',
+    ctaDemoStrong: 'Crea tu primer torneo en minutos',
     ctaDemoSub: 'Gratis para siempre · Sin tarjeta · Sin compromiso',
     ctaDashboard: 'Ver Dashboard Pistas',
     ctaLivePro: '📺 LiveScore Pro',
@@ -142,7 +142,7 @@ const I18N = {
     subtitle:
       'The first AI SaaS platform for tournament management, CourtManager court control, digital scoreboard with Gold Point, Americano/Mexicano/Swiss/Knockout engine and real-time analytics.',
     ctaDemo: 'Try Free Demo',
-    ctaDemoStrong: '🚀 Launch your first tournament in minutes',
+    ctaDemoStrong: 'Launch your first tournament in minutes',
     ctaDemoSub: 'Free forever · No card · No commitment',
     ctaDashboard: 'View Courts Dashboard',
     ctaLivePro: '📺 LiveScore Pro',
@@ -221,7 +221,7 @@ const I18N = {
     subtitle:
       "La première plateforme SaaS avec IA pour la gestion de tournois, le contrôle des pistes CourtManager, le tableau de score avec Point d'Or, le moteur Américain/Mexicain/Suisse/Élimination et les analyses en temps réel.",
     ctaDemo: 'Essayer la Démo Gratuite',
-    ctaDemoStrong: '🚀 Lancez votre premier tournoi en quelques minutes',
+    ctaDemoStrong: 'Lancez votre premier tournoi en quelques minutes',
     ctaDemoSub: 'Gratuit pour toujours · Sans carte · Sans engagement',
     ctaDashboard: 'Voir le Tableau des Pistes',
     ctaLivePro: '📺 LiveScore Pro',
@@ -300,7 +300,7 @@ const I18N = {
     subtitle:
       'A primeira plataforma SaaS com IA para gestão de torneios, controlo de pistas CourtManager, marcador digital com Ponto de Ouro, motor Americano/Mexicano/Suíço/Eliminatória e análises em tempo real.',
     ctaDemo: 'Experimentar Demo Grátis',
-    ctaDemoStrong: '🚀 Lance o seu primeiro torneio em minutos',
+    ctaDemoStrong: 'Lance o seu primeiro torneio em minutos',
     ctaDemoSub: 'Grátis para sempre · Sem cartão · Sem compromisso',
     ctaDashboard: 'Ver Painel de Pistas',
     ctaLivePro: '📺 LiveScore Pro',
@@ -390,21 +390,21 @@ export default function LandingPadel({ lang = 'es' }) {
   return (
     <div style={{ minHeight: '100vh', background: 'var(--padel-bg)', color: 'var(--padel-text)' }}>
       {/* HERO */}
-      <section style={{ position: 'relative', padding: '80px 0 70px', overflow: 'hidden' }}>
+      <section style={{ position: 'relative', padding: '56px 0 64px', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at 20% 20%, rgba(16,185,129,0.18), transparent 40%), radial-gradient(circle at 80% 0%, rgba(132,204,22,0.12), transparent 40%)' }} />
-        <div style={{ ...sectionStyle, position: 'relative' }}>
+        <div style={{ ...sectionStyle, position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
           <span style={{ display: 'inline-block', background: 'rgba(16,185,129,0.15)', border: '1px solid rgba(16,185,129,0.35)', color: 'var(--padel-lime)', padding: '6px 14px', borderRadius: '20px', fontWeight: 700, fontSize: '12px', letterSpacing: '1.5px' }}>
             🎾 {T.badge}
           </span>
-          <h1 style={{ fontSize: '56px', lineHeight: 1.05, fontWeight: 900, color: 'var(--padel-text)', margin: '24px 0 16px', letterSpacing: '-1.5px' }}>
+          <h1 style={{ fontSize: '56px', lineHeight: 1.05, fontWeight: 900, color: 'var(--padel-text)', margin: '20px 0 16px', letterSpacing: '-1.5px', maxWidth: '760px' }}>
             {T.title1}
             <br />
             <span style={{ background: 'linear-gradient(135deg, var(--padel-emerald) 0%, var(--padel-lime) 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>{T.title2}</span>
           </h1>
-          <p style={{ fontSize: '18px', color: 'var(--padel-muted)', maxWidth: '640px', lineHeight: 1.7, marginBottom: '32px' }}>{T.subtitle}</p>
-          <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap' }}>
+          <p style={{ fontSize: '18px', color: 'var(--padel-muted)', maxWidth: '700px', lineHeight: 1.7, marginBottom: '28px' }}>{T.subtitle}</p>
+          <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap', justifyContent: 'center' }}>
             <button onClick={() => navigate('/demo')} className="pulse-glow" style={{ background: 'linear-gradient(135deg, var(--padel-emerald) 0%, var(--padel-emerald-dark) 100%)', color: '#fff', border: 'none', padding: '16px 30px', borderRadius: '12px', fontWeight: 800, fontSize: '16px', cursor: 'pointer' }}>
-              🚀 {T.ctaDemoStrong}
+              {T.ctaDemoStrong}
             </button>
           </div>
           <p style={{ fontSize: '13px', color: 'var(--padel-muted)', marginTop: '12px', fontWeight: 600 }}>{T.ctaDemoSub}</p>
@@ -503,7 +503,7 @@ export default function LandingPadel({ lang = 'es' }) {
               <div style={{ fontSize: '52px', fontWeight: 900, color: 'var(--padel-lime)', lineHeight: 1.1 }}>{roiTotal} €<span style={{ fontSize: '18px' }}>/mes</span></div>
               <div style={{ fontSize: '13px', color: 'var(--padel-text)', marginTop: '10px' }}>{T.roiOutputSub}</div>
               <button onClick={() => navigate('/demo')} style={{ background: 'linear-gradient(135deg, var(--padel-emerald), var(--padel-emerald-dark))', color: '#fff', border: 'none', padding: '12px 22px', borderRadius: '10px', fontWeight: 800, fontSize: '14px', cursor: 'pointer', marginTop: '18px' }}>
-                🚀 {T.ctaDemoStrong}
+                {T.ctaDemoStrong}
               </button>
             </div>
           </div>
@@ -596,7 +596,7 @@ export default function LandingPadel({ lang = 'es' }) {
           <h2 style={{ fontSize: '36px', fontWeight: 900, color: 'var(--padel-text)', marginBottom: '12px' }}>{T.ctaSectionTitle}</h2>
           <p style={{ fontSize: '16px', color: 'var(--padel-muted)', maxWidth: '560px', margin: '0 auto 28px' }}>{T.ctaSectionDesc}</p>
           <button onClick={() => navigate('/demo')} className="pulse-glow" style={{ background: 'linear-gradient(135deg, #eab308 0%, #a16207 100%)', color: '#fff', border: 'none', padding: '16px 34px', borderRadius: '12px', fontWeight: 800, fontSize: '16px', cursor: 'pointer', boxShadow: '0 8px 24px rgba(234,179,8,0.35)' }}>
-            🚀 {T.ctaDemoStrong}
+            {T.ctaDemoStrong}
           </button>
           <p style={{ fontSize: '13px', color: 'var(--padel-muted)', marginTop: '14px', fontWeight: 600 }}>{T.ctaDemoSub}</p>
         </div>
