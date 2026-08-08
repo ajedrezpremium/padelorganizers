@@ -163,7 +163,36 @@ diferencial vs Playtomic: "la única plataforma que te llena las pistas vacías 
 
 ---
 
-## Orden de prioridad sugerido (ROI x esfuerzo)
+## 10. Pagos alternativos (PayPal, Apple Pay, Google Pay)
+
+**Qué:** ampliar la pasarela más allá de Stripe con PayPal y wallets. Hoy el sistema
+de pagos (reservas, split payments, inscripciones, escuela) está atado 100% a Stripe
+(`api/checkout.js`, `api/split.js`, `api/webhook.js`).
+
+**Por qué importa:**
+- **Geografía:** en España/LatAm hay jugadores que solo usan PayPal o el comercio
+  digital acostumbra a él (Playtomic solo Stripe, es una grieta).
+- **Split payments:** muy buen fit con partes por jugador; permite cobrar a quien no
+  tiene tarjeta.
+- **Imagen de confianza:** en torneos y escuelas cobrar con PayPal reduce fricción y
+  chargebacks.
+
+**Arquitectura (lean):**
+- Nuevo `api/paypal-order.js` + `api/paypal-capture.js` (Orders v2 con `client_id`/
+  `client_secret` desde env; nunca en cliente).
+- Un solo `payment_method` en reservas/splits (stripe | paypal) para el webhook.
+- Webhook PayPal de orden capturada → misma lógica de completado que el webhook de
+  Stripe (marcar split pagado, confirmar reserva).
+- En la página de pago el jugador elige Stripe (tarjeta) o PayPal.
+
+**Seguridad:** mercado de cargos/riesgos guiado; no crear una pasarela propia.
+
+**Prioridad:** media-alta (fase 2, tras consolidar Stripe y PMF). Sin "varios
+métodos" antes de tener clientes pagando.
+
+---
+
+## Priorización sugerida (ROI x esfuerzo)
 
 | Prioridad | Funcionalidad | Esfuerzo | Impacto | Se apoya en |
 |---|---|---|---|---|
@@ -176,6 +205,7 @@ diferencial vs Playtomic: "la única plataforma que te llena las pistas vacías 
 | 7 | Gamificación | Medio | Retención online | ranking club, CRM |
 | 8 | Retransmisión en directo | Alto | Marca y espectáculo | LiveScore Pro existente |
 | 9 | Match local / disponibilidad por ciudad | Medio | Llenar horas valle + captar socios | ClubApp (disponibilidad) + matchmaking SQL |
+| 10 | Pagos alternativos (PayPal, Apple/Google Pay) | Medio | Más métodos de cobro, menos fricción | webhook Stripe existente |
 
 ---
 
