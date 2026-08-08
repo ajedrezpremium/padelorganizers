@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { listReservations, addReservation, markReservationStatus, SLOTS, clubOnline } from '../services/clubService';
+import { addSplit, listSplits, markSplitPaidLocal } from '../services/splitService';
 import { useAuth } from '../hooks/useAuth';
 
 const I18N = {
@@ -13,24 +14,44 @@ const I18N = {
     confirmed: 'Reserva confirmada 🎉', successTitle: '¡Pago completado!',
     pending: 'Confirmando…', myBookings: 'Mis reservas', empty: 'Todavía no tienes reservas.',
     slotTaken: 'Ocupado', slotFree: 'Disponible',
+    splitToggle: 'Dividir pago entre jugadores', splitHint: 'Cada jugador recibe su propio link de pago (parte igual).',
+    player: 'Jugador', addPlayer: 'Añadir jugador', removePlayer: 'Quitar',
+    splitPayments: 'Links de pago por jugador', copy: 'Copiar', copied: '✓ Copiado',
+    paid: 'Pagado', waiting: 'Pendiente', allPaid: '¡Todos pagaron! Reserva confirmada 🎉',
+    simulatePaid: 'Simular pago',
   },
   en: {
     title: '🏟️ Club Booking App', sub: 'Book courts and pay online in seconds',
     pickCourt: 'Choose court', pickDay: 'Choose day', pickSlot: 'Choose time',
     courts: ['Court 1 · Centre', 'Court 2 · Premium', 'Court 3 · Covered', 'Court 4 · Covered'],
     myBookings: 'My bookings', empty: 'No bookings yet.', success: 'Payment complete!',
+    splitToggle: 'Split the payment between players', splitPlayers: 'Each player gets their own payment link (equal share).',
+    playerName: 'Player', addPlayer: 'Add player', removePlayer: 'Remove',
+    splitPayments: 'Payment links per player', copy: 'Copy', copied: '✓ Copied',
+    paid: 'Paid', waiting: 'Pending', allPaid: 'Everyone paid! Booking complete 🎉',
+    simulatePaid: 'Simulate payment',
   },
   fr: {
-    title: '🏟️ App Club de réservation', sub: 'Réservez des pistes et payez en ligne en un clin',
+    title: '🏫️ App Club de réservation', sub: 'Réservez des pistes et payez en ligne en un clin',
     pickCourt: 'Choisir la piste', pickDay: 'Choisir le jour', pickSlot: 'Choisir l\'heure',
     courts: ['Piste 1 · Centre', 'Piste 2 · Premium', 'Piste 3 · Couverte', 'Piste 4 · Couverte'],
     myBookings: 'Mes réservations', empty: 'Aucune réservation.', price: '€ / h',
+    splitToggle: 'Diviser le paiement entre joueurs', splitPlayers: 'Chaque joueur reçoit son lien de paiement (part égale).',
+    playerName: 'Joueur', addPlayer: 'Ajouter un joueur', removePlayer: 'Retirer',
+    splitPayments: 'Liens de paiement par joueur', copy: 'Copier', copied: '✓ Copié',
+    paid: 'Payé', waiting: 'En attente', allPaid: 'Tous payés ! Réservation complète 🎉',
+    simulatePaid: 'Simuler le paiement',
   },
   pt: {
-    title: '🏟️ App Clube de Reservas', sub: 'Reserve campos e pague online em segundos',
+    title: '🏫 App Clube de Reservas', sub: 'Reserve campos e pague online em segundos',
     pickCourt: 'Escolha o campo', pickDay: 'Escolha o dia', pickSlot: 'Escolha a hora',
     courts: ['Campo 1 · Central', 'Campo 2 · Premium', 'Campo 3 · Coberto', 'Campo 4 · Coberto'],
     myBookings: 'As minhas reservas', empty: 'Ainda não tem reservas.', price: '€ / h',
+    splitToggle: 'Dividir o pagamento entre jogadores', splitPlayers: 'Cada jogador recebe o seu link de pagamento (parte igual).',
+    playerName: 'Jogador', addPlayer: 'Adicionar jogador', removePlayer: 'Remover',
+    splitPayments: 'Links de pagamento por jogador', copy: 'Copiar', copied: '✓ Copiado',
+    paid: 'Pago', waiting: 'Pendente', allPaid: 'Todos pagaram! Reserva completa 🎉',
+    simulatePaid: 'Simular pagamento',
   },
 };
 
@@ -49,13 +70,23 @@ export default function ClubApp({ lang = 'es' }) {
   const [busy, setBusy] = useState(false);
   const [online] = useState(clubOnline());
   const PRICE = 8;
+  const [splitOn, setSplitOn] = useState(false);
+  const [players, setPlayers] = useState([{ name, email }]);
+  const [splits, setSplits] = useState([]);
 
   useEffect(() => { listReservations().then(handleReturn).then(setBookings); }, []);
+  useEffect(() => { listSplits().then(setSplits); }, []);
 
   // Al volver de Stripe (?status=success) confirma la reserva pendiente del slot pagado.
   async function handleReturn(list) {
     const params = new URLSearchParams(window.location.search);
     if (params.get('status') !== 'success') return list;
+    // Para pagos divididos NO se auto-completa: el webhook completa la reserva
+    // cuando TODOS los jugadores han pagado.
+    if (params.get('split') === '1') {
+      refreshSplits();
+      return list;
+    }
     const slot = params.get('slot');
     const target = list.find(b => b.status === 'pending' && (!slot || b.time_slot === slot));
     if (!target) return list;
@@ -63,10 +94,53 @@ export default function ClubApp({ lang = 'es' }) {
     return list.map(b => (b.id === target.id ? { ...b, status: 'completed' } : b));
   }
 
+  const refreshSplits = async () => setSplits(await listSplits());
+
   const checkout = async () => {
     setMsg('');
     if (!name.trim() || !email.trim()) { setMsg(T.required); return; }
     if (!slotSel) { setMsg(T.required); return; }
+    if (splitOn) {
+      const all = [{ name: name.trim(), email: email.trim() }, ...players.slice(1).filter(p => p && p.name.trim() && p.email.trim())];
+      if (all.length < 2) { setMsg(T.splitHint); return; }
+      setBusy(true);
+      setMsg(T.checkout);
+      try {
+        const r = await fetch('/api/split', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ court_name: T.courts[courtSel], day: daySel, slot_time: slotSel, amount: PRICE, players: all }),
+        });
+        const pay = await r.json();
+        if (pay.error) { setMsg(pay.error); setBusy(false); return; }
+        // Reserva única + N splits (uno por jugador)
+        const status = pay.demo ? 'confirmed' : 'pending';
+        const booking = await addReservation({
+          court_name: T.courts[courtSel], day: daySel, time_slot: slotSel,
+          player_name: all[0].name, player_email: all[0].email, user_id: user?.id || null,
+          price: PRICE, currency: 'eur', status, stripe_session: pay.demo ? null : pay.payments[0].sessionId,
+        });
+        for (const p of pay.payments) {
+          await addSplit({
+            reservation_id: booking.id,
+            player_name: p.name, player_email: p.email,
+            amount_eur: p.amount,
+            status: pay.demo ? 'paid' : 'pending',
+            stripe_session: p.sessionId,
+          });
+        }
+        setPlayers([{ name: name.trim(), email: email.trim() }]);
+        setBookings(await listReservations());
+        await refreshSplits();
+        if (pay.demo) setMsg(T.allPaid);
+        else { /* el organizador compartirá los links */ setMsg(T.splitPayments); }
+      } catch (e) {
+        setMsg(T.required);
+      } finally {
+        setBusy(false);
+      }
+      return;
+    }
     setBusy(true);
     setMsg(T.checkout);
     try {
@@ -147,12 +221,60 @@ export default function ClubApp({ lang = 'es' }) {
           <input value={email} onChange={e => setEmail(e.target.value)} type="email" placeholder={T.email}
             style={inputStyle} />
 
+          {/* Split payments: toggle + jugadores extra */}
+          <label style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 14, cursor: 'pointer' }}>
+            <input type="checkbox" checked={splitOn} onChange={e => setSplitOn(e.target.checked)} />
+            <span style={{ fontSize: 13, color: '#e2e8f0', fontWeight: 700 }}>{T.splitToggle}</span>
+          </label>
+          {splitOn && (
+            <div style={{ color: '#94a3b8', fontSize: 12, margin: '6px 0 0' }}>{T.splitHint}</div>
+          )}
+          {splitOn && players.slice(1).map((p, i) => (
+            <div key={i} style={{ display: 'flex', gap: 8, marginTop: 8 }} >
+              <input value={p.name} onChange={e => { const next = [...players]; next[i + 1] = { ...next[i + 1], name: e.target.value }; setPlayers(next); }} placeholder={`${T.player} ${i + 2} · nombre`} style={miniInput} />
+              <input value={p.email} onChange={e => { const next = [...players]; next[i + 1] = { ...next[i + 1], email: e.target.value }; setPlayers(next); }} type="email" placeholder={`${T.player} ${i + 2} · email`} style={{ ...miniInput, flex: 1.4 }} />
+              <button onClick={() => setPlayers(players.filter((_, j) => j !== i + 1))} style={ghostBtn} title={T.removePlayer}>✕</button>
+            </div>
+          ))}
+          {splitOn && players.length < 4 && (
+            <button onClick={() => setPlayers([...players, { name: '', email: '' }])} style={ghostBtnBig}>
+              ➕ {T.addPlayer}
+            </button>
+          )}
+
           {msg && <p style={{ fontSize: 13, color: '#84cc16', margin: '4px 0' }}>{msg}</p>}
 
           <button onClick={checkout} disabled={busy}
             style={{ width: '100%', padding: '13px', borderRadius: '10px', border: 'none', fontWeight: 800, fontSize: 15, cursor: 'pointer', background: busy ? '#64748b' : 'linear-gradient(135deg,#10b981,#059669)', color: '#fff', marginTop: 8 }}>
-            {busy ? '…' : `💳 Reservar · ${PRICE} €`}
+            {busy ? '…' : splitOn ? `💳 Reservar · ${PRICE} € (${players.filter(pl => pl.name.trim() && pl.email.trim()).length} jug.)` : `💳 Reservar · ${PRICE} €`}
           </button>
+
+          {/* Panel: links de pago por jugador */}
+          {splitOn && splits.length > 0 && (
+            <div style={{ marginTop: 16, borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: 14 }}>
+              <div style={{ fontSize: 13, fontWeight: 800, color: '#e2e8f0', marginBottom: 8 }}>🔗 {T.splitPayments}</div>
+              {splits.filter(s => s.status !== 'paid' || true).slice(0, 8).map(s => (
+                <div key={s.id} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 0', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+                  <div style={{ flex: 1, fontSize: 12, color: '#cbd5e1' }}>
+                    <b>{s.player_name}</b>
+                    <div style={{ color: s.status === 'paid' ? '#34d399' : '#fbbf24', fontWeight: 700 }}>
+                      {s.status === 'paid' ? '✅ ' + T.paid : '⏳ ' + T.waiting} · {Number(s.amount_eur).toFixed(2)} €
+                    </div>
+                  </div>
+                  {s.url && (
+                    <button onClick={() => navigator.clipboard.writeText(s.url)} style={ghostBtn}>
+                      {T.copy}
+                    </button>
+                  )}
+                  {!s.url && s.status !== 'paid' && (
+                    <button onClick={async () => { await markSplitPaidLocal(s); await refreshSplits(); }} style={ghostBtn}>
+                      {T.simulatePaid}
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Mis reservas */}
@@ -190,3 +312,6 @@ function demoDate() {
 
 const labelStyle = { display: 'block', fontSize: '13px', color: '#94a3b8', fontWeight: 600, margin: '0 0 8px' };
 const inputStyle = { width: '100%', padding: '12px 14px', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.2)', background: 'rgba(0,0,0,0.3)', color: '#fff', fontSize: 14, marginTop: 10, boxSizing: 'border-box' };
+const miniInput = { flex: 1, padding: '8px 10px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(0,0,0,0.3)', color: '#fff', fontSize: 12, boxSizing: 'border-box', minWidth: 0 };
+const ghostBtn = { padding: '6px 10px', borderRadius: '8px', border: '1px solid rgba(16,185,129,0.4)', background: 'rgba(16,185,129,0.1)', color: '#a3e635', fontSize: 12, fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap' };
+const ghostBtnBig = { marginTop: 8, padding: '9px 12px', borderRadius: '8px', border: '1px dashed rgba(16,185,129,0.4)', background: 'transparent', color: '#34d399', fontSize: 12, fontWeight: 700, cursor: 'pointer', width: '100%' };
