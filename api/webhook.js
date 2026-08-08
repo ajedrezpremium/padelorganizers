@@ -112,7 +112,7 @@ async function handleSplitPayment({ supabaseUrl, supabaseAnon, sessionId, res })
         'Content-Type': 'application/json',
         Prefer: 'return=minimal',
       },
-      body: JSON.stringify({ status: 'paid' }),
+      body: JSON.stringify({ status: 'paid', paid_at: new Date().toISOString() }),
     }
   );
   if (!patchSplit.ok) {

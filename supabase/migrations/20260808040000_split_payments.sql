@@ -9,11 +9,15 @@
 create table if not exists public.reservation_splits (
   id uuid primary key default gen_random_uuid(),
   reservation_id uuid references public.reservations(id) on delete cascade,
+  split_index integer not null default 0,        -- 0..N-1 (posición del jugador)
+  total_splits integer not null default 2,       -- nº total de jugadores de la reserva
   player_name text not null,
   player_email text not null,
   amount_eur numeric(8,2) not null default 0,
-  status text not null default 'pending',      -- pending | paid
+  status text not null default 'pending',      -- pending | paid | refunded
   stripe_session text,
+  paid_at timestamptz,
+  refunded_at timestamptz,
   created_at timestamptz not null default now()
 );
 
@@ -28,3 +32,4 @@ create policy "splits_update" on public.reservation_splits for update
 
 create index if not exists idx_splits_reservation on public.reservation_splits(reservation_id);
 create index if not exists idx_splits_session on public.reservation_splits(stripe_session);
+create index if not exists idx_splits_status on public.reservation_splits(reservation_id, status);

@@ -123,6 +123,8 @@ export default function ClubApp({ lang = 'es' }) {
         for (const p of pay.payments) {
           await addSplit({
             reservation_id: booking.id,
+            split_index: p.index,
+            total_splits: pay.payments.length,
             player_name: p.name, player_email: p.email,
             amount_eur: p.amount,
             status: pay.demo ? 'paid' : 'pending',

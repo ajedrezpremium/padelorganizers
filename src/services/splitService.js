@@ -24,11 +24,14 @@ export async function listSplits() {
 export async function addSplit(row) {
   const payload = {
     reservation_id: row.reservation_id,
+    split_index: row.split_index ?? row.index ?? 0,
+    total_splits: row.total_splits ?? row.total ?? 1,
     player_name: row.player_name,
     player_email: row.player_email,
     amount_eur: row.amount_eur,
     status: row.status || 'pending',
     stripe_session: row.stripe_session || null,
+    paid_at: row.paid_at || null,
   };
   if (isSupabaseConfigured) {
     const { data, error } = await supabase.from('reservation_splits').insert([payload]).select().single();

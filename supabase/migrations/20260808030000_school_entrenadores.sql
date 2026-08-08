@@ -153,3 +153,54 @@ create index if not exists idx_classes_coach on public.classes(coach_id);
 create index if not exists idx_attendance_class on public.class_attendance(class_id);
 create index if not exists idx_group_members_group on public.group_members(group_id);
 create index if not exists idx_eval_student on public.student_evaluations(student_id, evaluated_on desc);
+
+-- ============================================================
+-- COBRO RECURRENTE FIN DE MES (ERP escuela, core #8)
+-- Suscripción del alumno y facturas mensuales. El webhook de Stripe
+-- (api/webhook.js) marca las facturas como pagadas igual que las reservas.
+-- ============================================================
+
+-- Plan / suscripción de un alumno: cuota mensual recurrente fin de mes
+create table if not exists public.student_subscriptions (
+  id uuid primary key default gen_random_uuid(),
+  student_id uuid references public.students(id) on delete cascade,
+  plan_name text not null default 'Clases mensuales',
+  monthly_price decimal(10,2) not null default 0,
+  currency text not null default 'eur',
+  billing_day integer not null default 1,      -- día del mes del cobro
+  status text not null default 'active',        -- active | paused | cancelled
+  cancel_on date,                               -- si se cancela a futuro
+  notes text,
+  created_at timestamptz not null default now()
+);
+
+-- Facturas / cobros por alumno (generadas fin de mes o manualmente)
+create table if not exists public.school_invoices (
+  id uuid primary key default gen_random_uuid(),
+  subscription_id uuid references public.student_subscriptions(id) on delete cascade,
+  student_id uuid references public.students(id) on delete cascade,
+  period text not null,                          -- '2026-08' (mes facturado)
+  amount decimal(10,2) not null default 0,
+  currency text not null default 'eur',
+  status text not null default 'pending',        -- pending | paid | failed | cancelled
+  stripe_session text,
+  due_on date,
+  paid_at timestamptz,
+  created_at timestamptz not null default now(),
+  unique (subscription_id, period)
+);
+
+alter table public.student_subscriptions enable row level security;
+alter table public.school_invoices enable row level security;
+
+create policy "student_subscriptions_select" on public.student_subscriptions for select using (true);
+create policy "school_invoices_select" on public.school_invoices for select using (true);
+
+create policy "student_subscriptions_insert" on public.student_subscriptions for insert with check (true);
+create policy "student_subscriptions_update" on public.student_subscriptions for update using (true);
+create policy "school_invoices_insert" on public.school_invoices for insert with check (true);
+create policy "school_invoices_update" on public.school_invoices for update using (true);
+
+create index if not exists idx_subscriptions_student on public.student_subscriptions(student_id);
+create index if not exists idx_invoices_subscription on public.school_invoices(subscription_id, period);
+create index if not exists idx_invoices_student on public.school_invoices(student_id);
