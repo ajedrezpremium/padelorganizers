@@ -30,6 +30,13 @@ const HeaderPadel = ({ lang = 'es', onLanguageChange }) => {
 
   const t = TOOLTIPS[lang] || TOOLTIPS.es;
 
+  const LANG_LABELS = {
+    es: { label: 'Español', tooltip: 'Cambiar a español' },
+    en: { label: 'English', tooltip: 'Switch to English' },
+    fr: { label: 'Français', tooltip: 'Passer au français' },
+    pt: { label: 'Português', tooltip: 'Mudar para português' },
+  };
+
   return (
     <header style={{
       display: 'flex',
