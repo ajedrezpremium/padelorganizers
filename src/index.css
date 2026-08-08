@@ -87,14 +87,14 @@ button {
 .nav-ico[data-tooltip]::after {
   content: attr(data-tooltip);
   position: absolute;
-  bottom: -34px;
+  bottom: -36px;
   left: 50%;
   transform: translateX(-50%);
   background: var(--padel-text);
   color: var(--padel-bg);
-  padding: 5px 10px;
-  border-radius: 6px;
-  font-size: 11px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 12px;
   font-weight: 600;
   white-space: nowrap;
   opacity: 0;
