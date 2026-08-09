@@ -19,6 +19,7 @@ const I18N = {
     splitPayments: 'Links de pago por jugador', copy: 'Copiar', copied: '✓ Copiado',
     paid: 'Pagado', waiting: 'Pendiente', allPaid: '¡Todos pagaron! Reserva confirmada 🎉',
     simulatePaid: 'Simular pago',
+    payWith: 'Método de pago', stripe: 'Tarjeta', paypal: 'PayPal',
   },
   en: {
     title: '🏟️ Club Booking App', sub: 'Book courts and pay online in seconds',
@@ -30,6 +31,7 @@ const I18N = {
     splitPayments: 'Payment links per player', copy: 'Copy', copied: '✓ Copied',
     paid: 'Paid', waiting: 'Pending', allPaid: 'Everyone paid! Booking complete 🎉',
     simulatePaid: 'Simulate payment',
+    payWith: 'Payment method', stripe: 'Card', paypal: 'PayPal',
   },
   fr: {
     title: '🏫️ App Club de réservation', sub: 'Réservez des pistes et payez en ligne en un clin',
@@ -41,6 +43,7 @@ const I18N = {
     splitPayments: 'Liens de paiement par joueur', copy: 'Copier', copied: '✓ Copié',
     paid: 'Payé', waiting: 'En attente', allPaid: 'Tous payés ! Réservation complète 🎉',
     simulatePaid: 'Simuler le paiement',
+    payWith: 'Moyen de paiement', stripe: 'Carte', paypal: 'PayPal',
   },
   pt: {
     title: '🏫 App Clube de Reservas', sub: 'Reserve campos e pague online em segundos',
@@ -52,6 +55,7 @@ const I18N = {
     splitPayments: 'Links de pagamento por jogador', copy: 'Copiar', copied: '✓ Copiado',
     paid: 'Pago', waiting: 'Pendente', allPaid: 'Todos pagaram! Reserva completa 🎉',
     simulatePaid: 'Simular pagamento',
+    payWith: 'Método de pagamento', stripe: 'Cartão', paypal: 'PayPal',
   },
 };
 
@@ -73,6 +77,7 @@ export default function ClubApp({ lang = 'es' }) {
   const [splitOn, setSplitOn] = useState(false);
   const [players, setPlayers] = useState([{ name, email }]);
   const [splits, setSplits] = useState([]);
+  const [gateway, setGateway] = useState('stripe'); // stripe | paypal
 
   useEffect(() => { listReservations().then(handleReturn).then(setBookings); }, []);
   useEffect(() => { listSplits().then(setSplits); }, []);
@@ -80,6 +85,24 @@ export default function ClubApp({ lang = 'es' }) {
   // Al volver de Stripe (?status=success) confirma la reserva pendiente del slot pagado.
   async function handleReturn(list) {
     const params = new URLSearchParams(window.location.search);
+    // PayPal: al volver trae ?status=success&token=ORDERID → capturamos y confirmamos.
+    const ppToken = params.get('token');
+    if (params.get('status') === 'success' && ppToken && params.get('split') !== '1') {
+      try {
+        await fetch('/api/paypal-capture', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ order_id: ppToken }),
+        });
+      } catch { /* noop */ }
+      const slot = params.get('slot');
+      const target = list.find(b => b.status === 'pending' && (!slot || b.time_slot === slot));
+      if (target) {
+        await markReservationStatus(target.id, 'completed');
+        return list.map(b => (b.id === target.id ? { ...b, status: 'completed' } : b));
+      }
+      return list;
+    }
     if (params.get('status') !== 'success') return list;
     // Para pagos divididos NO se auto-completa: el webhook completa la reserva
     // cuando TODOS los jugadores han pagado.
@@ -106,6 +129,46 @@ export default function ClubApp({ lang = 'es' }) {
       setBusy(true);
       setMsg(T.checkout);
       try {
+        if (gateway === 'paypal') {
+          const r = await fetch('/api/paypal-order', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ court_name: T.courts[courtSel], day: daySel, slot_time: slotSel, amount: PRICE, players: all, split: true }),
+          });
+          const pay = await r.json();
+          if (pay.error) { setMsg(pay.error); setBusy(false); return; }
+          // Reserva única + N splits (uno por jugador), cada uno con su PayPal order.
+          const status = pay.demo ? 'confirmed' : 'pending';
+          const booking = await addReservation({
+            court_name: T.courts[courtSel], day: daySel, time_slot: slotSel,
+            player_name: all[0].name, player_email: all[0].email, user_id: user?.id || null,
+            price: PRICE, currency: 'eur', status, payment_method: 'paypal',
+            paypal_order: pay.demo ? null : pay.payments[0].id,
+          });
+          for (const p of pay.payments) {
+            await addSplit({
+              reservation_id: booking.id,
+              split_index: p.index,
+              total_splits: pay.payments.length,
+              player_name: p.name, player_email: p.email,
+              amount_eur: p.amount,
+              status: pay.demo ? 'paid' : 'pending',
+              payment_method: 'paypal',
+              paypal_order: p.id,
+              payment_url: p.url,
+            });
+            if (pay.demo) {
+              await markSplitPaidLocal({ ...p, id: `pp-${p.index}` });
+            }
+          }
+          setPlayers([{ name: name.trim(), email: email.trim() }]);
+          setBookings(await listReservations());
+          await refreshSplits();
+          if (pay.demo) setMsg(T.allPaid);
+          else setMsg(T.splitPayments);
+          setBusy(false);
+          return;
+        }
         const r = await fetch('/api/split', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -146,25 +209,49 @@ export default function ClubApp({ lang = 'es' }) {
     setBusy(true);
     setMsg(T.checkout);
     try {
-      // Intenta pasarela Stripe (o demo)
-      const r = await fetch('/api/checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ court_name: T.courts[courtSel], day: daySel, slot_time: slotSel, amount: PRICE }),
-      });
-      const pay = await r.json();
-      // Guardamos la reserva (status según demo/real)
-      const status = pay.demo ? 'confirmed' : 'pending';
-      await addReservation({
-        court_name: T.courts[courtSel], day: daySel, time_slot: slotSel,
-        player_name: name, player_email: email, user_id: user?.id || null,
-        price: PRICE, currency: 'eur', status, stripe_session: pay.sessionId || null,
-      });
-      setBookings(await listReservations());
-      if (pay.demo) {
-        setMsg(T.confirmed);
-      } else if (pay.url) {
-        window.location.href = pay.url;
+      if (gateway === 'paypal') {
+        const r = await fetch('/api/paypal-order', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ court_name: T.courts[courtSel], day: daySel, slot_time: slotSel, amount: PRICE }),
+        });
+        const pay = await r.json();
+        if (pay.error) { setMsg(pay.error); setBusy(false); return; }
+        const status = pay.demo ? 'confirmed' : 'pending';
+        await addReservation({
+          court_name: T.courts[courtSel], day: daySel, time_slot: slotSel,
+          player_name: name, player_email: email, user_id: user?.id || null,
+          price: PRICE, currency: 'eur', status, payment_method: 'paypal',
+          paypal_order: pay.demo ? null : pay.id,
+          stripe_session: null,
+        });
+        setBookings(await listReservations());
+        if (pay.demo) {
+          setMsg(T.confirmed);
+        } else if (pay.url) {
+          window.location.href = pay.url;
+        }
+      } else {
+        // Intenta pasarela Stripe (o demo)
+        const r = await fetch('/api/checkout', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ court_name: T.courts[courtSel], day: daySel, slot_time: slotSel, amount: PRICE }),
+        });
+        const pay = await r.json();
+        // Guardamos la reserva (status según demo/real)
+        const status = pay.demo ? 'confirmed' : 'pending';
+        await addReservation({
+          court_name: T.courts[courtSel], day: daySel, time_slot: slotSel,
+          player_name: name, player_email: email, user_id: user?.id || null,
+          price: PRICE, currency: 'eur', status, stripe_session: pay.sessionId || null,
+        });
+        setBookings(await listReservations());
+        if (pay.demo) {
+          setMsg(T.confirmed);
+        } else if (pay.url) {
+          window.location.href = pay.url;
+        }
       }
     } catch (e) {
       setMsg(T.required);
@@ -246,6 +333,17 @@ export default function ClubApp({ lang = 'es' }) {
 
           {msg && <p style={{ fontSize: 13, color: '#84cc16', margin: '4px 0' }}>{msg}</p>}
 
+          {/* Selector de pasarela de pago */}
+          <label style={{ ...labelStyle, marginTop: 14 }}>{T.payWith}</label>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+            <button onClick={() => setGateway('stripe')} style={{ padding: '10px', borderRadius: '10px', border: gateway === 'stripe' ? '2px solid #635bff' : '1px solid rgba(255,255,255,0.15)', background: gateway === 'stripe' ? 'rgba(99,91,255,0.15)' : 'rgba(255,255,255,0.03)', color: gateway === 'stripe' ? '#fff' : '#cbd5e1', fontWeight: 700, fontSize: 13, cursor: 'pointer' }}>
+              💳 {T.stripe}
+            </button>
+            <button onClick={() => setGateway('paypal')} style={{ padding: '10px', borderRadius: '10px', border: gateway === 'paypal' ? '2px solid #ffc439' : '1px solid rgba(255,255,255,0.15)', background: gateway === 'paypal' ? 'rgba(255,196,57,0.12)' : 'rgba(255,255,255,0.03)', color: gateway === 'paypal' ? '#ffc439' : '#cbd5e1', fontWeight: 700, fontSize: 13, cursor: 'pointer' }}>
+              🅿️ {T.paypal}
+            </button>
+          </div>
+
           <button onClick={checkout} disabled={busy}
             style={{ width: '100%', padding: '13px', borderRadius: '10px', border: 'none', fontWeight: 800, fontSize: 15, cursor: 'pointer', background: busy ? '#64748b' : 'linear-gradient(135deg,#10b981,#059669)', color: '#fff', marginTop: 8 }}>
             {busy ? '…' : splitOn ? `💳 Reservar · ${PRICE} € (${players.filter(pl => pl.name.trim() && pl.email.trim()).length} jug.)` : `💳 Reservar · ${PRICE} €`}
@@ -263,12 +361,12 @@ export default function ClubApp({ lang = 'es' }) {
                       {s.status === 'paid' ? '✅ ' + T.paid : '⏳ ' + T.waiting} · {Number(s.amount_eur).toFixed(2)} €
                     </div>
                   </div>
-                  {s.url && (
-                    <button onClick={() => navigator.clipboard.writeText(s.url)} style={ghostBtn}>
-                      {T.copy}
+                  {(s.payment_url || s.url) && s.status !== 'paid' && (
+                    <button onClick={() => navigator.clipboard.writeText(s.payment_url || s.url)} style={ghostBtn}>
+                      🔗 {T.copy} {s.payment_method !== 'paypal' ? '' : 'PP'}
                     </button>
                   )}
-                  {!s.url && s.status !== 'paid' && (
+                  {!s.payment_url && !s.url && s.status !== 'paid' && (
                     <button onClick={async () => { await markSplitPaidLocal(s); await refreshSplits(); }} style={ghostBtn}>
                       {T.simulatePaid}
                     </button>

@@ -37,7 +37,9 @@ export async function addReservation(payload) {
     price: payload.price,
     currency: 'eur',
     status: payload.status || 'pending',
+    payment_method: payload.payment_method || 'stripe',
     stripe_session: payload.stripe_session || null,
+    paypal_order: payload.paypal_order || null,
   };
   if (isSupabaseConfigured) {
     const { data, error } = await supabase.from('reservations').insert([row]).select().single();

@@ -15,7 +15,9 @@ create table if not exists public.reservation_splits (
   player_email text not null,
   amount_eur numeric(8,2) not null default 0,
   status text not null default 'pending',      -- pending | paid | refunded
-  stripe_session text,
+  payment_method text not null default 'stripe', -- stripe | paypal
+  stripe_session text,                          -- sesión Stripe si pago con tarjeta
+  paypal_order text,                            -- order id de PayPal si pago con PayPal
   paid_at timestamptz,
   refunded_at timestamptz,
   created_at timestamptz not null default now()
@@ -32,4 +34,11 @@ create policy "splits_update" on public.reservation_splits for update
 
 create index if not exists idx_splits_reservation on public.reservation_splits(reservation_id);
 create index if not exists idx_splits_session on public.reservation_splits(stripe_session);
+create index if not exists idx_splits_paypal on public.reservation_splits(paypal_order);
 create index if not exists idx_splits_status on public.reservation_splits(reservation_id, status);
+
+-- PayPal: referencia de la reserva pagada con PayPal (para confirmarla sin stripe_session).
+alter table public.reservations
+  add column if not exists payment_method text not null default 'stripe',
+  add column if not exists paypal_order text;
+create index if not exists idx_reservations_paypal on public.reservations(paypal_order);

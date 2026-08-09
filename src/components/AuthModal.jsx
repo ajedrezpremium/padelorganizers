@@ -109,8 +109,8 @@ export default function AuthModal({ lang = 'es', onClose, onAuthed }) {
   };
 
   return (
-    <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.65)', backdropFilter: 'blur(4px)', zIndex: 2000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }} onClick={onClose}>
-      <div style={{ background: '#0e1e1b', border: '1px solid rgba(16,185,129,0.3)', borderRadius: 20, padding: 30, width: 400, maxWidth: '100%', position: 'relative', boxShadow: '0 20px 60px rgba(0,0,0,0.6)', maxHeight: '92vh', overflowY: 'auto' }} onClick={e => e.stopPropagation()}>
+    <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.65)', backdropFilter: 'blur(4px)', zIndex: 2000, display: 'flex', alignItems: 'center', justifyContent: 'center', overflowY: 'auto', padding: 20 }} onClick={onClose}>
+      <div style={{ background: '#0e1e1b', border: '1px solid rgba(16,185,129,0.3)', borderRadius: 20, padding: 30, width: 400, maxWidth: '100%', margin: 'auto', position: 'relative', boxShadow: '0 20px 60px rgba(0,0,0,0.6)', maxHeight: 'calc(100vh - 40px)', overflowY: 'auto' }} onClick={e => e.stopPropagation()}>
         <button onClick={onClose} style={{ position: 'absolute', top: 14, right: 16, background: 'none', border: 'none', color: '#94a3b8', fontSize: 20, cursor: 'pointer' }}>✕</button>
 
         <div style={{ fontSize: 30, marginBottom: 6 }}>{mode === 'recover' ? '🔑' : '👤'}</div>

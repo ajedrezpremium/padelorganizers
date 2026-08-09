@@ -30,7 +30,10 @@ export async function addSplit(row) {
     player_email: row.player_email,
     amount_eur: row.amount_eur,
     status: row.status || 'pending',
+    payment_method: row.payment_method || 'stripe',
     stripe_session: row.stripe_session || null,
+    paypal_order: row.paypal_order || null,
+    payment_url: row.payment_url || null,
     paid_at: row.paid_at || null,
   };
   if (isSupabaseConfigured) {
