@@ -86,8 +86,10 @@ export default function ClubApp({ lang = 'es' }) {
   async function handleReturn(list) {
     const params = new URLSearchParams(window.location.search);
     // PayPal: al volver trae ?status=success&token=ORDERID → capturamos y confirmamos.
+    // Capturamos SIEMPRE que haya token (single y split): el capture es idempotente
+    // y usa custom_id para marcar el split/reserva como pagado en Supabase.
     const ppToken = params.get('token');
-    if (params.get('status') === 'success' && ppToken && params.get('split') !== '1') {
+    if (params.get('status') === 'success' && ppToken) {
       try {
         await fetch('/api/paypal-capture', {
           method: 'POST',
@@ -95,6 +97,10 @@ export default function ClubApp({ lang = 'es' }) {
           body: JSON.stringify({ order_id: ppToken }),
         });
       } catch { /* noop */ }
+      if (params.get('split') === '1') {
+        refreshSplits();
+        return list;
+      }
       const slot = params.get('slot');
       const target = list.find(b => b.status === 'pending' && (!slot || b.time_slot === slot));
       if (target) {
