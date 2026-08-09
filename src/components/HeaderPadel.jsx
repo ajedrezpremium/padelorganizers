@@ -77,9 +77,6 @@ const HeaderPadel = ({ lang = 'es', onLanguageChange }) => {
         <Link to="/club" data-tooltip={t.club} aria-label={t.club} className="nav-ico" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '9px 11px', color: '#fbbf24', textDecoration: 'none' }}>
           <NavIcon name="club" />
         </Link>
-        <Link to="/torneo" data-tooltip={t.tournament} aria-label={t.tournament} className="nav-ico" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '9px 11px', color: '#f59e0b', textDecoration: 'none' }}>
-          <NavIcon name="tournament" />
-        </Link>
         <Link to="/analytics" data-tooltip={t.analytics} aria-label={t.analytics} className="nav-ico" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '9px 11px', color: '#38bdf8', textDecoration: 'none' }}>
           <NavIcon name="chart" />
         </Link>
@@ -122,8 +119,14 @@ const HeaderPadel = ({ lang = 'es', onLanguageChange }) => {
         </div>
 
         <button
-          onClick={() => navigate('/demo')}
+          onClick={() => navigate('/torneo')}
+          data-tooltip={t.tournament}
+          title={t.tournament}
+          aria-label={t.tournament}
           style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px',
             background: 'linear-gradient(135deg, var(--padel-emerald) 0%, var(--padel-emerald-dark) 100%)',
             color: '#fff',
             border: 'none',
@@ -135,7 +138,8 @@ const HeaderPadel = ({ lang = 'es', onLanguageChange }) => {
             boxShadow: '0 4px 12px rgba(16, 185, 129, 0.3)'
           }}
         >
-          🚀 Demo Gratuita
+          <NavIcon name="tournament" size={16} />
+          {t.tournament}
         </button>
       </nav>
     </header>

@@ -63,7 +63,7 @@ const I18N = {
     subtitle:
       'La primera plataforma SaaS con IA para la gestión de torneos, control de pistas CourtManager, marcador digital con Punto de Oro, motor Americano/Mexicano/Suizo/Eliminatorio y analíticas en tiempo real.',
     ctaDemo: 'Probar Demo Gratuita',
-    ctaDemoStrong: '🚀 Crea tu primer torneo en minutos',
+    ctaDemoStrong: 'Crea tu primer torneo en minutos',
     ctaDemoSub: 'Gratis para siempre · Sin tarjeta · Sin compromiso',
     ctaDashboard: 'Ver Dashboard Pistas',
     ctaLivePro: '📺 LiveScore Pro',
@@ -112,17 +112,18 @@ const I18N = {
       { icon: 'cloud', title: 'SaaS + Reservas', desc: 'Modelo de monetización recurrente por club con reservas de pistas y membresías.', tooltip: 'Modelo SaaS con reservas y pagos integrados (Stripe)' },
     ],
     comparisonTitle: 'Comparativa de mercado',
-    comparisonCols: ['Característica', 'PADELORGANIZERS', 'Playtomic', 'Excel/WhatsApp'],
+    comparisonCols: ['Característica', 'PADELORGANIZERS', 'Playtomic', 'MATCHi', 'Padel Mates', 'Padel Manager'],
     comparison: [
-      ['Formato Americano/Mexicano automático', '✓', '✓', '✗'],
-      ['Punto de Oro digital', '✓', '✗', '✗'],
-      ['Pago dividido entre jugadores (Split)', '✓', 'Parcial', '✗'],
-      ['Anti no-show y lista de espera', '✓', 'Parcial', '✗'],
-      ['Escuela con cobro recurrente', '✓', 'Parcial', '✗'],
-      ['Ranking del club con desempates', '✓', 'Parcial', '✗'],
-      ['Control de pistas en tiempo real', '✓', 'Parcial', '✗'],
-      ['Multi-idioma (ES/EN/FR/PT)', '✓', '✗', '✗'],
-      ['Sin instalación, en la nube', '✓', 'App', 'PC'],
+      ['Formato Americano/Mexicano automático', '✓', '✓', '✗', '✓', '✓'],
+      ['Punto de Oro digital', '✓', '✗', '✗', '✗', '✗'],
+      ['Coach IA con voz (ES/EN/FR/PT)', '✓', '✗', '✗', '✗', '✗'],
+      ['Marcador en vivo + análisis', '✓', '✗', '✗', '✗', '✗'],
+      ['Pago dividido entre jugadores (Split)', '✓', '✓', '✓', '✓', 'Parcial'],
+      ['Pago PayPal (live)', '✓', 'Parcial', 'Parcial', '✓', 'Parcial'],
+      ['Escuela con cobro recurrente', '✓', '✗', '✓', 'Parcial', '✓'],
+      ['Control de pistas en tiempo real', '✓', 'Parcial', '✓', 'Parcial', '✓'],
+      ['Ranking del club con desempates', '✓', 'Parcial', 'Parcial', 'Parcial', '✓'],
+      ['Sin cuota de 100-350 €/mes al club', '✓', '✗', '✗', '✗', '✗'],
     ],
     pricingTitle: 'Modelo de monetización',
     pricingSubtitle: 'Crece con tu club. Empieza gratis y escala cuando lo necesites.',
@@ -142,7 +143,7 @@ const I18N = {
     subtitle:
       'The first AI SaaS platform for tournament management, CourtManager court control, digital scoreboard with Gold Point, Americano/Mexicano/Swiss/Knockout engine and real-time analytics.',
     ctaDemo: 'Try Free Demo',
-    ctaDemoStrong: '🚀 Launch your first tournament in minutes',
+    ctaDemoStrong: 'Launch your first tournament in minutes',
     ctaDemoSub: 'Free forever · No card · No commitment',
     ctaDashboard: 'View Courts Dashboard',
     ctaLivePro: '📺 LiveScore Pro',
@@ -191,17 +192,18 @@ const I18N = {
       { icon: 'cloud', title: 'SaaS + Bookings', desc: 'Recurring club monetization with court bookings and memberships.', tooltip: 'SaaS model with integrated bookings and payments (Stripe)' },
     ],
     comparisonTitle: 'Market comparison',
-    comparisonCols: ['Feature', 'PADELORGANIZERS', 'Playtomic', 'Excel/WhatsApp'],
+    comparisonCols: ['Feature', 'PADELORGANIZERS', 'Playtomic', 'MATCHi', 'Padel Mates', 'Padel Manager'],
     comparison: [
-      ['Automatic Americano/Mexicano format', '✓', '✓', '✗'],
-      ['Digital Gold Point', '✓', '✗', '✗'],
-      ['Split payment between players', '✓', 'Partial', '✗'],
-      ['No-show protection and waitlist', '✓', 'Partial', '✗'],
-      ['School with recurring billing', '✓', 'Partial', '✗'],
-      ['Club ranking with tiebreakers', '✓', 'Partial', '✗'],
-      ['Real-time court control', '✓', 'Partial', '✗'],
-      ['Multi-language (ES/EN/FR/PT)', '✓', '✗', '✗'],
-      ['No installation, cloud-based', '✓', 'App', 'PC'],
+      ['Automatic Americano/Mexicano format', '✓', '✓', '✗', '✓', '✓'],
+      ['Digital Gold Point', '✓', '✗', '✗', '✗', '✗'],
+      ['AI Coach with voice (ES/EN/FR/PT)', '✓', '✗', '✗', '✗', '✗'],
+      ['Live scoreboard + analytics', '✓', '✗', '✗', '✗', '✗'],
+      ['Split payment between players', '✓', '✓', '✓', '✓', 'Partial'],
+      ['PayPal payment (live)', '✓', 'Partial', 'Partial', '✓', 'Partial'],
+      ['School with recurring billing', '✓', '✗', '✓', 'Partial', '✓'],
+      ['Real-time court control', '✓', 'Partial', '✓', 'Partial', '✓'],
+      ['Club ranking with tiebreakers', '✓', 'Partial', 'Partial', 'Partial', '✓'],
+      ['No 100-350 €/month club fee', '✓', '✗', '✗', '✗', '✗'],
     ],
     pricingTitle: 'Monetization model',
     pricingSubtitle: 'Grow with your club. Start free and scale when you need it.',
@@ -221,7 +223,7 @@ const I18N = {
     subtitle:
       "La première plateforme SaaS avec IA pour la gestion de tournois, le contrôle des pistes CourtManager, le tableau de score avec Point d'Or, le moteur Américain/Mexicain/Suisse/Élimination et les analyses en temps réel.",
     ctaDemo: 'Essayer la Démo Gratuite',
-    ctaDemoStrong: '🚀 Lancez votre premier tournoi en quelques minutes',
+    ctaDemoStrong: 'Lancez votre premier tournoi en quelques minutes',
     ctaDemoSub: 'Gratuit pour toujours · Sans carte · Sans engagement',
     ctaDashboard: 'Voir le Tableau des Pistes',
     ctaLivePro: '📺 LiveScore Pro',
@@ -270,17 +272,18 @@ const I18N = {
       { icon: 'cloud', title: 'SaaS + Réservations', desc: 'Monétisation récurrente par club avec réservations de pistes et adhésions.', tooltip: 'Modèle SaaS avec réservations et paiements intégrés (Stripe)' },
     ],
     comparisonTitle: 'Comparaison du marché',
-    comparisonCols: ['Fonctionnalité', 'PADELORGANIZERS', 'Playtomic', 'Excel/WhatsApp'],
+    comparisonCols: ['Fonctionnalité', 'PADELORGANIZERS', 'Playtomic', 'MATCHi', 'Padel Mates', 'Padel Manager'],
     comparison: [
-      ['Format Américain/Mexicain automatique', '✓', '✓', '✗'],
-      ['Point d\'Or numérique', '✓', '✗', '✗'],
-      ['Paiement divisé entre joueurs (Split)', '✓', 'Partiel', '✗'],
-      ['Anti no-show et liste d\'attente', '✓', 'Partiel', '✗'],
-      ['École avec facturation récurrente', '✓', 'Partiel', '✗'],
-      ['Classement du club avec égalités', '✓', 'Partiel', '✗'],
-      ['Contrôle des pistes en temps réel', '✓', 'Partiel', '✗'],
-      ['Multilingue (ES/EN/FR/PT)', '✓', '✗', '✗'],
-      ['Sans installation, dans le cloud', '✓', 'App', 'PC'],
+      ['Format Américain/Mexicain automatique', '✓', '✓', '✗', '✓', '✓'],
+      ['Point d\'Or numérique', '✓', '✗', '✗', '✗', '✗'],
+      ['Coach IA avec voix (ES/EN/FR/PT)', '✓', '✗', '✗', '✗', '✗'],
+      ['Score en direct + analyses', '✓', '✗', '✗', '✗', '✗'],
+      ['Paiement divisé entre joueurs (Split)', '✓', '✓', '✓', '✓', 'Partiel'],
+      ['Paiement PayPal (live)', '✓', 'Partiel', 'Partiel', '✓', 'Partiel'],
+      ['École avec facturation récurrente', '✓', '✗', '✓', 'Partiel', '✓'],
+      ['Contrôle des pistes en temps réel', '✓', 'Partiel', '✓', 'Partiel', '✓'],
+      ['Classement du club avec égalités', '✓', 'Partiel', 'Partiel', 'Partiel', '✓'],
+      ['Sans frais de 100-350 €/mois au club', '✓', '✗', '✗', '✗', '✗'],
     ],
     pricingTitle: 'Modèle de monétisation',
     pricingSubtitle: 'Développez votre club. Commencez gratuitement et évoluez si besoin.',
@@ -300,7 +303,7 @@ const I18N = {
     subtitle:
       'A primeira plataforma SaaS com IA para gestão de torneios, controlo de pistas CourtManager, marcador digital com Ponto de Ouro, motor Americano/Mexicano/Suíço/Eliminatória e análises em tempo real.',
     ctaDemo: 'Experimentar Demo Grátis',
-    ctaDemoStrong: '🚀 Lance o seu primeiro torneio em minutos',
+    ctaDemoStrong: 'Lance o seu primeiro torneio em minutos',
     ctaDemoSub: 'Grátis para sempre · Sem cartão · Sem compromisso',
     ctaDashboard: 'Ver Painel de Pistas',
     ctaLivePro: '📺 LiveScore Pro',
@@ -349,17 +352,18 @@ const I18N = {
       { icon: 'cloud', title: 'SaaS + Reservas', desc: 'Modelo de monetização recorrente por clube com reservas de pistas e assinaturas.', tooltip: 'Modelo SaaS com reservas e pagamentos integrados (Stripe)' },
     ],
     comparisonTitle: 'Comparação de mercado',
-    comparisonCols: ['Característica', 'PADELORGANIZERS', 'Playtomic', 'Excel/WhatsApp'],
+    comparisonCols: ['Característica', 'PADELORGANIZERS', 'Playtomic', 'MATCHi', 'Padel Mates', 'Padel Manager'],
     comparison: [
-      ['Formato Americano/Mexicano automático', '✓', '✓', '✗'],
-      ['Ponto de Ouro digital', '✓', '✗', '✗'],
-      ['Pagamento dividido entre jogadores', '✓', 'Parcial', '✗'],
-      ['Anti no-show e lista de espera', '✓', 'Parcial', '✗'],
-      ['Escola com cobrança recorrente', '✓', 'Parcial', '✗'],
-      ['Classificação do clube com desempates', '✓', 'Parcial', '✗'],
-      ['Controlo de pistas em tempo real', '✓', 'Parcial', '✗'],
-      ['Multi-idioma (ES/EN/FR/PT)', '✓', '✗', '✗'],
-      ['Sem instalação, na nuvem', '✓', 'App', 'PC'],
+      ['Formato Americano/Mexicano automático', '✓', '✓', '✗', '✓', '✓'],
+      ['Ponto de Ouro digital', '✓', '✗', '✗', '✗', '✗'],
+      ['Coach IA com voz (ES/EN/FR/PT)', '✓', '✗', '✗', '✗', '✗'],
+      ['Marcador ao vivo + análises', '✓', '✗', '✗', '✗', '✗'],
+      ['Pagamento dividido entre jogadores', '✓', '✓', '✓', '✓', 'Parcial'],
+      ['Pagamento PayPal (live)', '✓', 'Parcial', 'Parcial', '✓', 'Parcial'],
+      ['Escola com cobrança recorrente', '✓', '✗', '✓', 'Parcial', '✓'],
+      ['Controlo de pistas em tempo real', '✓', 'Parcial', '✓', 'Parcial', '✓'],
+      ['Classificação do clube com desempates', '✓', 'Parcial', 'Parcial', 'Parcial', '✓'],
+      ['Sem taxa de 100-350 €/mês ao clube', '✓', '✗', '✗', '✗', '✗'],
     ],
     pricingTitle: 'Modelo de monetização',
     pricingSubtitle: 'Cresça com o seu clube. Comece grátis e escale quando precisar.',
@@ -390,7 +394,7 @@ export default function LandingPadel({ lang = 'es' }) {
   return (
     <div style={{ minHeight: '100vh', background: 'var(--padel-bg)', color: 'var(--padel-text)' }}>
       {/* HERO */}
-      <section style={{ position: 'relative', padding: '80px 0 70px', overflow: 'hidden' }}>
+      <section style={{ position: 'relative', padding: '44px 0 60px', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at 20% 20%, rgba(16,185,129,0.18), transparent 40%), radial-gradient(circle at 80% 0%, rgba(132,204,22,0.12), transparent 40%)' }} />
         <div style={{ ...sectionStyle, position: 'relative' }}>
           <span style={{ display: 'inline-block', background: 'rgba(16,185,129,0.15)', border: '1px solid rgba(16,185,129,0.35)', color: 'var(--padel-lime)', padding: '6px 14px', borderRadius: '20px', fontWeight: 700, fontSize: '12px', letterSpacing: '1.5px' }}>
@@ -535,7 +539,7 @@ export default function LandingPadel({ lang = 'es' }) {
         <div style={sectionStyle}>
           <h2 style={{ fontSize: '34px', fontWeight: 900, color: 'var(--padel-text)', textAlign: 'center', marginBottom: '36px' }}>{T.comparisonTitle}</h2>
           <div style={{ overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '600px' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '820px' }}>
               <thead>
                 <tr>
                   {T.comparisonCols.map((c, i) => (
