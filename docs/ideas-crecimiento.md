@@ -192,6 +192,29 @@ métodos" antes de tener clientes pagando.
 
 ---
 
+## 11. Liga de clubes por jornadas + notificaciones
+
+**Qué:** extender el motor actual (que ya tiene Ranked League global y formatos de
+torneo) para soportar **ligas de clubes tipo Vigo**: calendario de jornadas (ida y
+vuelta), emparejamientos programados, clasificación por jornadas, actas de puntos.
+
+**Estado real del repo (08/08/2026):**
+- ✅ `RankedLeague` = ranking global por club (Elo + badge + reset mensual) — no es liga.
+- ✅ Motor de torneos (Americano/Mexicano/Suizo/Eliminatorio) — sin jornadas de liga.
+- ❌ Calendario de ligas, ida/vuelta, clasificación de temporada: NO existe.
+- ❌ **Notificaciones/avisos: NO existe ninguna** — ni a organizadores, técnicos o
+  jugadores, ni recordatorios de partido, ni alertas de pago.
+
+**Qué construir (fase 2):** tablas `clu_ligas`/`clu_jornadas`/`clu_partidos` +
+programador de calendario (round-robin)+ **centro de notificaciones** (email/WhatsApp
+vía API, in-app): avisos de jornada, recordatorio de partido, resultado registrado,
+cobro pendiente. Barril de adquisición: "tu liga del club entera cuadrada".
+
+**Prioridad:** media (completa el eje competitivo que ya vende: del ranking global
+a la liga local real).
+
+---
+
 ## Priorización sugerida (ROI x esfuerzo)
 
 | Prioridad | Funcionalidad | Esfuerzo | Impacto | Se apoya en |
@@ -206,6 +229,7 @@ métodos" antes de tener clientes pagando.
 | 8 | Retransmisión en directo | Alto | Marca y espectáculo | LiveScore Pro existente |
 | 9 | Match local / disponibilidad por ciudad | Medio | Llenar horas valle + captar socios | ClubApp (disponibilidad) + matchmaking SQL |
 | 10 | Pagos alternativos (PayPal, Apple/Google Pay) | Medio | Más métodos de cobro, menos fricción | webhook Stripe existente |
+| 11 | Liga de clubes por jornadas + notificaciones | Medio | Eje competitivo local + avisos | RankedLeague + motor torneos |
 
 ---
 
