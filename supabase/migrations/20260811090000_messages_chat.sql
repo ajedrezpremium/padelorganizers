@@ -13,6 +13,12 @@ create table if not exists public.messages (
   created_at timestamptz not null default now()
 );
 
+-- La tabla pudo crear antes con tournament_id uuid (chromige del primer modelo);
+-- dejamos el tipo coerido a text para aceptar los ids de torneo como 'open-padel-vigo-2026'.
+alter table public.messages alter column tournament_id type text;
+alter table public.messages alter column author type text;
+alter table public.messages alter column body type text;
+
 create index if not exists idx_messages_tournament
   on public.messages(tournament_id, created_at);
 
