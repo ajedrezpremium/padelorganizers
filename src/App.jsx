@@ -12,6 +12,7 @@ import ClubApp from './components/ClubApp';
 import AnalyticsBoard from './components/AnalyticsBoard';
 import RankedLeague from './components/RankedLeague';
 import TorneoOrganizer from './components/TorneoOrganizer';
+import ClubesDirectory from './components/ClubesDirectory';
 import LegalNotice from './components/LegalNotice';
 import CookieBanner from './components/CookieBanner';
 import { useStore } from './services/store';
@@ -34,6 +35,7 @@ export default function App() {
         <Route path="/torneo" element={<TorneoOrganizer lang={lang} />} />
         <Route path="/analytics" element={<AnalyticsBoard lang={lang} state={store} />} />
         <Route path="/league" element={<RankedLeague lang={lang} />} />
+        <Route path="/clubes" element={<ClubesDirectory lang={lang} />} />
         <Route path="/legal" element={<LegalNotice lang={lang} />} />
         <Route path="*" element={<LandingPadel lang={lang} />} />
       </Routes>
