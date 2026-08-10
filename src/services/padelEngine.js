@@ -407,3 +407,30 @@ export function generatePredictiveMatches(data, pairTeams) {
   }
   return matches;
 }
+
+// ============================================================
+// CUADRO ELIMINATORIO DIRECTO (knockout)
+// Ordena por Elo, forma parejas (1º con 2º, 3º con 4º…) y las
+// enfrenta por semilla: top vs bottom, minimizando cruces tempranos.
+// ============================================================
+export function generateKnockout(data) {
+  const ids = [...data.players].sort((a, b) => b.elo - a.elo).map(p => p.id);
+  const n = Math.floor(ids.length / 2) * 2; // número par de jugadores
+  if (n < 4) return { teams: [], matches: [] };
+
+  const teams = [];
+  for (let i = 0; i < n; i += 2) teams.push([ids[i], ids[i + 1]]);
+
+  const matches = [];
+  const t = teams.length;
+  for (let i = 0; i + 1 < t; i += 2) {
+    const A = teams[i], B = teams[t - 1 - i];
+    matches.push({
+      ...pairToMatch(data, A, B),
+      round: 1,
+      predict: predictMatch(data, A, B),
+      balance: matchBalance(data, A, B),
+    });
+  }
+  return { teams, matches };
+}
