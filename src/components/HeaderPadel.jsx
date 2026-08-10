@@ -24,10 +24,10 @@ const HeaderPadel = ({ lang = 'es', onLanguageChange }) => {
   const navigate = useNavigate();
 
   const TOOLTIPS = {
-    es: { home: 'Inicio', launch: 'Lanzamiento y ofertas', demo: 'Probar la demo gratuita', dashboard: 'Dashboard de pistas', live: 'Vista en vivo', livepro: 'LiveScore Pro', club: 'Reservar pista en el club', tournament: '+ Torneo', analytics: 'Analíticas del torneo', league: 'Ranked League' },
-    en: { home: 'Home', launch: 'Launch & offers', demo: 'Try the free demo', dashboard: 'Courts dashboard', live: 'Live view', livepro: 'LiveScore Pro', club: 'Book a court at the club', tournament: '+ Tournament', analytics: 'Tournament analytics', league: 'Ranked League' },
-    fr: { home: 'Accueil', launch: 'Lancement et offres', demo: 'Essayer la démo gratuite', dashboard: 'Tableau des pistes', live: 'Vue en direct', livepro: 'LiveScore Pro', club: 'Réserver une piste', tournament: '+ Tournoi', analytics: 'Analyses du tournoi', league: 'Ligue classée' },
-    pt: { home: 'Início', launch: 'Lançamento e ofertas', demo: 'Experimentar a demo grátis', dashboard: 'Dashboard de pistas', live: 'Vista ao vivo', livepro: 'LiveScore Pro', club: 'Reservar pista no clube', tournament: '+ Torneio', analytics: 'Análises do torneio', league: 'Liga ranqueada' },
+es: { home: 'Inicio', launch: 'Lanzamiento y ofertas', demo: 'Probar la demo gratuita', dashboard: 'Dashboard de pistas', live: 'Vista en vivo', livepro: 'LiveScore Pro', club: 'Reservar pista en el club', tournament: 'Torneo', analytics: 'Analíticas del torneo', league: 'Ranked League' },
+    en: { home: 'Home', launch: 'Launch & offers', demo: 'Try the free demo', dashboard: 'Courts dashboard', live: 'Live view', livepro: 'LiveScore Pro', club: 'Book a court at the club', tournament: 'Tournament', analytics: 'Tournament analytics', league: 'Ranked League' },
+    fr: { home: 'Accueil', launch: 'Lancement et offres', demo: 'Essayer la démo gratuite', dashboard: 'Tableau des pistes', live: 'Vue en direct', livepro: 'LiveScore Pro', club: 'Réserver une piste', tournament: 'Tournoi', analytics: 'Analyses du tournoi', league: 'Ligue classée' },
+    pt: { home: 'Início', launch: 'Lançamento e ofertas', demo: 'Experimentar a demo grátis', dashboard: 'Dashboard de pistas', live: 'Vista ao vivo', livepro: 'LiveScore Pro', club: 'Reservar pista no clube', tournament: 'Torneio', analytics: 'Análises do torneio', league: 'Liga ranqueada' },
   };
 
   const t = TOOLTIPS[lang] || TOOLTIPS.es;

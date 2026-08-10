@@ -145,7 +145,7 @@ export default function PadelDashboard({ lang = 'es' }) {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px', marginBottom: '20px' }}>
         <div>
           <h2 style={{ fontSize: '22px', fontWeight: 900, color: '#fff', margin: 0 }}>{T.title}</h2>
-          <span style={{ fontSize: '13px', color: '#94a3b8' }}>{T.subtitle}</span>
+          <span style={{ fontSize: '13px', color: '#94a3b8' }}>{(data.tournament && data.tournament.name ? `${data.tournament.name} — ${data.tournament.club || ''}` : T.subtitle)}</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.3)', color: '#84cc16', padding: '8px 14px', borderRadius: '12px', fontWeight: 700, fontSize: '13px' }}>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import HeaderPadel from './components/HeaderPadel';
+import PadelAIAgent from './components/PadelAIAgent';
 import LandingPadel from './components/LandingPadel';
 import LaunchPage from './components/LandingPro';
 import PadelDashboard from './components/PadelDashboard';
@@ -37,6 +38,7 @@ export default function App() {
         <Route path="*" element={<LandingPadel lang={lang} />} />
       </Routes>
       <CookieBanner lang={lang} />
+      <PadelAIAgent lang={lang} />
     </div>
   );
 }

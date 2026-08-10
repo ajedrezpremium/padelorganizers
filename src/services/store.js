@@ -58,6 +58,31 @@ export function resetState() {
   emit();
 }
 
+// Crea (o reemplaza) el torneo activo con los datos del organizador.
+// Se usa al finalizar el wizard de /torneo para que el dashboard, el live
+// y el chat reflejen el torneo recién creado en lugar del demo.
+export function buildTournament(data) {
+  if (!data || !data.tournament) return;
+  state = data;
+  emit();
+}
+
+// Estado por defecto para "mi torneo" (además del demo importable).
+export function emptyTournamentData(id = 'torneo-organizador') {
+  return {
+    tournament: { id, name: 'Mi Torneo', club: 'Mi Club', modality: 'americano', totalCourts: 4, pointsPerMatch: 24, goldPoint: true, status: 'active', lang: 'es' },
+    courts: [
+      { id: 1, name: 'Pista 1', status: 'free', matchId: null, startTime: null },
+      { id: 2, name: 'Pista 2', status: 'free', matchId: null, startTime: null },
+      { id: 3, name: 'Pista 3', status: 'free', matchId: null, startTime: null },
+      { id: 4, name: 'Pista 4', status: 'free', matchId: null, startTime: null },
+    ],
+    pairs: [],
+    players: [],
+    matches: [],
+  };
+}
+
 // Actualiza el marcador EN VIVO de un partido (juegos/puntos/sets del set actual).
 // Escribe en el store global -> se refleja en live pública, chat y dashboard.
 export function updateLiveScore(matchId, live) {
