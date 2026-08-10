@@ -28,7 +28,7 @@ function loadEnv() {
   if (!existsSync(envFile)) return {}
   const out = {}
   for (const line of readFileSync(envFile, 'utf8').split(/\r?\n/)) {
-    const m = line.match(/^\s*([A-Z_][A-Z0-9_]*)\s*=\s*(.*)\s*$/)
+    const m = line.match(/^\s*([A-Za-z_][A-Za-z0-9_-]*)\s*=\s*(.*)\s*$/)
     if (m) out[m[1]] = m[2].replace(/^["']|["']$/g, '').trim()
   }
   return out
@@ -36,12 +36,10 @@ function loadEnv() {
 
 const env = loadEnv()
 const GMAIL_USER = env.GMAIL_USER
-const GMAIL_APP_PASS = env.GMAIL_APP_PASS
+const GMAIL_APP_PASS = (env.GMAIL_APP_PASS || env['GOOGLE-APP-KEY'] || '').replace(/\s+/g, '')
 
-if ((!GMAIL_USER || !GMAIL_APP_PASS) && process.argv.includes('--dry')) {
-  console.warn('Aviso: sin credenciales GMAIL en .env solo se genera el HTML (--dry).')
-} else if (!GMAIL_USER || !GMAIL_APP_PASS) {
-  console.error('Faltan GMAIL_USER / GMAIL_APP_PASS en .env. Consulta el comentario del script.')
+if (!GMAIL_USER || !GMAIL_APP_PASS) {
+  console.error('Faltan GMAIL_USER y (GMAIL_APP_PASS o GOOGLE-APP-KEY) en .env. Consulta el comentario del script.')
   process.exit(1)
 }
 
@@ -98,16 +96,19 @@ function estadoDe(idx) {
   return buildLog().find((r) => r.idx === String(idx))?.estado || 'pendiente'
 }
 
-function marcar(idx, estado, error = '') {
+function marcar(idx, estado, error = '', club = {}) {
   const log = buildLog()
   const target = log.find((r) => r.idx === String(idx))
   const fecha = new Date().toISOString()
+  const nombre = club['Nombre'] !== undefined ? club['Nombre'] : target?.nombre || ''
+  const correo = club['Correo'] !== undefined ? club['Correo'] : target?.correo || ''
+  const direccion = club['Dirección'] !== undefined ? club['Dirección'] : target?.direccion || ''
+  const plataforma = club['Plataforma de Reserva'] !== undefined ? club['Plataforma de Reserva'] : target?.plataforma || ''
+  const web = club['Página Web'] !== undefined ? club['Página Web'] : target?.web || ''
   if (target) {
-    target.estado = estado
-    target.fecha = fecha
-    target.error = error
+    Object.assign(target, { nombre, correo, direccion, plataforma, web, estado, fecha, error })
   } else {
-    log.push({ idx: String(idx), nombre: '', correo: '', direccion: '', plataforma: '', web: '', estado, fecha, error })
+    log.push({ idx: String(idx), nombre, correo, direccion, plataforma, web, estado, fecha, error })
   }
   const headers = ['idx', 'nombre', 'correo', 'direccion', 'plataforma', 'web', 'estado', 'fecha', 'error']
   const lines = [headers.join(',')]
@@ -145,7 +146,10 @@ const transporter = nodemailer.createTransport({
   port: 465,
   secure: true,
   auth: { user: GMAIL_USER, pass: GMAIL_APP_PASS },
-})
+  tls: env.SMTP_ALLOW_INSECURE === '1'
+    ? { rejectUnauthorized: false }   // p.ej. cuando Avast/antivirus intercepta el SMTP
+    : undefined,
+});
 
 const template = readFileSync(join(__dirname, 'plantilla-primer-contacto.html'), 'utf8')
 
@@ -173,7 +177,7 @@ async function main() {
     }
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(correo)) {
       console.log(`- [${i}] ${club['Nombre']}: correo no válido ("${correo}"), registro como 'sin-correo'.`)
-      marcar(i, 'sin-correo', 'email inválido o vía web')
+      marcar(i, 'sin-correo', 'email inválido o vía web', club)
       continue
     }
     const html = personalizar(template, club, i)
@@ -185,10 +189,10 @@ async function main() {
     }
     try {
       await transporter.sendMail(mail)
-      marcar(i, 'ok')
+      marcar(i, 'ok', '', club)
       console.log(`- [${i}] ENVIADO a ${correo} (${club['Nombre']}).`)
     } catch (err) {
-      marcar(i, 'fallo', String(err.message || err))
+      marcar(i, 'fallo', String(err.message || err), club)
       console.error(`- [${i}] FALLO ${correo}: ${String(err.message || err)}`)
     }
     await new Promise((r) => setTimeout(r, 4500))
