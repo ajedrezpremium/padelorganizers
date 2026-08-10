@@ -16,6 +16,7 @@ const NavIcon = ({ name, size = 22 }) => {
     chart: <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="20" x2="18" y2="10" /><line x1="12" y1="20" x2="12" y2="4" /><line x1="6" y1="20" x2="6" y2="14" /><rect x="3" y="3" width="18" height="18" rx="2" /></svg>,
     trophy: <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" /><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" /><path d="M4 22h16" /><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22" /><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22" /><path d="M18 2H6v7a6 6 0 0 0 12 0V2z" /></svg>,
     tournament: <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9" /><path d="M12 7v10" /><path d="M7 12h10" /></svg>,
+    map: <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6" /><line x1="8" y1="2" x2="8" y2="18" /><line x1="16" y1="6" x2="16" y2="22" /></svg>,
   };
   return icons[name] || icons.home;
 };
@@ -23,11 +24,11 @@ const NavIcon = ({ name, size = 22 }) => {
 const HeaderPadel = ({ lang = 'es', onLanguageChange }) => {
   const navigate = useNavigate();
 
-  const TOOLTIPS = {
-es: { home: 'Inicio', launch: 'Lanzamiento y ofertas', demo: 'Probar la demo gratuita', dashboard: 'Dashboard de pistas', live: 'Vista en vivo', livepro: 'LiveScore Pro', club: 'Reservar pista en el club', tournament: 'Torneo', analytics: 'Analíticas del torneo', league: 'Ranked League' },
-    en: { home: 'Home', launch: 'Launch & offers', demo: 'Try the free demo', dashboard: 'Courts dashboard', live: 'Live view', livepro: 'LiveScore Pro', club: 'Book a court at the club', tournament: 'Tournament', analytics: 'Tournament analytics', league: 'Ranked League' },
-    fr: { home: 'Accueil', launch: 'Lancement et offres', demo: 'Essayer la démo gratuite', dashboard: 'Tableau des pistes', live: 'Vue en direct', livepro: 'LiveScore Pro', club: 'Réserver une piste', tournament: 'Tournoi', analytics: 'Analyses du tournoi', league: 'Ligue classée' },
-    pt: { home: 'Início', launch: 'Lançamento e ofertas', demo: 'Experimentar a demo grátis', dashboard: 'Dashboard de pistas', live: 'Vista ao vivo', livepro: 'LiveScore Pro', club: 'Reservar pista no clube', tournament: 'Torneio', analytics: 'Análises do torneio', league: 'Liga ranqueada' },
+const TOOLTIPS = {
+    es: { home: 'Inicio', launch: 'Lanzamiento y ofertas', demo: 'Probar la demo gratuita', dashboard: 'Dashboard de pistas', live: 'Vista en vivo', livepro: 'LiveScore Pro', club: 'Reservar pista en el club', tournament: 'Torneo', analytics: 'Analíticas del torneo', league: 'Ranked League', directory: 'Directorio de clubes y escuelas' },
+    en: { home: 'Home', launch: 'Launch & offers', demo: 'Try the free demo', dashboard: 'Courts dashboard', live: 'Live view', livepro: 'LiveScore Pro', club: 'Book a court at the club', tournament: 'Tournament', analytics: 'Tournament analytics', league: 'Ranked League', directory: 'Clubs & schools directory' },
+    fr: { home: 'Accueil', launch: 'Lancement et offres', demo: 'Essayer la démo gratuite', dashboard: 'Tableau des pistes', live: 'Vue en direct', livepro: 'LiveScore Pro', club: 'Réserver une piste', tournament: 'Tournoi', analytics: 'Analyses du tournoi', league: 'Ligue classée', directory: 'Annuaire des clubs et écoles' },
+    pt: { home: 'Início', launch: 'Lançamento e ofertas', demo: 'Experimentar a demo grátis', dashboard: 'Dashboard de pistas', live: 'Vista ao vivo', livepro: 'LiveScore Pro', club: 'Reservar pista no clube', tournament: 'Torneio', analytics: 'Análises do torneio', league: 'Liga ranqueada', directory: 'Diretório de clubes e escolas' },
   };
 
   const t = TOOLTIPS[lang] || TOOLTIPS.es;
@@ -82,6 +83,9 @@ es: { home: 'Inicio', launch: 'Lanzamiento y ofertas', demo: 'Probar la demo gra
         </Link>
         <Link to="/league" data-tooltip={t.league} aria-label={t.league} className="nav-ico" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '9px 11px', color: '#a3e635', textDecoration: 'none' }}>
           <NavIcon name="trophy" />
+        </Link>
+        <Link to="/clubes" data-tooltip={t.directory} aria-label={t.directory} className="nav-ico" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '9px 11px', color: '#2dd4bf', textDecoration: 'none' }}>
+          <NavIcon name="map" />
         </Link>
 
         {/* Modo Local ↔ Nube */}
