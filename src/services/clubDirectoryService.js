@@ -95,7 +95,7 @@ export const CLUBES_SEMILLA = [
   {
     id: 'c-11', name: 'Círculo Cultural Mercantil e Industrial de Vigo', city: 'Vigo', province: 'Pontevedra', country: 'ES',
     address: 'Estrada das Plantas, 121, 36214 Vigo', latitude: 42.216, longitude: -8.723, geo_approx: true,
-    phone: '+34 986 43 33 44', email: 'deportes@circulomercantilvigo.com', website: 'https://circulomercantilvigo.com/',
+    phone: '+34 986 43 33 44', email: 'circulomercantilvigo@gmail.com', website: 'https://circulomercantilvigo.com/',
     courts: '8 pistas de pádel cubiertas (cristal y muro)', indoor: true, grass: 'cristal y muro', booking_platform: 'App Socios / Zona No Socios Web',
     has_school: true, has_shop: false, is_verified: false, is_featured: false, status: 'pendiente_verificacion',
     description: 'Club con 8 pistas cubiertas de pádel, abiertas a no socios.',
@@ -103,7 +103,7 @@ export const CLUBES_SEMILLA = [
   {
     id: 'c-12', name: 'Real Club Náutico de Vigo (Los Abetos)', city: 'Nigrán', province: 'Pontevedra', country: 'ES',
     address: 'Camiño dos Abetos, s/n, 36350 Priegue, Nigrán', latitude: 42.182, longitude: -8.792, geo_approx: true,
-    phone: '+34 986 36 61 00 / 986 44 74 41', email: 'oficinas@rcnauticovigo.com', website: 'http://www.rcnauticovigo.com/',
+    phone: '+34 986 36 61 00 / 986 44 74 41', email: 'conserjenigran@rcnauticovigo.com', website: 'http://www.rcnauticovigo.com/',
     courts: '7 pistas de pádel (4 indoor, 3 outdoor)', indoor: true, grass: 'sintético', booking_platform: 'Gestión Interna Socios / Teléfono',
     has_school: true, has_shop: false, is_verified: false, is_featured: false, status: 'pendiente_verificacion',
     description: 'Instalaciones deportivas Los Abetos del RCN Vigo en Nigrán.',
