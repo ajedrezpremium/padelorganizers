@@ -13,8 +13,11 @@ create table if not exists public.messages (
   created_at timestamptz not null default now()
 );
 
--- La tabla pudo crear antes con tournament_id uuid (chromige del primer modelo);
--- dejamos el tipo coerido a text para aceptar los ids de torneo como 'open-padel-vigo-2026'.
+-- La tabla pudo crear antes con tournament_id uuid + FK a public.tournaments(id)
+-- (esquema original). Soltamos la FK y coerimos a text para aceptar los ids de
+-- torneo como slugs 'open-padel-vigo-2026'. El chat es libre y efímero: no
+-- necesita integridad referencial con torneos persistidos.
+alter table public.messages drop constraint if exists messages_tournament_id_fkey;
 alter table public.messages alter column tournament_id type text;
 alter table public.messages alter column author type text;
 alter table public.messages alter column body type text;
