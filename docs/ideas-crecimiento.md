@@ -215,6 +215,54 @@ a la liga local real).
 
 ---
 
+## 12. Directorio Nacional de Clubes y Escuelas de Pádel
+
+**Qué es:** buscador de clubes y escuelas de pádel de España con tarjetas tipo
+Google Maps: ficha con datos de contacto (teléfono, correo, web), características
+(nº de pistas, indoor/cubierta, césped, plataforma de reserva, escuela/entrenadores)
+y localización geolocalizada con mapa. Ruta pública `/clubes` con filtros por
+ciudad, provincia y tipo (club / escuela / federación).
+
+**Dolor que resuelve:** el usuario no tiene un lugar central para encontrar
+"dónde jugar y recibir clases cerca de mí"; hoy vive en Google Maps + Playtomic +
+páginas webs dispersas, con datos incompletos o desactualizados.
+
+**Por qué encaja con el ecosistema (más que una landing blanda):**
+- **Captación de jugadores gratis (SEO):** es exactamente lo que se busca en Google
+  ("club de pádel en Vigo", "escuela de pádel infantil cerca de mí"). Cada ficha de
+  club puede posicionar. Es el embudo de entrada a toda la plataforma.
+- **Datos ya existentes:** `clientes/leads_vigo.csv` (15 clubes reales de Vigo con
+  contacto, pistas, plataforma y web) es la semilla; la campaña de email en curso
+  convierte cada lead en ficha verificada.
+- **Monetización elegante (no publicidad agresiva):**
+  - Listado destacado / "verificado" premium por club (pago mensual).
+  - Badge "Reserva online aquí" → enlace al motor de reservas del club (y al de la
+    plataforma cuando el club use Padel Organizers).
+  - CPA por socio/torneo nuevo derivado desde la ficha.
+- **Red de datos para otros productos:** alimenta la base de datos de clientes (#5),
+  el Match local (#9) y el CRM (#1) con la ubicación/capacidad de cada club.
+
+**Arquitectura lean (MVP 1 ciudad, no agregador global el día 1):**
+- Tabla `clubes` (nombre, ciudad, provincia, lat/lng, dirección, teléfono, correo,
+  web, pistas, indoor, cesped, plataforma_reserva, escuela, estado) + seed desde el
+  CSV con geocodificación por ciudad (o coords aproximadas marcadas como tales).
+- Ruta `/clubes` con tarjetas + filtros; cada ficha abre detalle con mapa embebido
+  (Leaflet/OpenStreetMap, sin APIKey de Google) y botones de contacto (tel:, mailto:).
+- Estado por ficha: `pendiente_verificacion` → `verificado` (tras la campaña) → `destacado` (de pago).
+- Fase 2 en otra ciudad cuando se dominen 10+ clubes de una; luego extensión nacional.
+
+**Lanzamiento (en paralelo a la campaña de Vigo):**
+1. Cargar los 15 leads de Vigo en la tabla.
+2. Correo de la campaña pide al club confirmar/actualizar su ficha (gancho de
+   conversación), lo que también mejora la entregabilidad del resto de la campaña.
+3. Publicar `/clubes` con Vigo → verificar posicionamiento local ("club de pádel Vigo").
+4. Monetizar en mes 2-3 con listado destacado a los clubes que ya usan la plataforma.
+
+**Momento y prioridad:** candidato a **V1.1** — bajo esfuerzo técnico (tabla + ruta +
+seed ya disponibles) y alto impacto en captación/SEO. Prioridad media-alta.
+
+---
+
 ## Priorización sugerida (ROI x esfuerzo)
 
 | Prioridad | Funcionalidad | Esfuerzo | Impacto | Se apoya en |
@@ -230,6 +278,7 @@ a la liga local real).
 | 9 | Match local / disponibilidad por ciudad | Medio | Llenar horas valle + captar socios | ClubApp (disponibilidad) + matchmaking SQL |
 | 10 | Pagos alternativos (PayPal, Apple/Google Pay) | Medio | Más métodos de cobro, menos fricción | webhook Stripe existente |
 | 11 | Liga de clubes por jornadas + notificaciones | Medio | Eje competitivo local + avisos | RankedLeague + motor torneos |
+| 12 | Directorio Nacional de Clubes/Escuelas | Bajo | SEO + captación de jugadores | leads CSV Vigo + geo + ruta `/clubes` |
 
 ---
 
