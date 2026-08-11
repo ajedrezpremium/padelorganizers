@@ -9,6 +9,7 @@ import {
   listEvaluations, addEvaluation,
   listBonuses, addBonus, useBonus,
   schoolStats, LEVEL_LABELS, CATEGORY_LABELS, LEVELS, CATEGORIES,
+  listDrills, saveDrill, deleteDrill, drillAxisLabels, drillSeed,
 } from '../services/schoolService';
 
 const I18N = {
@@ -24,20 +25,27 @@ const I18N = {
     addCoach: 'Añadir entrenador', saveCoach: 'Guardar entrenador',
     addStudent: 'Añadir alumno', saveStudent: 'Guardar alumno',
     name: 'Nombre', email: 'Email', phone: 'Teléfono', level: 'Nivel', category: 'Categoría',
-    guardian: 'Tutor legal', minorWarning: 'Los menores requieren tutor legal autorizado.',
+    guardian: 'Tutor legal', minorNote: 'Los menores requieren tutor legal autorizado.',
     addGroup: 'Nuevo grupo', saveGroup: 'Guardar grupo', groupName: 'Nombre del grupo',
     capacity: 'Capacidad', schedule: 'Horario', members: 'Componentes', addToGroup: 'Añadir al grupo',
     addClass: 'Nueva clase', saveClass: 'Guardar clase', groupByClass: 'Grupo', coachForClass: 'Entrenador',
     court: 'Pista', dateTime: 'Fecha y hora',
     duration: 'Duración (min)', price: 'Precio (€)', attendance: 'Asistencia', present: 'Presente',
     statusDone: 'Marcar realizada', statusCancelled: 'Cancelar', statusPlanned: 'Reabrir',
-    addEval: 'Evaluar', saveEval: 'Guardar evaluación', technical: 'Técnica', tactical: 'Táctica',
+    addScore: 'Evaluar', saveEval: 'Guardar evaluación', technical: 'Técnica', tactical: 'Táctica',
     movement: 'Movimiento', mental: 'Mental', notes: 'Notas', score: 'Media',
     addBonus: 'Añadir bono', saveBonus: 'Guardar bono', totalClasses: 'Nº de clases', useBonus: 'Usar clase',
     online: '🟢 Nube', local: '🟡 Local', empty: 'Sin datos todavía.', noStudents: 'Sin alumnos. Añade el primero.',
     loading: 'Cargando…', members: 'miembros', coachForGroup: 'Selecciona entrenador',
      groupForClass: 'Grupo', assigned: 'grupos', active: 'Activo', inactive: 'Inactivo',
     noGroups: 'Sin grupos creados.', bonusLeft: 'restantes', bonusTotal: 'clases',
+    tabProgress: '📈 Progresión', tabDrills: '🗂️ Drills',
+    progressSub: 'Evolución del alumno (scouting)', selectStudent: 'Selecciona alumno', lastEval: 'Última evaluación',
+    evalsCount: 'evaluaciones', progressTrend: 'Tendencia', trendUp: 'en mejora', trendDown: 'a reforzar', trendFlat: 'estable',
+    addDrill: 'Nuevo ejercicio', saveDrill: 'Guardar ejercicio', drillName: 'Nombre', drillAxis: 'Ámbito',
+    drillLevel: 'Nivel', drillMin: 'Duración (min)', drillFocus: 'Foco', drillSetup: 'Material / setup',
+    axisTechnical: 'Técnica', axisTactical: 'Táctica', axisMovement: 'Movimiento', axisMental: 'Mental',
+    noDrills: 'Sin ejercicios. Añade el primero.',
   },
   en: {
     title: '🏫 School & Coaches',
@@ -64,6 +72,13 @@ const I18N = {
     loading: 'Loading…', coach: 'Coach',
     coachByClass: 'Coach', attrCoach: 'Assigned coach', membersCount: 'members',
     active: 'Active', inactive: 'Inactive', bonusLeft: 'left', totalCls: 'classes',
+    tabProgress: '📈 Progress', tabDrills: '🗂️ Drills',
+    progressSub: 'Student evolution (scouting)', selectStudent: 'Select student', lastEval: 'Last evaluation',
+    evalsCount: 'evaluations', progressTrend: 'Trend', trendUp: 'improving', trendDown: 'needs work', trendFlat: 'stable',
+    addDrill: 'New drill', saveDrill: 'Save drill', drillName: 'Name', drillAxis: 'Focus area',
+    drillLevel: 'Level', drillMin: 'Duration (min)', drillFocus: 'Focus', drillSetup: 'Equipment / setup',
+    axisTechnical: 'Technical', axisTactical: 'Tactical', axisMovement: 'Movement', axisMental: 'Mental',
+    noDrills: 'No drills. Add the first.',
   },
   fr: {
     title: '🏫 École & Entraîneurs',
@@ -87,6 +102,13 @@ const I18N = {
     addBonus: 'Ajouter bon', saveBonus: 'Enregistrer', totalClasses: 'N séances', useBonus: 'Utiliser',
     online: '🟢 Cloud', local: '🟡 Local', empty: 'Aucune donnée.', noStudents: 'Aucun élève. Ajoutez le premier.',
     loading: 'Chargement…', coach: 'Entraîneur', noGroups: 'Aucun groupe.',
+    tabProgress: '📈 Progression', tabDrills: '🗂️ Drills',
+    progressSub: 'Évolution de l\'élève (scouting)', selectStudent: 'Sélectionner élève', lastEval: 'Dernière évaluation',
+    evalsCount: 'évaluations', progressTrend: 'Tendance', trendUp: 'en progrès', trendDown: 'à renforcer', trendFlat: 'stable',
+    addDrill: 'Nouvel exercice', saveDrill: 'Enregistrer', drillName: 'Nom', drillAxis: 'Domaine',
+    drillLevel: 'Niveau', drillMin: 'Durée (min)', drillFocus: 'Focus', drillSetup: 'Matériel / setup',
+    axisTechnical: 'Technique', axisTactical: 'Tactique', axisMovement: 'Déplacement', axisMental: 'Mental',
+    noDrills: 'Aucun exercice. Ajoutez le premier.',
   },
   pt: {
     title: '🏓 Escola & Treinadores',
@@ -110,6 +132,13 @@ const I18N = {
     addBonus: 'Adicionar bônus', saveBonus: 'Salvar', totalClasses: 'N aulas', useBonus: 'Usar aula',
     online: '🟢 Nuvem', local: '🟡 Local', empty: 'Sem dados.', noStudents: 'Sem alunos. Adicione o primeiro.',
     loading: 'Carregando…', noGroups: 'Sem grupos.',
+    tabProgress: '📈 Progresso', tabDrills: '🗂️ Drills',
+    progressSub: 'Evolução do aluno (scouting)', selectStudent: 'Selecionar aluno', lastEval: 'Última avaliação',
+    evalsCount: 'avaliações', progressTrend: 'Tendência', trendUp: 'em progresso', trendDown: 'a reforçar', trendFlat: 'estável',
+    addDrill: 'Novo exercício', saveDrill: 'Salvar', drillName: 'Nome', drillAxis: 'Domínio',
+    drillLevel: 'Nível', drillMin: 'Duração (min)', drillFocus: 'Foco', drillSetup: 'Material / setup',
+    axisTechnical: 'Técnica', axisTactical: 'Tática', axisMovement: 'Movimento', axisMental: 'Mental',
+    noDrills: 'Sem exercícios. Adicione o primeiro.',
   },
 };
 
@@ -145,6 +174,7 @@ export default function SchoolApp({ lang = 'es' }) {
   const [attendance, setAttendance] = useState([]);
   const [evals, setEvals] = useState([]);
   const [bonuses, setBonuses] = useState([]);
+  const [drills, setDrills] = useState([]);
 
   const emptyStudent = () => ({ id: null, name: '', email: '', phone: '', birthdate: '', ageGroup: 'adults', level: 'BEGINNER', guardianName: '', guardianEmail: '', guardianPhone: '', notes: '' });
   const emptyStudentForm = emptyStudent;
@@ -159,15 +189,20 @@ export default function SchoolApp({ lang = 'es' }) {
   const [classForm, setClassForm] = useState(emptyClass());
   const [evalForm, setEvalForm] = useState(null);
   const [bonusForm, setBonusForm] = useState(emptyBonus());
+  const [drillForm, setDrillForm] = useState({ name: '', axis: 'technical', level: 'BEGINNER', durationMin: 20, category: 'adults', focus: '', setup: '' });
+  const [progressStudent, setProgressStudent] = useState('');
   const [loading, setLoading] = useState(true);
   const [cloudOk, setCloudOk] = useState(false);
 
   const loadAll = async () => {
     setLoading(true);
+    const safe = async (p) => { try { return await p; } catch (e) { return []; } };
+    const d = await safe(listDrills());
+    setDrills(d);
     try {
       const [c, s, g, m, cl, a, e, b] = await Promise.all([
-        listCoaches(), listStudents(), listGroups(), listMembers(),
-        listClasses(), listAttendanceByClass('__all__'), listEvaluations(), listBonuses(),
+        safe(listCoaches()), safe(listStudents()), safe(listGroups()), safe(listMembers()),
+        safe(listClasses()), safe(listAttendanceByClass('__all__')), safe(listEvaluations()), safe(listBonuses()),
       ]);
       setCoaches(c); setStudents(s); setGroups(g); setMembers(m);
       setClasses(cl); setAttendance(a); setEvals(e); setBonuses(b);
@@ -230,6 +265,25 @@ export default function SchoolApp({ lang = 'es' }) {
   };
   const submitEval = async () => { await addEvaluation(evalForm); setEvalForm(null); loadAll(); };
   const submitBonus = async () => { await addBonus({ ...bonusForm, studentId: evalForm ? evalForm.studentId : bonusForm.studentId }); loadAll(); };
+  const submitDrill = async () => { await saveDrill(drillForm); setDrillForm({ name: '', axis: 'technical', level: 'BEGINNER', durationMin: 20, category: 'adults', focus: '', setup: '' }); setDrills(await listDrills()); };
+  const AX = drillAxisLabels(lang);
+  const progressEvals = progressStudent
+    ? evals.filter(ev => ev.studentId === progressStudent).sort((a, b) => String(a.evaluatedOn).localeCompare(String(b.evaluatedOn)))
+    : [];
+  const lastEval = progressEvals[progressEvals.length - 1] || null;
+  const progSeries = progressEvals.map(ev => ({
+    d: String(ev.evaluatedOn).slice(0, 10),
+    avg: ((+ev.technical + +ev.tactical + +ev.movement + +ev.mental) / 4).toFixed(1),
+  }));
+  const trend = (() => {
+    if (progSeries.length < 2) return 'flat';
+    const first = Number(progSeries[0].avg), last = Number(progSeries[progSeries.length - 1].avg);
+    return last > first + 0.3 ? 'up' : last < first - 0.3 ? 'down' : 'flat';
+  })();
+  const progAtt = progressStudent
+    ? attendance.filter(a => a.studentId === progressStudent)
+    : [];
+  const progAttRate = progAtt.length ? Math.round((progAtt.filter(a => a.attended).length / progAtt.length) * 100) : null;
 
   return (
     <div style={{ padding: '30px 0 60px', minHeight: '80vh' }}>
@@ -258,7 +312,7 @@ export default function SchoolApp({ lang = 'es' }) {
 
         {/* tabs */}
         <div style={{ display: 'flex', gap: 8, marginBottom: 20, flexWrap: 'wrap' }}>
-          {[['students', T.tabStudents], ['groups', T.tabGroups], ['classes', T.tabClasses], ['coaches', T.tabCoaches]].map(([k, l]) => (
+          {[['students', T.tabStudents], ['groups', T.tabGroups], ['classes', T.tabClasses], ['coaches', T.tabCoaches], ['progress', T.tabProgress], ['drills', T.tabDrills]].map(([k, l]) => (
             <button key={k} onClick={() => setTab(k)} style={{ ...(tab === k ? btnPrimary : btnGhost) }}>{l}</button>
           ))}
         </div>
@@ -467,6 +521,117 @@ export default function SchoolApp({ lang = 'es' }) {
                       <button onClick={() => deleteCoach(c.id)} style={{ background: 'transparent', border: 'none', color: '#f87171', cursor: 'pointer', fontWeight: 700 }}>✕</button>
                     </div>
                   ))}
+                </div>
+              </div>
+            )}
+
+            {/* ===== PROGRESIÓN / SCOUTING ===== */}
+            {tab === 'progress' && (
+              <div>
+                <div style={card}>
+                  <h3 style={{ fontSize: 16, fontWeight: 800, color: 'var(--padel-text)', marginBottom: 4 }}>{T.tabProgress}</h3>
+                  <p style={{ fontSize: 12, color: 'var(--padel-muted)', margin: '0 0 14px' }}>{T.progressSub}</p>
+                  <select value={progressStudent} onChange={e => setProgressStudent(e.target.value)} style={input}>
+                    <option value="">{T.selectStudent}…</option>
+                    {students.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
+                  </select>
+                </div>
+
+                {progressStudent && !lastEval && (
+                  <div style={{ ...card, marginTop: 12 }}>
+                    <p style={{ fontSize: 13, color: 'var(--padel-muted)', margin: 0 }}>{T.noStudents}</p>
+                  </div>
+                )}
+
+                {progressStudent && lastEval && (
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 16, marginTop: 12 }}>
+                    {/* radar */}
+                    <div style={card}>
+                      <h4 style={{ fontSize: 14, fontWeight: 800, color: 'var(--padel-text)', margin: '0 0 10px' }}>🧭 {T.lastEval} · {lastEval.evaluatedOn}</h4>
+                      <svg viewBox="0 0 220 220" style={{ width: '100%', maxWidth: 280, display: 'block', margin: '0 auto' }}>
+                        {[2, 4, 6, 8, 10].map(r => (
+                          <polygon key={r} points={[
+                            [110, 110 - (r * 9.9)], [110 + (r * 9.9), 110], [110, 110 + (r * 9.9)], [110 - (r * 9.9), 110],
+                          ].map(p => p.join(',')).join(' ')} fill="none" stroke="var(--padel-border)" strokeWidth="1" />
+                        ))}
+                        <polygon points={[
+                          [110, 110 - (Math.min(lastEval.technical, 10) * 9.9)], [110 + (Math.min(lastEval.tactical, 10) * 9.9), 110],
+                          [110, 110 + (Math.min(lastEval.movement, 10) * 9.9)], [110 - (Math.min(lastEval.mental, 10) * 9.9), 110],
+                        ].map(p => p.join(',')).join(' ')} fill="rgba(163,230,53,0.25)" stroke="var(--padel-lime)" strokeWidth="2" />
+                        {[
+                          { pos: [110, 110 - 116], lab: T.axisTechnical, val: lastEval.technical },
+                          { pos: [110 + 116, 110], lab: T.axisTactical, val: lastEval.tactical },
+                          { pos: [110, 110 + 116], lab: T.axisMovement, val: lastEval.movement },
+                          { pos: [110 - 116, 110], lab: T.axisMental, val: lastEval.mental },
+                        ].map(({ pos: [x, y], lab, val }) => (
+                          <g key={lab}>
+                            <line x1={110} y1={110} x2={x} y2={y} stroke="var(--padel-border)" strokeWidth="1" />
+                            <text x={x} y={y + (y === 110 ? 18 : -6)} textAnchor="middle" fontSize="11" fill="var(--padel-muted)" fontWeight="700">{lab}</text>
+                            <text x={x} y={y + (y === 110 ? 34 : 12)} textAnchor="middle" fontSize="12" fill="var(--padel-lime)" fontWeight="900">{val}</text>
+                          </g>
+                        ))}
+                      </svg>
+                    </div>
+
+                    {/* tendencia */}
+                    <div style={card}>
+                      <h4 style={{ fontSize: 14, fontWeight: 800, color: 'var(--padel-text)', margin: '0 0 12px' }}>📉 {T.progressTrend} · {progSeries.length} {T.evalsCount}</h4>
+                      {progSeries.map(pt => (
+                        <div key={pt.d} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
+                          <span style={{ fontSize: 11, color: 'var(--padel-muted)', width: 74, flexShrink: 0 }}>{pt.d.slice(0, -3)}</span>
+                          <div style={{ flex: 1, background: 'var(--padel-hover-bg)', borderRadius: 6, height: 18, overflow: 'hidden' }}>
+                            <div style={{ width: `${pt.avg * 10}%`, height: '100%', background: pt.avg >= 8 ? 'var(--padel-emerald)' : pt.avg >= 6 ? 'var(--padel-lime)' : '#f97316', borderRadius: 6 }} />
+                          </div>
+                          <span style={{ fontSize: 12, fontWeight: 800, color: 'var(--padel-text)', width: 26, textAlign: 'right' }}>{pt.avg}</span>
+                        </div>
+                      ))}
+                      <div style={{ marginTop: 10, padding: '10px 12px', borderRadius: 10, background: trend === 'up' ? 'rgba(163,230,53,0.08)' : trend === 'down' ? 'rgba(248,113,113,0.08)' : 'var(--padel-hover-bg)', fontSize: 13, fontWeight: 700, color: trend === 'up' ? 'var(--padel-lime)' : trend === 'down' ? '#f87171' : 'var(--padel-muted)' }}>
+                        {trend === 'up' ? '📈 ' + T.trendUp : trend === 'down' ? '📉 ' + T.trendDown : '➡️ ' + T.trendFlat}
+                      </div>
+                      {progAttRate !== null && (
+                        <div style={{ marginTop: 8, fontSize: 13, color: 'var(--padel-muted)' }}>
+                          🎯 {T.attendanceRate}: <b style={{ color: 'var(--padel-lime)' }}>{progAttRate}%</b>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* ===== DRILLS / PLANIFICADOR ===== */}
+            {tab === 'drills' && (
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 16 }}>
+                <div style={card}>
+                  <h3 style={{ fontSize: 16, fontWeight: 800, color: 'var(--padel-text)', marginBottom: 14 }}>{T.addDrill}</h3>
+                  <Field label={T.drillName} value={drillForm.name} onChange={e => setDrillForm({ ...drillForm, name: e.target.value })} />
+                  <Field label={T.drillAxis} value={drillForm.axis} options={Object.keys(AX)} onChange={e => setDrillForm({ ...drillForm, axis: e.target.value })} />
+                  <Field label={T.drillLevel} value={drillForm.level} options={LEVELS} onChange={e => setDrillForm({ ...drillForm, level: e.target.value })} />
+                  <Field label={T.drillMin} type="number" value={drillForm.durationMin} onChange={e => setDrillForm({ ...drillForm, durationMin: Number(e.target.value) })} />
+                  <Field label={T.drillFocus} value={drillForm.focus} onChange={e => setDrillForm({ ...drillForm, focus: e.target.value })} />
+                  <Field label={T.drillSetup} value={drillForm.setup} onChange={e => setDrillForm({ ...drillForm, setup: e.target.value })} />
+                  <button onClick={submitDrill} style={{ ...btnPrimary, width: '100%' }}>{T.saveDrill}</button>
+                </div>
+
+                <div style={{ ...card, maxHeight: 560, overflowY: 'auto' }}>
+                  {drills.length === 0 && <p style={{ fontSize: 13, color: 'var(--padel-muted)' }}>{T.noDrills}</p>}
+                  {drills.map(dr => {
+                    const axisKey = Object.keys(AX).find(k => AX[k] === (AX[dr.axis] || dr.axis)) || dr.axis;
+                    const color = { technical: '#60a5fa', tactical: '#f472b6', movement: '#fb923c' }[axisKey] || '#a78bfa';
+                    return (
+                      <div key={dr.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', padding: '10px 0', borderBottom: '1px solid var(--padel-border)' }}>
+                        <div>
+                          <div style={{ fontWeight: 700, color: 'var(--padel-text)', fontSize: 14 }}>
+                            <span style={{ display: 'inline-block', padding: '1px 8px', borderRadius: 8, fontSize: 11, fontWeight: 800, color: '#fff', background: color }}>{AX[dr.axis] || dr.axis}</span>{' '}
+                            {dr.name}
+                          </div>
+                          <div style={{ fontSize: 12, color: 'var(--padel-muted)', marginTop: 4 }}>{dr.focus}</div>
+                          <div style={{ fontSize: 11, color: 'var(--padel-muted)' }}>{L[dr.level] || dr.level} · ⏱ {dr.durationMin}m {dr.setup ? `· ${dr.setup}` : ''}</div>
+                        </div>
+                        <button onClick={async () => { deleteDrill(dr.id); setDrills(await listDrills()); }} style={{ background: 'transparent', border: 'none', color: '#f87171', cursor: 'pointer', fontWeight: 700 }}>✕</button>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             )}

@@ -16,6 +16,7 @@ const LS = {
   attendance: 'padelorganizers-attendance',
   evals: 'padelorganizers-evals',
   bonuses: 'padelorganizers-bonuses',
+  drills: 'padelorganizers-drills',
 };
 
 function readLocal(key) {
@@ -374,9 +375,80 @@ async function tableExists(table) {
   }
 }
 
+// ---------- planificador metodológico (drills) ----------
+// Biblioteca semilla de ejercicios organizada por ámbito (técnica/táctica/movimiento/mental) y nivel.
+const DRILL_SEED = [
+  { id: 'drl-serve', name: 'Saque con direcciones', axis: 'technical', level: 'BEGINNER', durationMin: 20, category: 'adults', focus: 'Precisión del saque de derecha y de revés', setup: '2 pistas, 1 cesta de bolas' },
+  { id: 'drl-band', name: 'Bandeja y víbora', axis: 'technical', level: 'INTERMEDIATE', durationMin: 25, category: 'adults', focus: 'Golpe de bandeja y víbora desde ventaja', setup: '4-8 jugadores, red y rejilla' },
+  { id: 'drl-lobe', name: 'Globo y remate', axis: 'technical', level: 'BEGINNER', durationMin: 20, category: 'adults', focus: 'Globo defensivo y remate por 3', setup: '1 pista, 4-6 jugadores' },
+  { id: 'drl-wall', name: 'Defensa de doble pared', axis: 'movement', level: 'ADVANCED', durationMin: 25, category: 'adults', focus: 'Salida de pared de rey y lateral', setup: 'Pista con panel lateral, 4 jugadores' },
+  { id: 'drl-net', name: 'Red y bote en red', axis: 'tactical', level: 'INTERMEDIATE', durationMin: 20, category: 'adults', focus: 'Posicionamiento en red y red en bandeja', setup: '4 jugadores, contra pared' },
+  { id: 'drl-kids-fun', name: 'Juegos de coordinación', axis: 'movement', level: 'BEGINNER', durationMin: 30, category: 'kids', focus: 'Psicomotricidad con bote y pasos', setup: 'Material infantil, minipista' },
+  { id: 'drl-kids-raquet', name: 'Racket skills', axis: 'technical', level: 'BEGINNER', durationMin: 25, category: 'kids', focus: 'Control de bola con la pala a alturas', setup: 'Material infantil' },
+  { id: 'drl-mental', name: 'Gestión de puntos clave', axis: 'mental', level: 'ADVANCED', durationMin: 15, category: 'adults', focus: 'Rituales y respiración en 30-30', setup: '1 Hora simulada, 4 jugadores' },
+  { id: 'drl-rotate', name: 'Cambios de banda en defensa', axis: 'tactical', level: 'INTERMEDIATE', durationMin: 20, category: 'adults', focus: 'Coordinación en bandejo y desmarque', setup: '4 jugadores, ejercicios por pareja' },
+  { id: 'drl-power', name: 'Volea de definición', axis: 'technical', level: 'PRO', durationMin: 20, category: 'adults', focus: 'Volea ofensiva orientada a banda contraria', setup: '4 jugadores elite' },
+];
+
+export function drillSeed() {
+  return JSON.parse(JSON.stringify(DRILL_SEED));
+}
+
+export async function listDrills({ cloud = isSupabaseConfigured } = {}) {
+  const raw = localStorage.getItem(LS.drills);
+  let local = [];
+  if (raw) { try { local = JSON.parse(raw); } catch { local = []; } }
+  if (!local || !local.length) {
+    writeLocal(LS.drills, DRILL_SEED);
+    return DRILL_SEED;
+  }
+  return local;
+}
+
+export function saveDrill(drill, { cloud = isSupabaseConfigured } = {}) {
+  const local = readLocal(LS.drills);
+  const existing = drill.id ? local.find(d => d.id === drill.id) : null;
+  const rec = {
+    id: drill.id || localId(),
+    name: drill.name || 'Drill',
+    axis: drill.axis || 'technical',
+    level: drill.level || 'BEGINNER',
+    durationMin: drill.durationMin || 20,
+    category: drill.category || 'adults',
+    focus: drill.focus || '',
+    setup: drill.setup || '',
+  };
+  const next = existing ? local.map(d => (d.id === existing.id ? rec : d)) : [...local, rec];
+  writeLocal(LS.drills, next);
+  if (cloud) {
+    supabase.from('school_drills').upsert({
+      id: rec.id, name: rec.name, axis: rec.axis, level: rec.level,
+      duration_min: rec.durationMin, category: rec.category, focus: rec.focus, setup: rec.setup,
+    }, { onConflict: 'id' }).then(() => {}).catch(() => {});
+  }
+  return rec;
+}
+
+export function deleteDrill(id, { cloud = isSupabaseConfigured } = {}) {
+  const next = readLocal(LS.drills).filter(d => d.id !== id);
+  writeLocal(LS.drills, next);
+  if (cloud) {
+    supabase.from('school_drills').delete().eq('id', id).then(() => {}).catch(() => {});
+  }
+  return next;
+}
+
+export function drillAxisLabels(lang = 'es') {
+  return {
+    technical: lang === 'es' ? 'Técnica' : lang === 'fr' ? 'Technique' : lang === 'pt' ? 'Técnica' : 'Technical',
+    tactical: lang === 'es' ? 'Táctica' : lang === 'fr' ? 'Tactique' : lang === 'pt' ? 'Tática' : 'Tactical',
+    movement: lang === 'es' ? 'Movimiento' : lang === 'fr' ? 'Déplacement' : lang === 'pt' ? 'Movimento' : 'Movement',
+    mental: 'Mental',
+  };
+}
+
 // ---------- estadísticas de la escuela ----------
-export function schoolStats({ students, groups, classes, attendance, bonuses }) {
-  const activeGroups = (groups || []).filter(g => g.active).length;
+export function schoolStats({ students, groups, classes, attendance, bonuses }) {  const activeGroups = (groups || []).filter(g => g.active).length;
   const planned = (classes || []).filter(c => c.status === 'planned' && new Date(c.startsOn) > new Date()).length;
   const done = (classes || []).filter(c => c.status === 'done').length;
   const attendedCount = (attendance || []).filter(a => a.attended).length;
