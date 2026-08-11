@@ -26,3 +26,9 @@ dist-ssr
 .env.local
 
 .vercel
+
+# Tokens de verificacion (secretos en claro)
+clientes/tokens_verificacion.json
+clientes/preview-verificacion.html
+clientes/preview-email.html
+clientes/tokens_verificacion.sql

@@ -50,6 +50,8 @@ const I18N = {
     local: '🟡 Vista previa Vigo',
     sourceNote: 'Vigo · campaña de presentación',
     results: 'clubes',
+    claimCta: '¿Eres el club? Verifica tu ficha',
+    verifiedNote: '✅ Ficha verificada: este club aparece antes en la búsqueda y en Google.',
   },
   en: {
     title: '🗺️ Club & School Directory',
@@ -82,6 +84,8 @@ const I18N = {
     local: '🟡 Vigo preview',
     sourceNote: 'Vigo · launch campaign',
     results: 'clubs',
+    claimCta: 'Are you the club? Verify your listing',
+    verifiedNote: '✅ Verified listing: this club appears first in search and on Google.',
   },
   fr: {
     title: '🗺️ Annuaire des Clubs et Écoles',
@@ -114,6 +118,8 @@ const I18N = {
     local: '🟡 Aperçu Vigo',
     sourceNote: 'Vigo · campagne de lancement',
     results: 'clubs',
+    claimCta: 'Vous êtes le club ? Vérifiez votre fiche',
+    verifiedNote: '✅ Fiche vérifiée : ce club apparaît en premier dans la recherche et sur Google.',
   },
   pt: {
     title: '🗺️ Diretório de Clubes e Escolas',
@@ -146,6 +152,8 @@ const I18N = {
     local: '🟡 Pré-visualização Vigo',
     sourceNote: 'Vigo · campanha de lançamento',
     results: 'clubes',
+    claimCta: 'É o clube? Verifique a sua ficha',
+    verifiedNote: '✅ Ficha verificada: este clube aparece primeiro na pesquisa e no Google.',
   },
 };
 
@@ -195,7 +203,7 @@ export default function ClubesDirectory({ lang = 'es' }) {
 
   const filtered = useMemo(() => {
     const needle = q.trim().toLowerCase();
-    return clubes.filter((c) => {
+    const list = clubes.filter((c) => {
       if (city && c.city !== city) return false;
       if (needle) {
         const hay = `${c.name} ${c.city || ''} ${c.province || ''}`.toLowerCase();
@@ -203,7 +211,11 @@ export default function ClubesDirectory({ lang = 'es' }) {
       }
       return true;
     });
+    // Beneficio de ficha verificada: destacados y verificados primero.
+    return [...list].sort((a, b) => rank(b) - rank(a));
   }, [clubes, q, city]);
+
+  const rank = (c) => (c.is_featured ? 2 : c.is_verified ? 1 : 0);
 
   const openSelected = (club) => {
     setSelected(club);
@@ -316,6 +328,19 @@ export default function ClubesDirectory({ lang = 'es' }) {
               {selected.has_shop ? <span style={{ ...cardStyles.feat, ...{ marginRight: 6 } }}>{t.shop}</span> : null}
               {selected.indoor ? <span style={{ ...cardStyles.feat, ...{ marginRight: 6 } }}>{t.indoor}</span> : <span style={{ ...cardStyles.feat, ...{ marginRight: 6 } }}>{t.outdoor}</span>}
             </div>
+            {selected.is_verified ? (
+              <p style={{ margin: '14px 0 0', padding: '12px 14px', background: '#d1fae5', color: '#065f46', borderRadius: 10, fontSize: 14, fontWeight: 600 }}>
+                {t.verifiedNote}
+              </p>
+            ) : null}
+            {!selected.is_verified && online ? (
+              <a
+                href={`/verificar?club=${encodeURIComponent(selected.id || selected.slug)}`}
+                style={{ display: 'inline-block', marginTop: 16, padding: '10px 16px', borderRadius: 10, border: '1px solid var(--padel-emerald)', color: 'var(--padel-emerald-dark)', textDecoration: 'none', fontWeight: 700, fontSize: 14 }}
+              >
+                {t.claimCta} →
+              </a>
+            ) : null}
             <a href={mapsUrl(selected)} target="_blank" rel="noreferrer" style={cardStyles.mapsBtn}>{t.openInMaps} ↗</a>
           </div>
         ) : (

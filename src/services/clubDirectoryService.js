@@ -238,3 +238,38 @@ export async function listCiudades(clubes) {
   const uniq = [...new Set(clubes.map((c) => c.city))].sort();
   return uniq;
 }
+
+// Busca un club por id o slug sobre los datos cargados.
+export function findClub(clubes, idOrSlug) {
+  if (!idOrSlug) return null;
+  return clubes.find((c) => c.id === idOrSlug || c.slug === idOrSlug) || null;
+}
+
+// Solicitar verificación de una ficha (sin token): registra el interés.
+// Debe configurarse Supabase para que funcione de verdad (RPC).
+export async function solicitarVerificacion({ clubId, nombre, email, cargo, notas }) {
+  if (!isSupabaseConfigured) return { ok: false, demo: true };
+  const { data, error } = await supabase.rpc('solicitar_verificacion', {
+    p_club_id: clubId,
+    p_contacto_nombre: nombre || null,
+    p_contacto_email: email || null,
+    p_contacto_cargo: cargo || null,
+    p_notas: notas || null,
+  });
+  if (error) return { ok: false, error };
+  return { ok: true, data };
+}
+
+// Confirmar verificación con el token mágico del correo de la campaña.
+export async function confirmarVerificacion({ clubId, token, nombre, email, cargo }) {
+  if (!isSupabaseConfigured) return { ok: false, demo: true };
+  const { data, error } = await supabase.rpc('confirmar_verificacion', {
+    p_club_id: clubId,
+    p_token: token,
+    p_contacto_nombre: nombre || null,
+    p_contacto_email: email || null,
+    p_contacto_cargo: cargo || null,
+  });
+  if (error) return { ok: false, error };
+  return { ok: true, data };
+}
