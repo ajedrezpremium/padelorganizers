@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth';
+import PadelLegends from './PadelLegends';
 import {
   ensureCurrentLeague, listLeague, upsertEntry, BADGES, badgeIcon, currentSeason,
 } from '../services/leagueService';
@@ -221,6 +222,8 @@ export default function RankedLeague({ lang = 'es', online }) {
           </table>
         </div>
       </div>
+
+      <PadelLegends lang={lang} />
     </div>
   );
 }
