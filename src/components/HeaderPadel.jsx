@@ -15,9 +15,9 @@ const NavIcon = ({ name, size = 22 }) => {
     club: <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><line x1="2" y1="12" x2="22" y2="12" /><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" /></svg>,
     chart: <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="20" x2="18" y2="10" /><line x1="12" y1="20" x2="12" y2="4" /><line x1="6" y1="20" x2="6" y2="14" /><rect x="3" y="3" width="18" height="18" rx="2" /></svg>,
     trophy: <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" /><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" /><path d="M4 22h16" /><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22" /><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22" /><path d="M18 2H6v7a6 6 0 0 0 12 0V2z" /></svg>,
-    tournament: <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9" /><path d="M12 7v10" /><path d="M7 12h10" /></svg>,
     map: <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6" /><line x1="8" y1="2" x2="8" y2="18" /><line x1="16" y1="6" x2="16" y2="22" /></svg>,
     shop: <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" /><line x1="3" y1="6" x2="21" y2="6" /><path d="M16 10a4 4 0 0 1-8 0" /></svg>,
+    raquet: <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round"><path d="M12 18.5 6.5 13A12 12 0 0 1 14.4 3.2h4.4v4.4A12 12 0 0 1 12 18.5z" /><line x1="12" y1="18.5" x2="9.5" y2="21" /><line x1="5.5" y1="14" x2="3.5" y2="16" /><path d="M9 13h.01" /><path d="M12 10h.01" /><path d="M15 7h.01" /></svg>,
   };
   return icons[name] || icons.home;
 };
@@ -63,6 +63,15 @@ const TOOLTIPS = {
 <nav style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
         <Link to="/" data-tooltip={t.home} aria-label={t.home} className="nav-ico" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '9px 11px', color: 'var(--padel-muted)', textDecoration: 'none' }}>
           <NavIcon name="home" />
+        </Link>
+        <Link to="/torneo" data-tooltip={t.tournament} aria-label={t.tournament} style={{
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          width: 38, height: 38, borderRadius: 10,
+          background: 'linear-gradient(135deg, #34d399 0%, #059669 100%)',
+          boxShadow: '0 4px 12px rgba(16, 185, 129, 0.35)',
+          textDecoration: 'none',
+        }}>
+          <NavIcon name="raquet" size={20} />
         </Link>
         <Link to="/lanzamiento" data-tooltip={t.launch} aria-label={t.launch} className="nav-ico" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '9px 11px', color: '#fb7185', textDecoration: 'none' }}>
           <NavIcon name="rocket" />
@@ -134,30 +143,7 @@ const TOOLTIPS = {
           ))}
         </div>
 
-        <button
-          onClick={() => navigate('/torneo')}
-          data-tooltip={t.tournament}
-          title={t.tournament}
-          aria-label={t.tournament}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '6px',
-            background: 'linear-gradient(135deg, var(--padel-emerald) 0%, var(--padel-emerald-dark) 100%)',
-            color: '#fff',
-            border: 'none',
-            padding: '10px 18px',
-            borderRadius: '10px',
-            fontWeight: 700,
-            fontSize: '13px',
-            cursor: 'pointer',
-            boxShadow: '0 4px 12px rgba(16, 185, 129, 0.3)'
-          }}
-        >
-          <NavIcon name="tournament" size={16} />
-          {t.tournament}
-        </button>
-      </nav>
+        </nav>
     </header>
   );
 };
