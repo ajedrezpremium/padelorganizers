@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="500" viewBox="0 0 1500 500">
+  <defs>
+    <radialGradient id="g1" cx="0.16" cy="0.3" r="0.95">
+      <stop offset="0" stop-color="#10b981" stop-opacity="0.42"/>
+      <stop offset="1" stop-color="#071210" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="g2" cx="0.9" cy="0.12" r="0.6">
+      <stop offset="0" stop-color="#84cc16" stop-opacity="0.26"/>
+      <stop offset="1" stop-color="#071210" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fde047"/>
+      <stop offset="0.5" stop-color="#eab308"/>
+      <stop offset="1" stop-color="#a16207"/>
+    </linearGradient>
+    <linearGradient id="word" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#fde047"/>
+      <stop offset="1" stop-color="#eab308"/>
+    </linearGradient>
+  </defs>
+  <rect width="1500" height="500" fill="#071210"/>
+  <rect width="1500" height="500" fill="url(#g1)"/>
+  <rect width="1500" height="500" fill="url(#g2)"/>
+  <!-- líneas de pista -->
+  <g stroke="#2dd4bf" stroke-opacity="0.22">
+    <line x1="0" y1="400" x2="1500" y2="400"/>
+    <line x1="0" y1="100" x2="1500" y2="100"/>
+    <line x1="1010" y1="100" x2="1010" y2="400" stroke-opacity="0.10"/>
+  </g>
+  <!-- Pala -->
+  <g transform="translate(170,250) scale(3.1)">
+    <path d="M32 13c10.5 0 19 7.6 19 17.6 0 14.4-8 23.4-19 28.4-11-5-19-14-19-28.4C13 20.6 21.5 13 32 13z" fill="url(#gold)"/>
+    <circle cx="23" cy="22" r="2" fill="rgba(0,0,0,0.18)"/>
+    <circle cx="30" cy="19" r="2" fill="rgba(0,0,0,0.18)"/>
+    <circle cx="37" cy="22" r="2" fill="rgba(0,0,0,0.18)"/>
+    <circle cx="26" cy="28" r="2" fill="rgba(0,0,0,0.18)"/>
+    <circle cx="33" cy="28" r="2" fill="rgba(0,0,0,0.18)"/>
+    <circle cx="40" cy="28" r="2" fill="rgba(0,0,0,0.18)"/>
+    <rect x="29.4" y="44" width="5.2" height="12" rx="2.2" fill="url(#gold)"/>
+  </g>
+  <!-- Wordmark -->
+  <text x="380" y="225" font-family="Inter, sans-serif" font-size="86" font-weight="800" fill="#f0fdf4" letter-spacing="1">PADEL </text>
+  <text x="380" y="330" font-family="Inter, sans-serif" font-size="86" font-weight="800" fill="url(#word)" letter-spacing="1">ORGANIZERS</text>
+  <text x="388" y="396" font-family="Inter, sans-serif" font-size="24" font-weight="700" fill="#fde047" letter-spacing="7">COURTMANAGER® AI</text>
+  <!-- Chip URL -->
+  <g transform="translate(1180,225)">
+    <rect x="0" y="0" width="210" height="70" rx="35" fill="#0e1e1b" stroke="#10b981" stroke-opacity="0.5" stroke-width="2"/>
+    <text x="105" y="45" font-family="Inter, sans-serif" font-size="24" font-weight="700" fill="#2dd4bf" text-anchor="middle">vercel.app</text>
+  </g>
+  <text x="140" y="460" font-family="Inter, sans-serif" font-size="22" font-weight="700" fill="#94a3b8" letter-spacing="3">@PadelOrganizers</text>
+</svg>

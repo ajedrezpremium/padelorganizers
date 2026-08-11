@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1584" height="396" viewBox="0 0 1584 396">
+  <defs>
+    <radialGradient id="g1" cx="0.14" cy="0.25" r="0.9">
+      <stop offset="0" stop-color="#10b981" stop-opacity="0.40"/>
+      <stop offset="1" stop-color="#071210" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="g2" cx="0.92" cy="0.1" r="0.6">
+      <stop offset="0" stop-color="#84cc16" stop-opacity="0.25"/>
+      <stop offset="1" stop-color="#071210" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fde047"/>
+      <stop offset="0.5" stop-color="#eab308"/>
+      <stop offset="1" stop-color="#a16207"/>
+    </linearGradient>
+    <linearGradient id="word" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#fde047"/>
+      <stop offset="1" stop-color="#eab308"/>
+    </linearGradient>
+  </defs>
+  <rect width="1584" height="396" fill="#071210"/>
+  <rect width="1584" height="396" fill="url(#g1)"/>
+  <rect width="1584" height="396" fill="url(#g2)"/>
+  <!-- líneas de pista decorativas -->
+  <g stroke="#2dd4bf" stroke-opacity="0.22">
+    <line x1="0" y1="316" x2="1584" y2="316"/>
+    <line x1="0" y1="80"  x2="1584" y2="80"/>
+    <line x1="1080" y1="80" x2="1080" y2="316" stroke-opacity="0.10"/>
+    <line x1="1260" y1="80" x2="1260" y2="316" stroke-opacity="0.10"/>
+  </g>
+  <!-- Pala -->
+  <g transform="translate(150,198) scale(2.6)">
+    <path d="M32 13c10.5 0 19 7.6 19 17.6 0 14.4-8 23.4-19 28.4-11-5-19-14-19-28.4C13 20.6 21.5 13 32 13z" fill="url(#gold)"/>
+    <circle cx="23" cy="22" r="2" fill="rgba(0,0,0,0.18)"/>
+    <circle cx="30" cy="19" r="2" fill="rgba(0,0,0,0.18)"/>
+    <circle cx="37" cy="22" r="2" fill="rgba(0,0,0,0.18)"/>
+    <circle cx="26" cy="28" r="2" fill="rgba(0,0,0,0.18)"/>
+    <circle cx="33" cy="28" r="2" fill="rgba(0,0,0,0.18)"/>
+    <circle cx="40" cy="28" r="2" fill="rgba(0,0,0,0.18)"/>
+    <rect x="29.4" y="44" width="5.2" height="12" rx="2.2" fill="url(#gold)"/>
+  </g>
+  <!-- Wordmark -->
+  <text x="330" y="178" font-family="Inter, sans-serif" font-size="74" font-weight="800" fill="#f0fdf4" letter-spacing="1">PADEL </text>
+  <text x="330" y="262" font-family="Inter, sans-serif" font-size="74" font-weight="800" fill="url(#word)" letter-spacing="1">ORGANIZERS</text>
+  <text x="336" y="316" font-family="Inter, sans-serif" font-size="22" font-weight="700" fill="#fde047" letter-spacing="6">COURTMANAGER® AI</text>
+  <!-- URL derecha -->
+  <g transform="translate(1000,205)">
+    <rect x="0" y="0" width="420" height="64" rx="32" fill="#0e1e1b" stroke="#10b981" stroke-opacity="0.5" stroke-width="2"/>
+    <text x="210" y="42" font-family="Inter, sans-serif" font-size="30" font-weight="700" fill="#2dd4bf" text-anchor="middle" letter-spacing="1">padelorganizers.vercel.app</text>
+  </g>
+  <text x="1210" y="330" font-family="Inter, sans-serif" font-size="20" font-weight="700" fill="#94a3b8" text-anchor="middle" letter-spacing="2">🎾 Torneos · CourtManager · Punto de Oro</text>
+</svg>
