@@ -454,7 +454,7 @@ export default function LandingPadel({ lang = 'es' }) {
               🚀 {T.ctaDemoStrong}
             </button>
             <button onClick={() => navigate('/clubes')} style={{ background: 'rgba(45,212,191,0.12)', border: '1px solid rgba(45,212,191,0.4)', color: 'var(--padel-teal, #2dd4bf)', padding: '16px 26px', borderRadius: '12px', fontWeight: 800, fontSize: '15px', cursor: 'pointer' }}>
-              🗺️ Directorio · 65 clubes
+              🗺️ Directorio · 105 clubes
             </button>
             <button onClick={() => navigate('/tienda')} style={{ background: 'rgba(251,191,36,0.12)', border: '1px solid rgba(251,191,36,0.4)', color: '#fbbf24', padding: '16px 26px', borderRadius: '12px', fontWeight: 800, fontSize: '15px', cursor: 'pointer' }}>
               🛒 Tienda del Circuito
@@ -695,7 +695,8 @@ export default function LandingPadel({ lang = 'es' }) {
         © 2026 {T.footer} ·{' '}
         <a href="/clubes" style={{ color: '#2dd4bf', textDecoration: 'none', fontWeight: 600 }}>Directorio de clubes</a> ·{' '}
         <a href="/tienda" style={{ color: '#fbbf24', textDecoration: 'none', fontWeight: 600 }}>Tienda</a> ·{' '}
-        <a href="/legal" style={{ color: '#38bdf8', textDecoration: 'none', fontWeight: 600 }}>Aviso legal / Cookies</a>
+        <a href="/legal" style={{ color: '#38bdf8', textDecoration: 'none', fontWeight: 600 }}>Aviso legal / Cookies</a> ·{' '}
+        <a href="https://www.padelfip.com/es/fip-rankings/" target="_blank" rel="noopener noreferrer" style={{ color: '#a3e635', textDecoration: 'none', fontWeight: 600 }}>Ranking mundial FIP ↗</a>
       </footer>
     </div>
   );

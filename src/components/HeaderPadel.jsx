@@ -60,9 +60,45 @@ const TOOLTIPS = {
         <LogoPadel size={30} tagline="COURTMANAGER® AI" />
       </div>
 
-      <nav style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
-        <Link to="/" data-tooltip={t.home} className="nav-ico" aria-label={t.home} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '9px 11px', color: 'var(--padel-muted)', textDecoration: 'none' }}>
+<nav style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
+        <Link to="/" data-tooltip={t.home} aria-label={t.home} className="nav-ico" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '9px 11px', color: 'var(--padel-muted)', textDecoration: 'none' }}>
           <NavIcon name="home" />
+        </Link>
+        <Link to="/lanzamiento" data-tooltip={t.launch} aria-label={t.launch} className="nav-ico" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '9px 11px', color: '#fb7185', textDecoration: 'none' }}>
+          <NavIcon name="rocket" />
+        </Link>
+
+        {/* Clúster Negocio (emprendedor-dirigente) */}
+        <span style={{ width: 1, height: 22, background: 'var(--padel-border)', margin: '0 4px', opacity: 0.6 }} aria-hidden="true" />
+        <Link to="/dashboard" data-tooltip={t.dashboard} aria-label={t.dashboard} className="nav-ico" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '9px 11px', color: '#10b981', textDecoration: 'none' }}>
+          <NavIcon name="dashboard" />
+        </Link>
+        <Link to="/club" data-tooltip={t.club} aria-label={t.club} className="nav-ico" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '9px 11px', color: '#10b981', textDecoration: 'none' }}>
+          <NavIcon name="club" />
+        </Link>
+        <Link to="/analytics" data-tooltip={t.analytics} aria-label={t.analytics} className="nav-ico" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '9px 11px', color: '#38bdf8', textDecoration: 'none' }}>
+          <NavIcon name="chart" />
+        </Link>
+
+        {/* Clúster Competición (técnico + jugador) */}
+        <span style={{ width: 1, height: 22, background: 'var(--padel-border)', margin: '0 4px', opacity: 0.6 }} aria-hidden="true" />
+        <Link to="/livepro" data-tooltip={t.livepro} aria-label={t.livepro} className="nav-ico" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '9px 11px', color: '#fb7185', textDecoration: 'none' }}>
+          <NavIcon name="scoreboard" />
+        </Link>
+        <Link to="/live" data-tooltip={t.live} aria-label={t.live} className="nav-ico" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '9px 11px', color: 'var(--padel-muted)', textDecoration: 'none' }}>
+          <NavIcon name="live" />
+        </Link>
+        <Link to="/league" data-tooltip={t.league} aria-label={t.league} className="nav-ico" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '9px 11px', color: '#a3e635', textDecoration: 'none' }}>
+          <NavIcon name="trophy" />
+        </Link>
+
+        {/* Clúster Descubre (jugador) */}
+        <span style={{ width: 1, height: 22, background: 'var(--padel-border)', margin: '0 4px', opacity: 0.6 }} aria-hidden="true" />
+        <Link to="/clubes" data-tooltip={t.directory} aria-label={t.directory} className="nav-ico" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '9px 11px', color: '#2dd4bf', textDecoration: 'none' }}>
+          <NavIcon name="map" />
+        </Link>
+        <Link to="/tienda" data-tooltip={t.shop} aria-label={t.shop} className="nav-ico" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '9px 11px', color: '#fbbf24', textDecoration: 'none' }}>
+          <NavIcon name="shop" />
         </Link>
         <Link to="/lanzamiento" data-tooltip={t.launch} aria-label={t.launch} className="nav-ico" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '9px 11px', color: '#fb7185', textDecoration: 'none' }}>
           <NavIcon name="rocket" />

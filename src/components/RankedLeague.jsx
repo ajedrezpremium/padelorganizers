@@ -23,6 +23,8 @@ const I18N = {
     local: '🟡 Local',
     loggedAs: 'Registrado como',
     resetNote: 'Se reinicia cada mes automáticamente.',
+    fip: 'Ranking mundial FIP', 
+    fipHint: 'Ranking oficial de la Federación Internacional de Pádel (fuente)',
   },
   en: {
     title: '🏆 Ranked League',
@@ -42,6 +44,8 @@ const I18N = {
     local: '🟡 Local',
     loggedAs: 'Signed in as',
     extra: 'Resets automatically every month.',
+    fip: 'FIP World Ranking',
+    fipHint: 'Official ranking of the International Padel Federation (source)',
   },
   fr: {
     title: '🏆 Ranked League',
@@ -59,6 +63,8 @@ const I18N = {
     local: '🟡 Local',
     loggedAs: 'Connecté en tant que',
     extra: 'Réinitialisation automatique chaque mois.',
+    fip: 'Classement mondial FIP',
+    fipHint: 'Classement officiel de la Fédération Internationale de Padel (source)',
   },
   pt: {
     title: '🏆 Ranked League',
@@ -76,6 +82,8 @@ const I18N = {
     local: '🟡 Local',
     loggedAs: 'Conectado como',
     extra: 'Reinicia automaticamente todos os meses.',
+    fip: 'Ranking mundial FIP',
+    fipHint: 'Ranking oficial da Federação Internacional de Pádel (fonte)',
   },
 };
 
@@ -131,9 +139,20 @@ export default function RankedLeague({ lang = 'es', online }) {
           <h2 style={{ fontSize: '22px', fontWeight: 900, color: '#fff', margin: 0 }}>{T.title}</h2>
           <span style={{ fontSize: '13px', color: '#94a3b8' }}>{T.subtitle}</span>
         </div>
-        <span style={{ fontSize: '12px', color: isCloud ? '#84cc16' : '#fbbf24', fontWeight: 700 }}>
-          {isCloud ? T.online : T.local} · {T.season} {currentSeason()}
-        </span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+          <span style={{ fontSize: '12px', color: isCloud ? '#84cc16' : '#fbbf24', fontWeight: 700 }}>
+            {isCloud ? T.online : T.local} · {T.season} {currentSeason()}
+          </span>
+          <a
+            href="https://www.padelfip.com/es/fip-rankings/"
+            target="_blank"
+            rel="noopener noreferrer"
+            title={T.fipHint}
+            style={{ fontSize: '12px', fontWeight: 700, color: '#a3e635', textDecoration: 'none', border: '1px solid rgba(163,230,53,0.35)', borderRadius: '8px', padding: '4px 10px', background: 'rgba(163,230,53,0.08)' }}
+          >
+            🌍 {T.fip} ↗
+          </a>
+        </div>
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'minmax(260px,0.9fr) 1.3fr', gap: 20, alignItems: 'start' }}>
