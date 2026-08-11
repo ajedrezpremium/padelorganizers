@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import AuthModal from './AuthModal';
 import { useAuth } from '../hooks/useAuth';
 
@@ -30,16 +31,23 @@ export default function UserMenu({ lang = 'es' }) {
   }
 
   const display = profile?.display_name || user.email?.split('@')[0] || 'Jugador';
+  const levelText = profile?.level ? `${display} · Nivel ${profile.level} · ELO ${profile.elo || 1500}` : `${display} · ELO ${profile?.elo || 1500}`;
 
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'rgba(132,204,22,0.1)', border: '1px solid rgba(132,204,22,0.3)', borderRadius: 12, padding: '6px 14px' }}>
+      <Link
+        to="/perfil"
+        data-tooltip={levelText}
+        aria-label={levelText}
+        className="nav-ico"
+        style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'rgba(132,204,22,0.1)', border: '1px solid rgba(132,204,22,0.3)', borderRadius: 12, padding: '6px 14px', textDecoration: 'none', color: 'inherit' }}
+      >
         <span style={{ fontSize: 18 }}>🏅</span>
         <div style={{ textAlign: 'left' }}>
           <div style={{ fontSize: 13, fontWeight: 800, color: '#fff', lineHeight: 1.1 }}>{display}</div>
           <div style={{ fontSize: 11, color: '#84cc16', fontWeight: 700 }}>{profile?.level ? `Nivel ${profile.level}` : '🔥 Elo ' + (profile?.elo || 1500)}</div>
         </div>
-      </div>
+      </Link>
       <button onClick={signOut} style={{ background: 'none', border: '1px solid rgba(255,255,255,0.2)', color: '#94a3b8', padding: '6px 12px', borderRadius: 10, fontSize: 12, fontWeight: 700, cursor: 'pointer' }}>
         {T.logout}
       </button>
