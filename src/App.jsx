@@ -9,6 +9,7 @@ import PadelScoreBoard from './components/PadelScoreBoard';
 import LiveView from './components/LiveView';
 import LiveScorePro from './components/LiveScorePro';
 import ClubApp from './components/ClubApp';
+import MembersApp from './components/MembersApp';
 import AnalyticsBoard from './components/AnalyticsBoard';
 import RankedLeague from './components/RankedLeague';
 import TorneoOrganizer from './components/TorneoOrganizer';
@@ -34,6 +35,7 @@ export default function App() {
         <Route path="/live" element={<LiveView lang={lang} />} />
         <Route path="/livepro" element={<LiveScorePro lang={lang} state={store} />} />
         <Route path="/club" element={<ClubApp lang={lang} />} />
+        <Route path="/socios" element={<MembersApp lang={lang} />} />
         <Route path="/torneo" element={<TorneoOrganizer lang={lang} />} />
         <Route path="/analytics" element={<AnalyticsBoard lang={lang} state={store} />} />
         <Route path="/league" element={<RankedLeague lang={lang} />} />
