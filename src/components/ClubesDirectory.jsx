@@ -201,6 +201,8 @@ export default function ClubesDirectory({ lang = 'es' }) {
 
   const ciudades = useMemo(() => [...new Set(clubes.map((c) => c.city))].sort(), [clubes]);
 
+  const rank = (c) => (c.is_featured ? 2 : c.is_verified ? 1 : 0);
+
   const filtered = useMemo(() => {
     const needle = q.trim().toLowerCase();
     const list = clubes.filter((c) => {
@@ -214,8 +216,6 @@ export default function ClubesDirectory({ lang = 'es' }) {
     // Beneficio de ficha verificada: destacados y verificados primero.
     return [...list].sort((a, b) => rank(b) - rank(a));
   }, [clubes, q, city]);
-
-  const rank = (c) => (c.is_featured ? 2 : c.is_verified ? 1 : 0);
 
   const openSelected = (club) => {
     setSelected(club);
