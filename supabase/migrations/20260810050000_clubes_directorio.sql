@@ -99,7 +99,7 @@ values
    'Club con 8 pistas cubiertas de pádel, abiertas a no socios.'),
   ('Real Club Náutico de Vigo (Los Abetos)', 'real-club-nautico-vigo-los-abetos', 'Nigrán', 'Pontevedra',
    'Camiño dos Abetos, s/n, 36350 Priegue, Nigrán', 42.150131, -8.793221, false,
-   '+34 986 36 61 00 / 986 44 74 41', 'gestiondeportiva@rcnauticovigo.com', 'http://www.rcnauticovigo.com/',
+   '+34 986 36 61 00 / 986 44 74 41', 'info@rcnauticovigo.com', 'http://www.rcnauticovigo.com/',
    '7 pistas de pádel (4 indoor, 3 outdoor)', true, 'sintético', 'Gestión Interna Socios / Teléfono', true, false, false, 'pendiente_verificacion',
    'Instalaciones deportivas Los Abetos del RCN Vigo en Nigrán.'),
   ('Club de Campo de Vigo', 'club-de-campo-de-vigo', 'Vigo', 'Pontevedra',

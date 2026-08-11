@@ -103,7 +103,7 @@ export const CLUBES_SEMILLA = [
   {
     id: 'c-12', name: 'Real Club Náutico de Vigo (Los Abetos)', city: 'Nigrán', province: 'Pontevedra', country: 'ES',
     address: 'Camiño dos Abetos, s/n, 36350 Priegue, Nigrán', latitude: 42.150131, longitude: -8.793221, geo_approx: false,
-    phone: '+34 986 36 61 00 / 986 44 74 41', email: 'gestiondeportiva@rcnauticovigo.com', website: 'http://www.rcnauticovigo.com/',
+    phone: '+34 986 36 61 00 / 986 44 74 41', email: 'info@rcnauticovigo.com', website: 'http://www.rcnauticovigo.com/',
     courts: '7 pistas de pádel (4 indoor, 3 outdoor)', indoor: true, grass: 'sintético', booking_platform: 'Gestión Interna Socios / Teléfono',
     has_school: true, has_shop: false, is_verified: false, is_featured: false, status: 'pendiente_verificacion',
     description: 'Instalaciones deportivas Los Abetos del RCN Vigo en Nigrán.',
