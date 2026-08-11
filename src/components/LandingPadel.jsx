@@ -453,6 +453,12 @@ export default function LandingPadel({ lang = 'es' }) {
             <button onClick={() => navigate('/demo')} className="pulse-glow" style={{ background: 'linear-gradient(135deg, var(--padel-emerald) 0%, var(--padel-emerald-dark) 100%)', color: '#fff', border: 'none', padding: '16px 30px', borderRadius: '12px', fontWeight: 800, fontSize: '16px', cursor: 'pointer' }}>
               🚀 {T.ctaDemoStrong}
             </button>
+            <button onClick={() => navigate('/clubes')} style={{ background: 'rgba(45,212,191,0.12)', border: '1px solid rgba(45,212,191,0.4)', color: 'var(--padel-teal, #2dd4bf)', padding: '16px 26px', borderRadius: '12px', fontWeight: 800, fontSize: '15px', cursor: 'pointer' }}>
+              🗺️ Directorio · 65 clubes
+            </button>
+            <button onClick={() => navigate('/tienda')} style={{ background: 'rgba(251,191,36,0.12)', border: '1px solid rgba(251,191,36,0.4)', color: '#fbbf24', padding: '16px 26px', borderRadius: '12px', fontWeight: 800, fontSize: '15px', cursor: 'pointer' }}>
+              🛒 Tienda del Circuito
+            </button>
           </div>
           <p style={{ fontSize: '13px', color: 'var(--padel-muted)', marginTop: '12px', fontWeight: 600 }}>{T.ctaDemoSub}</p>
         </div>
@@ -687,6 +693,8 @@ export default function LandingPadel({ lang = 'es' }) {
       {/* FOOTER */}
       <footer style={{ padding: '24px', textAlign: 'center', fontSize: '13px', color: 'var(--padel-muted)', borderTop: '1px solid var(--padel-border)' }}>
         © 2026 {T.footer} ·{' '}
+        <a href="/clubes" style={{ color: '#2dd4bf', textDecoration: 'none', fontWeight: 600 }}>Directorio de clubes</a> ·{' '}
+        <a href="/tienda" style={{ color: '#fbbf24', textDecoration: 'none', fontWeight: 600 }}>Tienda</a> ·{' '}
         <a href="/legal" style={{ color: '#38bdf8', textDecoration: 'none', fontWeight: 600 }}>Aviso legal / Cookies</a>
       </footer>
     </div>
