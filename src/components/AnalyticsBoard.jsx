@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import {
   forecastFinalStandings, eloSeries, matchupHeatmap, tournamentKpis,
 } from '../services/analyticsService';
+import { getInitialDemoTournamentData } from '../services/padelEngine';
 
 const I18N = {
   es: {
@@ -78,7 +79,11 @@ function Bar({ pct, color }) {
 
 export default function AnalyticsBoard({ state, lang = 'es' }) {
   const T = I18N[lang] || I18N.es;
-  const data = state || {};
+  // Si el store está vacío o sin parejas (p.ej. torneo recién creado), cayame
+  // a los datos demo para que la página nunca salga en blanco.
+  const tooEmpty = !state || !(state.pairs || state.players || state.matches)
+    || ((state.pairs && state.pairs.length === 0) && (state.players && state.players.length === 0));
+  const data = tooEmpty ? getInitialDemoTournamentData() : (state || {});
   const kpis = useMemo(() => tournamentKpis(data), [data]);
   const forecast = useMemo(() => forecastFinalStandings(data), [data]);
   const heatmap = useMemo(() => matchupHeatmap(data), [data]);
@@ -97,10 +102,10 @@ export default function AnalyticsBoard({ state, lang = 'es' }) {
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px,1fr))', gap: 14, marginBottom: 20 }}>
         {[
-          ['\U0001F3C6', T.kpiLeader, kpis.leader],
-          ['\u2605', T.kpiBest, kpis.bestPlayer],
-          ['\U0001F3C6', T.kpiAvg, kpis.avgElo],
-          ['\u2697', T.kpiPairs, kpis.pairs],
+          ['🏆', T.kpiLeader, kpis.leader],
+          ['⭐', T.kpiBest, kpis.bestPlayer],
+          ['📈', T.kpiAvg, kpis.avgElo],
+          ['👥', T.kpiPairs, kpis.pairs],
         ].map(([icon, label, val], i) => (
           <div key={i} style={card}>
             <div style={{ fontSize: 22 }}>{icon}</div>
@@ -194,8 +199,9 @@ export default function AnalyticsBoard({ state, lang = 'es' }) {
 }
 
 function pairLabel(data, row) {
-  const players = (data.players || []).filter(x => x.pairId === row.pairId);
-  return players.length ? players.map(x => (x.name || '').split(' ')[0]).join(' / ') : (row.pair1Names || row.pairId || 'Equipo');
+  const pairId = row.pairId || row.id;
+  const players = (data.players || []).filter(x => x.pairId === pairId);
+  return players.length ? players.map(x => (x.name || '').split(' ')[0]).join(' / ') : (row.pair1Names || row.pair1 || row.pair2 ? [row.pair1, row.pair2].filter(Boolean).map(n => (n || '').split(' ')[0]).join(' / ') : 'Equipo');
 }
 function shortPair(name) {
   const n = (name || '') === '—' ? '—' : (name || '').split('/')[0];
