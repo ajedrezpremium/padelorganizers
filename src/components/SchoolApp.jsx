@@ -18,7 +18,8 @@ const I18N = {
     statsTitle: 'Panel de la escuela',
     students: 'Alumnos', groups: 'Grupos activos', planned: 'Próximas', done: 'Realizadas',
     attendanceRate: 'Asistencia', minors: 'Menores', bonusAvailable: 'Bonos disponibles',
-    tabStudents: '👥 Alumnos', tabGroups: '👨‍🏫 Grupos', tabClasses: '🗓️ Clases', tabCoaches: '📈 Progresión',
+    tabStudents: '👥 Alumnos', tabGroups: '👨‍🏫 Grupos', tabClasses: '🗓️ Clases', tabCoaches: '👨‍🔧 Entrenadores',
+    overlap: 'Solapamientos detectados', noOverlap: 'No hay solapamientos entre clases.',
     coachName: 'Nombre', coachEmail: 'Email', coachPhone: 'Teléfono', coachSpecialty: 'Especialidad',
     addCoach: 'Añadir entrenador', saveCoach: 'Guardar entrenador',
     addStudent: 'Añadir alumno', saveStudent: 'Guardar alumno',
@@ -35,7 +36,7 @@ const I18N = {
     addBonus: 'Añadir bono', saveBonus: 'Guardar bono', totalClasses: 'Nº de clases', useBonus: 'Usar clase',
     online: '🟢 Nube', local: '🟡 Local', empty: 'Sin datos todavía.', noStudents: 'Sin alumnos. Añade el primero.',
     loading: 'Cargando…', members: 'miembros', coachForGroup: 'Selecciona entrenador',
-    groupForClass: 'Grupo', coachForClass: 'Entrenador', assigned: 'grupos', active: 'Activo', inactive: 'Inactivo',
+     groupForClass: 'Grupo', assigned: 'grupos', active: 'Activo', inactive: 'Inactivo',
     noGroups: 'Sin grupos creados.', bonusLeft: 'restantes', bonusTotal: 'clases',
   },
   en: {
@@ -43,7 +44,8 @@ const I18N = {
     subtitle: 'Groups by level and age · classes · attendance · technical evaluation · class bonuses',
     students: 'Students', groups: 'Active groups', planned: 'Upcoming', done: 'Completed',
     attendanceRate: 'Attendance', minors: 'Minors', bonusAvailable: 'Bonuses available',
-    tabStudents: '👥 Students', tabGroups: '👨‍🏫 Groups', tabClasses: '🗓️ Classes', tabCoaches: '📚 Progress',
+    tabStudents: '👥 Students', tabGroups: '👨‍🏫 Groups', tabClasses: '🗓️ Classes', tabCoaches: '👨‍🔧 Coaches',
+    overlap: 'Overlaps detected', noOverlap: 'No class overlaps.',
     coachName: 'Name', coachEmail: 'Email', coachPhone: 'Phone', coachSpecialty: 'Specialty',
     addCoach: 'Add coach', saveCoach: 'Save coach',
     addStudent: 'Add student', saveStudent: 'Save student',
@@ -68,7 +70,8 @@ const I18N = {
     subtitle: 'Groupes par niveau et âge · cours · présence · évaluation · bons de cours',
     students: 'Élèves', groups: 'Groupes actifs', planned: 'À venir', done: 'Réalisés',
     attendanceRate: 'Présence', minors: 'Mineurs', bonusAvailable: 'Bons dispo',
-    tabStudents: '👥 Élèves', tabGroups: '👨‍🏫 Groupes', tabClasses: '🗓️ Cours', tabCoaches: '📚 Progression',
+    tabStudents: '👥 Élèves', tabGroups: '👨‍🏫 Groupes', tabClasses: '🗓️ Cours', tabCoaches: '👨‍🔧 Entraîneurs',
+    overlap: 'Chevauchements détectés', noOverlap: 'Aucun chevauchement entre cours.',
     coachName: 'Nom', coachEmail: 'Email', coachPhone: 'Téléphone', coachSpecialty: 'Spécialité',
     addCoach: 'Ajouter entraîneur', saveCoach: 'Enregistrer',
     addStudent: 'Ajouter élève', saveStudent: 'Enregistrer',
@@ -90,7 +93,8 @@ const I18N = {
     subtitle: 'Grupos por nível e idade · aulas · presenças · avaliação · bônus de aulas',
     students: 'Alunos', groups: 'Grupos ativos', planned: 'Próximas', done: 'Realizadas',
     attendanceRate: 'Presenças', minors: 'Menores', bonusAvailable: 'Bônus disp.',
-    tabStudents: '👥 Alunos', tabGroups: '👨‍🏫 Grupos', tabClasses: '🗓️ Aulas', tabCoaches: '📚 Progresso',
+    tabStudents: '👥 Alunos', tabGroups: '👨‍🏫 Grupos', tabClasses: '🗓️ Aulas', tabCoaches: '👨‍🔧 Treinadores',
+    overlap: 'Sobreposições detectadas', noOverlap: 'Sem sobreposição entre aulas.',
     coachName: 'Nome', coachEmail: 'Email', coachPhone: 'Telefone', coachSpecialty: 'Especialidade',
     addCoach: 'Adicionar treinador', saveCoach: 'Salvar',
     addStudent: 'Adicionar aluno', saveStudent: 'Salvar',
@@ -143,6 +147,7 @@ export default function SchoolApp({ lang = 'es' }) {
   const [bonuses, setBonuses] = useState([]);
 
   const emptyStudent = () => ({ id: null, name: '', email: '', phone: '', birthdate: '', ageGroup: 'adults', level: 'BEGINNER', guardianName: '', guardianEmail: '', guardianPhone: '', notes: '' });
+  const emptyStudentForm = emptyStudent;
   const emptyGroup = () => ({ id: null, name: '', category: 'adults', level: 'BEGINNER', capacity: 8, coachId: '', schedule: '', active: true });
   const emptyCoach = () => ({ id: null, name: '', email: '', phone: '', specialty: '', bio: '', active: true });
   const emptyClass = () => ({ id: null, groupId: '', coachId: '', courtName: '', startsOn: '', durationMin: 60, location: '', price: '' });
@@ -190,6 +195,25 @@ export default function SchoolApp({ lang = 'es' }) {
     const sum = list.reduce((acc, ev) => acc + (+ev.technical) + (+ev.tactical) + (+ev.movement) + (+ev.mental), 0);
     return (sum / (list.length * 4)).toFixed(1);
   };
+
+  // Detección de solapamientos entre clases (calendario cruzado del profesor)
+  const overlappedClasses = classes.filter(cl => {
+    if (cl.status !== 'planned') return false;
+    const start = new Date(cl.startsOn).getTime();
+    if (!start) return false;
+    const end = start + (cl.durationMin || 60) * 60000;
+    return classes.some(other => {
+      if (other.id === cl.id || other.status !== 'planned') return false;
+      const oStart = new Date(other.startsOn).getTime();
+      if (!oStart) return false;
+      const oEnd = oStart + (other.durationMin || 60) * 60000;
+      // mismo entrenador o misma pista y franjas que se cruzan
+      const sameCoach = cl.coachId && other.coachId && cl.coachId === other.coachId;
+      const sameCourt = cl.courtName && other.courtName && cl.courtName === other.courtName;
+      const crosses = start < oEnd && oStart < end;
+      return crosses && (sameCoach || sameCourt);
+    });
+  });
 
   const submitStudent = async () => { await addStudent(studentForm); setStudentForm(emptyStudentForm()); loadAll(); };
   const submitGroup = async () => { await addGroup(groupForm); setGroupForm(emptyGroup()); loadAll(); };
@@ -339,6 +363,17 @@ export default function SchoolApp({ lang = 'es' }) {
                 </div>
 
                 <div style={{ maxHeight: 560, overflowY: 'auto' }}>
+                  {overlappedClasses.length > 0 && (
+                    <div style={{ ...card, marginBottom: 12, borderColor: 'rgba(251,191,36,0.5)', background: 'rgba(251,191,36,0.06)' }}>
+                      <div style={{ fontSize: 13, fontWeight: 800, color: '#fbbf24', marginBottom: 6 }}>⚠️ {T.overlap}</div>
+                      {overlappedClasses.map(cl => (
+                        <div key={cl.id} style={{ fontSize: 12, color: 'var(--padel-text)', padding: '3px 0' }}>
+                          🗓️ {nameOf(cl.groupId, groups) || cl.courtName} · {new Date(cl.startsOn).toLocaleString(lang === 'es' ? 'es-ES' : lang === 'fr' ? 'fr-FR' : lang === 'pt' ? 'pt-PT' : 'en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                          {cl.coachId ? ` · 👨‍🏫 ${nameOf(cl.coachId, coaches)}` : ''} · 🏸 {cl.courtName}
+                        </div>
+                      ))}
+                    </div>
+                  )}
                   {classes.length === 0 && <p style={{ color: 'var(--padel-muted)' }}>{T.empty}</p>}
                   {classes.slice().sort((a, b) => new Date(a.startsOn) - new Date(b.startsOn)).map(cl => (
                     <div key={cl.id} style={{ ...card, marginBottom: 10 }}>
