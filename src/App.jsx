@@ -11,6 +11,7 @@ import LiveScorePro from './components/LiveScorePro';
 import ClubApp from './components/ClubApp';
 import MembersApp from './components/MembersApp';
 import ClubCrm from './components/ClubCrm';
+import UserProfile from './components/UserProfile';
 import AnalyticsBoard from './components/AnalyticsBoard';
 import TournamentControl from './components/TournamentControl';
 import RankedLeague from './components/RankedLeague';
@@ -39,6 +40,7 @@ export default function App() {
         <Route path="/club" element={<ClubApp lang={lang} />} />
         <Route path="/socios" element={<MembersApp lang={lang} />} />
         <Route path="/crm" element={<ClubCrm lang={lang} />} />
+        <Route path="/perfil" element={<UserProfile lang={lang} />} />
         <Route path="/torneo" element={<TorneoOrganizer lang={lang} />} />
         <Route path="/control" element={<TournamentControl lang={lang} />} />
         <Route path="/analytics" element={<AnalyticsBoard lang={lang} state={store} />} />
