@@ -32,7 +32,7 @@ const NavIcon = ({ name, size = 22 }) => {
 };
 
 // Dropdown al hover: icono + menú con sub-servicios
-const NavDrop = ({ tooltip, to, icon, color, children = [], active }) => {
+const NavDrop = ({ tooltip, to, icon, color, children = [], active, highlight = false }) => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   return (
@@ -46,11 +46,11 @@ const NavDrop = ({ tooltip, to, icon, color, children = [], active }) => {
         data-tooltip={tooltip}
         aria-label={tooltip}
         className="nav-ico"
-        style={{
-          display: 'flex', alignItems: 'center', justifyContent: 'center', width: 40, height: 40,
-          borderRadius: 10, border: 'none', background: active ? 'rgba(16,185,129,0.18)' : 'transparent',
-          color, padding: 0, cursor: 'pointer',
-        }}
+        style={
+          highlight
+            ? { display: 'flex', alignItems: 'center', justifyContent: 'center', width: 44, height: 44, borderRadius: 12, border: 'none', padding: 0, color: '#fff', background: 'linear-gradient(135deg, #34d399 0%, #059669 100%)', boxShadow: '0 4px 12px rgba(16, 185, 129, 0.35)', cursor: 'pointer' }
+            : { display: 'flex', alignItems: 'center', justifyContent: 'center', width: 40, height: 40, borderRadius: 10, border: 'none', background: active ? 'rgba(16,185,129,0.18)' : 'transparent', color, padding: 0, cursor: 'pointer' }
+        }
       >
         <NavIcon name={icon} />
       </button>
@@ -117,10 +117,10 @@ const HeaderPadel = ({ lang = 'es', onLanguageChange }) => {
       </div>
 
       <nav style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
-        {/* Mi espacio: header a medida según el perfil logueado */}
-        {role && (
-          <Link to={role === 'member' || role === 'both' ? '/socio' : role === 'student' ? '/alumno' : '/perfil'}
-            data-tooltip={role === 'member' || role === 'both' ? 'Mi carné de socio' : role === 'student' ? 'Mi progreso como alumno' : 'Mi perfil de jugador'}
+        {/* Mi espacio: header a medida según el perfil logueado (sólo socio/alumno; el jugador usa la medalla 🏅) */}
+        {role && role !== 'player' && (
+          <Link to={role === 'member' || role === 'both' ? '/socio' : '/alumno'}
+            data-tooltip={role === 'member' || role === 'both' ? 'Mi carné de socio' : 'Mi progreso como alumno'}
             aria-label="Mi espacio"
             className="nav-ico"
             style={{
@@ -128,7 +128,7 @@ const HeaderPadel = ({ lang = 'es', onLanguageChange }) => {
               borderRadius: 10, color: '#84cc16', textDecoration: 'none',
               background: 'rgba(132,204,22,0.12)', border: '1px solid rgba(132,204,22,0.35)',
             }}>
-            <NavIcon name={role === 'member' || role === 'both' ? 'membercard' : role === 'student' ? 'student' : 'raquet'} size={20} />
+            <NavIcon name={role === 'member' || role === 'both' ? 'membercard' : 'student'} size={20} />
           </Link>
         )}
 
@@ -139,6 +139,7 @@ const HeaderPadel = ({ lang = 'es', onLanguageChange }) => {
           icon="raquet"
           color="#34d399"
           active={isOn('/torneo')}
+          highlight
           children={[
             ['🏟️ ' + t.tournaments, '/torneo'],
             ['📊 Dashboard pistas', '/dashboard'],
