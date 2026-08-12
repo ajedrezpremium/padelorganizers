@@ -44,8 +44,20 @@ export default function UserMenu({ lang = 'es' }) {
       >
         <span style={{ fontSize: 18 }}>🏅</span>
       </Link>
-      <button onClick={signOut} style={{ background: 'none', border: '1px solid rgba(255,255,255,0.2)', color: '#94a3b8', padding: '6px 12px', borderRadius: 10, fontSize: 12, fontWeight: 700, cursor: 'pointer' }}>
-        {T.logout}
+      <button
+        onClick={signOut}
+        data-tooltip={T.logout}
+        aria-label={T.logout}
+        className="nav-ico"
+        style={{ background: 'none', border: '1px solid rgba(255,255,255,0.2)', color: '#94a3b8', width: 36, height: 36, borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}
+      >
+        <svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
+          <path d="M9 2v5" />
+          <path d="M15 2v5" />
+          <path d="M6 7h12v3a6 6 0 0 1-12 0V7Z" />
+          <path d="M12 16v6" />
+          <path d="M9 22h6" />
+        </svg>
       </button>
     </div>
   );
