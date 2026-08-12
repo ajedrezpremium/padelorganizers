@@ -22,11 +22,15 @@ create table if not exists public.school_drills (
 alter table public.school_drills enable row level security;
 
 -- Lectura pública para el panel de la escuela (como el resto del MVP)
+drop policy if exists "school_drills_select" on public.school_drills;
 create policy "school_drills_select" on public.school_drills for select using (true);
 
 -- Escritura pública para el panel (MVP de la demo; subir permisos en fase RBAC)
+drop policy if exists "school_drills_insert" on public.school_drills;
 create policy "school_drills_insert" on public.school_drills for insert with check (true);
+drop policy if exists "school_drills_update" on public.school_drills;
 create policy "school_drills_update" on public.school_drills for update using (true);
+drop policy if exists "school_drills_delete" on public.school_drills;
 create policy "school_drills_delete" on public.school_drills for delete using (true);
 
 -- Índices
