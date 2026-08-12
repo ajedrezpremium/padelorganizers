@@ -12,6 +12,8 @@ import ClubApp from './components/ClubApp';
 import MembersApp from './components/MembersApp';
 import MemberPortal from './components/MemberPortal';
 import StudentPortal from './components/StudentPortal';
+import MarketingApp from './components/MarketingApp';
+import CommunityApp from './components/CommunityApp';
 import ClubCrm from './components/ClubCrm';
 import UserProfile from './components/UserProfile';
 import MatchmakingApp from './components/MatchmakingApp';
@@ -48,6 +50,8 @@ export default function App() {
         <Route path="/match" element={<MatchmakingApp lang={lang} />} />
         <Route path="/socio" element={<MemberPortal lang={lang} />} />
         <Route path="/alumno" element={<StudentPortal lang={lang} />} />
+        <Route path="/marketing" element={<MarketingApp lang={lang} />} />
+        <Route path="/comunidad" element={<CommunityApp lang={lang} />} />
         <Route path="/escuela" element={<SchoolApp lang={lang} />} />
         <Route path="/torneo" element={<TorneoOrganizer lang={lang} />} />
         <Route path="/control" element={<TournamentControl lang={lang} />} />
