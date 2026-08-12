@@ -10,6 +10,8 @@ import LiveView from './components/LiveView';
 import LiveScorePro from './components/LiveScorePro';
 import ClubApp from './components/ClubApp';
 import MembersApp from './components/MembersApp';
+import MemberPortal from './components/MemberPortal';
+import StudentPortal from './components/StudentPortal';
 import ClubCrm from './components/ClubCrm';
 import UserProfile from './components/UserProfile';
 import MatchmakingApp from './components/MatchmakingApp';
@@ -44,6 +46,8 @@ export default function App() {
         <Route path="/crm" element={<ClubCrm lang={lang} />} />
         <Route path="/perfil" element={<UserProfile lang={lang} />} />
         <Route path="/match" element={<MatchmakingApp lang={lang} />} />
+        <Route path="/socio" element={<MemberPortal lang={lang} />} />
+        <Route path="/alumno" element={<StudentPortal lang={lang} />} />
         <Route path="/escuela" element={<SchoolApp lang={lang} />} />
         <Route path="/torneo" element={<TorneoOrganizer lang={lang} />} />
         <Route path="/control" element={<TournamentControl lang={lang} />} />
