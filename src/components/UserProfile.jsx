@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { upsertProfile } from '../services/dataService';
 import { getState } from '../services/store';
+import { eloSeries } from '../services/analyticsService';
 
 const I18N = {
   es: {
@@ -18,6 +19,10 @@ const I18N = {
     rank: 'Ranking del club', back: '← Volver',
     noAccountData: 'No hay datos de perfil en la nube (modo demo).',
     levelHint: { n1: 'Principiante', n2: 'Iniciación', n3: 'Intermedio', n4: 'Avanzado', n5: 'Élite' },
+    history: 'Historial de partidos', noHistory: 'Todavía no has jugado ningún partido.',
+    rivalries: 'Rivalidades', noRivalries: 'Juega tu primer partido para ver rivalidades.',
+    eloCurve: 'Progresión de ELO', round: 'Ronda',
+    vs: 'vs', win: 'Victoria', loss: 'Derrota', inProg: 'En directo', r0: 'R', total: 'Total',
   },
   en: {
     title: '🏅 Player profile',
@@ -33,6 +38,10 @@ const I18N = {
     rank: 'Club ranking', back: '← Back',
     noAccountData: 'No profile data in the cloud (demo mode).',
     levelHint: { n1: 'Beginner', n2: 'Initiation', n3: 'Intermediate', n4: 'Advanced', n5: 'Elite' },
+    history: 'Match history', noHistory: 'You have not played any match yet.',
+    rivalries: 'Rivalries', noRivalries: 'Play your first match to see rivalries.',
+    eloCurve: 'ELO progression', round: 'Round',
+    vs: 'vs', win: 'Win', loss: 'Loss', inProg: 'Live', r0: 'R', total: 'Total',
   },
   fr: {
     title: '🏅 Profil joueur',
@@ -48,6 +57,10 @@ const I18N = {
     rank: 'Classement du club', back: '← Retour',
     noAccountData: 'Aucune donnée de profil dans le cloud (mode démo).',
     levelHint: { n1: 'Débutant', n2: 'Initiation', n3: 'Intermédiaire', n4: 'Avancé', n5: 'Élite' },
+    history: 'Historique des matchs', noHistory: 'Vous n\'avez pas encore joué de match.',
+    rivalries: 'Rivalités', noRivalries: 'Jouez votre premier match pour voir les rivalités.',
+    eloCurve: 'Progression ELO', round: 'Tour',
+    vs: 'vs', win: 'Victoire', loss: 'Défaite', inProg: 'En direct', r0: 'T', total: 'Total',
   },
   pt: {
     title: '🏅 Perfil do jogador',
@@ -63,6 +76,10 @@ const I18N = {
     rank: 'Classificação do clube', back: '← Voltar',
     noAccountData: 'Sem dados de perfil na nuvem (modo demo).',
     levelHint: { n1: 'Iniciante', n2: 'Iniciação', n3: 'Intermediário', n4: 'Avançado', n5: 'Elite' },
+    history: 'Histórico de partidas', noHistory: 'Ainda não jogou nenhuma partida.',
+    rivalries: 'Rivalidades', noRivalries: 'Jogue a sua primeira partida para ver rivalidades.',
+    eloCurve: 'Progressão de ELO', round: 'Rodada',
+    vs: 'vs', win: 'Vitória', loss: 'Derrota', inProg: 'Ao vivo', r0: 'R', total: 'Total',
   },
 };
 
@@ -86,6 +103,9 @@ export default function UserProfile({ lang = 'es' }) {
   // Datos reales del store
   const [self, setSelf] = useState(null);
   const [totals, setTotals] = useState({ players: 0, matches: 0, pairs: 0 });
+  const [history, setHistory] = useState([]);
+  const [rivalries, setRivalries] = useState([]);
+  const [curve, setCurve] = useState([]);
 
   useEffect(() => {
     if (profile) setForm({ display_name: profile.display_name || '', elo: Number(profile.elo || 1500), level: Number(profile.level || 3), home_club: profile.home_club || '' });
@@ -98,6 +118,41 @@ export default function UserProfile({ lang = 'es' }) {
     const pname = (form.display_name || email?.split('@')[0] || '').toLowerCase();
     const pl = (st.players || []).find((p) => (p.name || '').toLowerCase().includes(pname) || (p.name || '').toLowerCase() === pname);
     setSelf(pl || null);
+
+    const myPairId = pl?.pairId;
+    if (myPairId) {
+      // Historial de partidos de la pareja del jugador
+      const myMatches = (st.matches || [])
+        .filter((m) => m.pair1Id === myPairId || m.pair2Id === myPairId)
+        .map((m) => {
+          const isP1 = m.pair1Id === myPairId;
+          const enemy = isP1 ? m.pair2Names || m.pair2Id : m.pair1Names || m.pair1Id;
+          const score = `${m.scoreSet1 || '0-0'}${m.scoreSet2 && m.scoreSet2 !== '0-0' ? ' · ' + m.scoreSet2 : ''}`;
+          const meGames = isP1 ? m.pair1Games : m.pair2Games;
+          const enGames = isP1 ? m.pair2Games : m.pair1Games;
+          const winnerIsMe = m.winnerId === myPairId;
+          const status = m.status === 'completed' ? (winnerIsMe ? 'win' : 'loss') : m.status === 'in_progress' ? 'inProg' : 'scheduled';
+          return { id: m.id, round: m.round, enemy, score, status, meGames, enGames };
+        })
+        .sort((a, b) => (b.round || 0) - (a.round || 0));
+      setHistory(myMatches);
+
+      // Rivalidades: enfrentamientos contra cada pareja contraria
+      const agg = {};
+      myMatches.forEach((m) => {
+        const key = m.enemy || '?';
+        if (!agg[key]) agg[key] = { enemy: key, played: 0, wins: 0, losses: 0 };
+        agg[key].played += 1;
+        if (m.status === 'win') agg[key].wins += 1;
+        if (m.status === 'loss') agg[key].losses += 1;
+      });
+      setRivalries(Object.values(agg).sort((a, b) => b.played - a.played));
+
+      // Curva de ELO estimada
+      setCurve(eloSeries(st, myPairId, { points: 8 }));
+    } else {
+      setHistory([]); setRivalries([]); setCurve([]);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, form.display_name]);
 
@@ -223,6 +278,56 @@ export default function UserProfile({ lang = 'es' }) {
                   {self && (self.wins || 0) >= 3 && <span style={{ fontSize: 11, fontWeight: 800, padding: '5px 10px', borderRadius: 99, background: 'rgba(16,185,129,0.15)', color: '#10b981' }}>👑 Rey de la red</span>}
                 </div>
               ) : <p style={{ color: 'var(--padel-muted)', fontSize: 12.5, margin: 0 }}>{T.noBadges}</p>}
+
+              {/* Historial de partidos */}
+              <h2 style={{ fontSize: 15, fontWeight: 800, color: 'var(--padel-text)', margin: '20px 0 10px' }}>📜 {T.history}</h2>
+              {history.length ? (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                  {history.map((m) => {
+                    const color = m.status === 'win' ? '#10b981' : m.status === 'loss' ? '#fb7185' : m.status === 'inProg' ? '#fbbf24' : '#64748b';
+                    const label = m.status === 'win' ? T.win : m.status === 'loss' ? T.loss : m.status === 'inProg' ? T.inProg : `${T.r0}${m.round || '?'}`;
+                    return (
+                      <div key={m.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'var(--padel-bg)', borderRadius: 10, padding: '8px 12px' }}>
+                        <span style={{ fontSize: 12.5, fontWeight: 700, color: 'var(--padel-text)' }}>{T.r0}{m.round} · {m.vs} {m.enemy}</span>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                          {m.score && m.status === 'completed' && <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--padel-muted)' }}>{m.score}</span>}
+                          <span style={{ fontSize: 10, fontWeight: 800, padding: '3px 8px', borderRadius: 99, background: `${color}22`, color }}>{label}</span>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : <p style={{ color: 'var(--padel-muted)', fontSize: 12.5, margin: 0 }}>{T.noHistory}</p>}
+
+              {/* Rivalidades */}
+              <h2 style={{ fontSize: 15, fontWeight: 800, color: 'var(--padel-text)', margin: '20px 0 10px' }}>⚔️ {T.rivalries}</h2>
+              {rivalries.length ? (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                  {rivalries.map((r) => (
+                    <div key={r.enemy} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'var(--padel-bg)', borderRadius: 10, padding: '8px 12px' }}>
+                      <span style={{ fontSize: 12.5, fontWeight: 700, color: 'var(--padel-text)' }}>{r.enemy}</span>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                        <span style={{ fontSize: 10.5, fontWeight: 800, color: '#10b981' }}>{r.wins} {T.win}</span>
+                        <span style={{ fontSize: 10.5, fontWeight: 800, color: '#fb7185' }}>{r.losses} {T.loss}</span>
+                        <span style={{ fontSize: 10.5, fontWeight: 800, color: 'var(--padel-muted)' }}>· {r.played} {T.pj}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : <p style={{ color: 'var(--padel-muted)', fontSize: 12.5, margin: 0 }}>{T.noRivalries}</p>}
+
+              {/* Progresión de ELO */}
+              <h2 style={{ fontSize: 15, fontWeight: 800, color: 'var(--padel-text)', margin: '20px 0 10px' }}>📈 {T.eloCurve}</h2>
+              {curve.length ? (
+                <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, height: 88, paddingTop: 8 }}>
+                  {curve.map((pt, i) => (
+                    <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-end', height: '100%' }}>
+                      <div style={{ width: '100%', maxWidth: 22, borderRadius: '4px 4px 0 0', height: `${Math.max(8, ((pt.elo - 1450) / 400) * 100)}%`, background: 'linear-gradient(180deg,#a3e635,#10b981)' }} />
+                      <span style={{ fontSize: 9, fontWeight: 700, color: 'var(--padel-muted)', marginTop: 2 }}>{pt.elo}</span>
+                    </div>
+                  ))}
+                </div>
+              ) : <p style={{ color: 'var(--padel-muted)', fontSize: 12.5, margin: 0 }}>{T.noSelf}</p>}
             </div>
           </div>
         )}
