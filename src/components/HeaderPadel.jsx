@@ -173,7 +173,10 @@ const HeaderPadel = ({ lang = 'es', onLanguageChange }) => {
         ]} />
 
         {/* 5 · Marketing */}
-        <NavDrop tooltip={t.marketing} to="/marketing" icon="marketing" color="#fb7185" active={location.pathname.startsWith('/marketing')} children={[]} />
+        <NavDrop tooltip={t.marketing} to="/marketing" icon="marketing" color="#fb7185" active={location.pathname.startsWith('/marketing') || location.pathname.startsWith('/sponsors')} children={[
+          ['📣 ' + (t.marketing || 'Marketing'), '/marketing'],
+          ['💰 Monetización · Sponsors', '/sponsors'],
+        ]} />
 
         {/* 6 · Comunidad */}
         <NavDrop tooltip={t.community} to="/comunidad" icon="community" color="#f472b6" active={location.pathname.startsWith('/comunidad')} children={[]} />

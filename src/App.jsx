@@ -18,6 +18,7 @@ import ClubCrm from './components/ClubCrm';
 import OwnerDashboard from './components/OwnerDashboard';
 import IotAccess from './components/IotAccess';
 import QrLight from './components/QrLight';
+import SponsorsManager from './components/SponsorsManager';
 import UserProfile from './components/UserProfile';
 import MatchmakingApp from './components/MatchmakingApp';
 import SchoolApp from './components/SchoolApp';
@@ -58,6 +59,7 @@ export default function App() {
         <Route path="/panel" element={<OwnerDashboard lang={lang} />} />
         <Route path="/iot" element={<IotAccess lang={lang} />} />
         <Route path="/luces" element={<QrLight lang={lang} />} />
+        <Route path="/sponsors" element={<SponsorsManager lang={lang} />} />
         <Route path="/perfil" element={<UserProfile lang={lang} />} />
         <Route path="/match" element={<MatchmakingApp lang={lang} />} />
         <Route path="/socio" element={<MemberPortal lang={lang} />} />

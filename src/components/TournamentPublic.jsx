@@ -5,6 +5,7 @@ import { pullState } from '../services/cloudService';
 import { COURT_STATUS } from '../services/padelEngine';
 import AnalyticsBoard from './AnalyticsBoard';
 import TournamentChat from './TournamentChat';
+import { listSponsorsSync, tierOf } from '../services/sponsorService';
 
 const I18N = {
   es: {
@@ -380,14 +381,33 @@ export default function TournamentPublic({ lang = 'es' }) {
         <h3 style={{ fontSize: '16px', fontWeight: 800, color: '#fff', margin: '0 0 4px' }}>{T.sponsorsTitle}</h3>
         <p style={{ fontSize: '12px', color: '#94a3b8', margin: '0 auto 14px', maxWidth: 520 }}>{T.sponsorsSub.replace('{club}', t.club)}</p>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '12px', marginBottom: '14px' }}>
-          {[0, 1, 2].map((i) => (
-            <div key={i} style={{ border: '1px dashed rgba(255,255,255,0.15)', borderRadius: '12px', padding: '18px', fontSize: '13px', fontWeight: 800, color: '#475569' }}>
-              {T.sponsorSlot}
-            </div>
-          ))}
+          {(() => {
+            const sp = listSponsorsSync();
+            return sp.length ? sp.map((s) => {
+              const tt = tierOf(s.tier);
+              return (
+                <a key={s.id} href={s.url} target="_blank" rel="noopener noreferrer" style={{
+                  border: `1px solid ${s.color}33`, borderRadius: '12px', padding: '18px 10px',
+                  background: `linear-gradient(135deg, ${s.color}22, rgba(0,0,0,0.25))`,
+                  color: s.color, textDecoration: 'none', fontSize: '13px', fontWeight: 900, letterSpacing: 0.5,
+                  display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4,
+                }}>
+                  <span>{s.brand}</span>
+                  <span style={{ fontSize: '10px', fontWeight: 700, opacity: 0.7 }}>{tt.emoji} {tt.label[lang] || tt.label.es} ↗</span>
+                </a>
+              );
+            }) : [0, 1, 2].map((i) => (
+              <div key={i} style={{ border: '1px dashed rgba(255,255,255,0.15)', borderRadius: '12px', padding: '18px', fontSize: '13px', fontWeight: 800, color: '#475569' }}>
+                {T.sponsorSlot}
+              </div>
+            ));
+          })()}
         </div>
+        <button onClick={() => navigate('/sponsors')} style={{ background: 'rgba(251,191,36,0.1)', color: '#fbbf24', border: '1px solid rgba(251,191,36,0.35)', padding: '10px 18px', borderRadius: '10px', fontWeight: 700, fontSize: '13px', cursor: 'pointer', marginRight: 8 }}>
+          💰 {T.sponsorContact}
+        </button>
         <button onClick={() => navigate('/club')} style={{ background: 'rgba(255,255,255,0.08)', color: '#fff', border: '1px solid rgba(255,255,255,0.2)', padding: '10px 18px', borderRadius: '10px', fontWeight: 700, fontSize: '13px', cursor: 'pointer' }}>
-          {T.sponsorContact}
+          {T.sponsorSlot}
         </button>
       </div>
 
