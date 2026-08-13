@@ -105,11 +105,19 @@ export async function saveCoach(coach, { cloud = isSupabaseConfigured } = {}) {
   const next = existing ? local.map(c => (c.id === existing.id ? rec : c)) : [rec, ...local];
   writeLocal(LS.coaches, next);
   if (cloud) {
-    await supabase.from('coaches').upsert({
+    const payload = {
       id: rec.id, name: rec.name, email: rec.email, phone: rec.phone,
       specialty: rec.specialty, bio: rec.bio, avatar_url: rec.avatarUrl,
       level: rec.level, hourly_rate: rec.hourlyRate, active: rec.active,
-    }, { onConflict: 'id' });
+    };
+    const { error } = await supabase.from('coaches').upsert(payload, { onConflict: 'id' });
+    if (error && error.code === '42703') {
+      // columna level/hourly_rate aún no existe en la nube → reintentar sin ellas
+      await supabase.from('coaches').upsert({
+        id: rec.id, name: rec.name, email: rec.email, phone: rec.phone,
+        specialty: rec.specialty, bio: rec.bio, avatar_url: rec.avatarUrl, active: rec.active,
+      }, { onConflict: 'id' });
+    }
   }
   return rec;
 }
