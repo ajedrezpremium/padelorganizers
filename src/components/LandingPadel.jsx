@@ -467,6 +467,21 @@ export default function LandingPadel({ lang = 'es' }) {
         </div>
       </section>
 
+      {/* APP SHOWCASE */}
+      <section style={{ padding: '0 0 70px' }}>
+        <div style={sectionStyle}>
+          <div style={{ textAlign: 'center', marginBottom: '24px' }}>
+            <span style={{ display: 'inline-block', background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.3)', color: 'var(--padel-lime)', padding: '5px 12px', borderRadius: '16px', fontWeight: 700, fontSize: '11px', letterSpacing: '1px' }}>👁️ {T.showBadge}</span>
+            <h2 style={{ fontSize: '30px', fontWeight: 900, color: 'var(--padel-text)', margin: '16px 0 6px' }}>{T.showTitle}</h2>
+            <p style={{ fontSize: '15px', color: 'var(--padel-muted)', maxWidth: '560px', margin: '0 auto' }}>{T.showDesc}</p>
+          </div>
+          <div style={{ position: 'relative', borderRadius: '20px', overflow: 'hidden', border: '1px solid rgba(16,185,129,0.25)', boxShadow: '0 24px 60px rgba(0,0,0,0.45)', maxWidth: '980px', margin: '0 auto' }}>
+            <img src="/images/padelorganizers.com.png" alt="PADELORGANIZERS.COM" style={{ width: '100%', display: 'block' }} loading="lazy" />
+            <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.06)' }} />
+          </div>
+        </div>
+      </section>
+
       {/* SOCIAL PROOF */}
       <section style={{ padding: '70px 0' }}>
         <div style={sectionStyle}>
@@ -574,17 +589,22 @@ export default function LandingPadel({ lang = 'es' }) {
         </div>
       </section>
 
-      {/* APP SHOWCASE */}
-      <section style={{ padding: '0 0 70px' }}>
+      {/* AUDIENCE / PERFILES */}
+      <section style={{ padding: '80px 0', background: 'var(--padel-card-bg)', borderTop: '1px solid var(--padel-border)', borderBottom: '1px solid var(--padel-border)' }}>
         <div style={sectionStyle}>
-          <div style={{ textAlign: 'center', marginBottom: '24px' }}>
-            <span style={{ display: 'inline-block', background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.3)', color: 'var(--padel-lime)', padding: '5px 12px', borderRadius: '16px', fontWeight: 700, fontSize: '11px', letterSpacing: '1px' }}>👁️ {T.showBadge}</span>
-            <h2 style={{ fontSize: '30px', fontWeight: 900, color: 'var(--padel-text)', margin: '16px 0 6px' }}>{T.showTitle}</h2>
-            <p style={{ fontSize: '15px', color: 'var(--padel-muted)', maxWidth: '560px', margin: '0 auto' }}>{T.showDesc}</p>
+          <h2 style={{ fontSize: '34px', fontWeight: 900, color: 'var(--padel-text)', textAlign: 'center', marginBottom: '8px' }}>{T.audienceTitle}</h2>
+          <p style={{ fontSize: '15px', color: 'var(--padel-muted)', textAlign: 'center', marginBottom: '36px' }}>{T.audienceSubtitle}</p>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '14px', marginBottom: '40px' }}>
+            {T.audience.map((a, i) => (
+              <div key={i} style={{ background: 'var(--padel-bg)', border: '1px solid var(--padel-border)', borderRadius: '16px', padding: '24px', textAlign: 'center' }}>
+                <div style={{ fontSize: '34px', marginBottom: '12px' }}>{a.icon}</div>
+                <h3 style={{ fontSize: '17px', fontWeight: 800, color: 'var(--padel-text)', margin: '0 0 6px' }}>{a.title}</h3>
+                <p style={{ fontSize: '14px', color: 'var(--padel-muted)', lineHeight: 1.6, margin: 0 }}>{a.desc}</p>
+              </div>
+            ))}
           </div>
-          <div style={{ position: 'relative', borderRadius: '20px', overflow: 'hidden', border: '1px solid rgba(16,185,129,0.25)', boxShadow: '0 24px 60px rgba(0,0,0,0.45)', maxWidth: '980px', margin: '0 auto' }}>
-            <img src="/images/padelorganizers.com.png" alt="PADELORGANIZERS.COM" style={{ width: '100%', display: 'block' }} loading="lazy" />
-            <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.06)' }} />
+          <div style={{ borderRadius: '20px', overflow: 'hidden', border: '1px solid rgba(16,185,129,0.25)', boxShadow: '0 24px 60px rgba(0,0,0,0.45)', maxWidth: '980px', margin: '0 auto' }}>
+            <img src="/images/padel-perfil-clientes.png" alt={T.audienceTitle} style={{ width: '100%', display: 'block' }} loading="lazy" />
           </div>
         </div>
       </section>
@@ -642,26 +662,6 @@ export default function LandingPadel({ lang = 'es' }) {
                 </ul>
               </div>
             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* AUDIENCE / PERFILES */}
-      <section style={{ padding: '80px 0', background: 'var(--padel-card-bg)', borderTop: '1px solid var(--padel-border)', borderBottom: '1px solid var(--padel-border)' }}>
-        <div style={sectionStyle}>
-          <h2 style={{ fontSize: '34px', fontWeight: 900, color: 'var(--padel-text)', textAlign: 'center', marginBottom: '8px' }}>{T.audienceTitle}</h2>
-          <p style={{ fontSize: '15px', color: 'var(--padel-muted)', textAlign: 'center', marginBottom: '36px' }}>{T.audienceSubtitle}</p>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '14px', marginBottom: '40px' }}>
-            {T.audience.map((a, i) => (
-              <div key={i} style={{ background: 'var(--padel-bg)', border: '1px solid var(--padel-border)', borderRadius: '16px', padding: '24px', textAlign: 'center' }}>
-                <div style={{ fontSize: '34px', marginBottom: '12px' }}>{a.icon}</div>
-                <h3 style={{ fontSize: '17px', fontWeight: 800, color: 'var(--padel-text)', margin: '0 0 6px' }}>{a.title}</h3>
-                <p style={{ fontSize: '14px', color: 'var(--padel-muted)', lineHeight: 1.6, margin: 0 }}>{a.desc}</p>
-              </div>
-            ))}
-          </div>
-          <div style={{ borderRadius: '20px', overflow: 'hidden', border: '1px solid rgba(16,185,129,0.25)', boxShadow: '0 24px 60px rgba(0,0,0,0.45)', maxWidth: '980px', margin: '0 auto' }}>
-            <img src="/images/padel-perfil-clientes.png" alt={T.audienceTitle} style={{ width: '100%', display: 'block' }} loading="lazy" />
           </div>
         </div>
       </section>
