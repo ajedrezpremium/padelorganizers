@@ -16,6 +16,8 @@ const I18N = {
     statPlayers: 'Parejas',
     ranking: 'Ranking en Vivo',
     playerRanking: 'Rating Elo · Jugadores',
+    padelLegendsTitle: 'PadelLegends',
+    padelLegendsDesc: 'Fotos reales desde Wikimedia Commons para los jugadores del torneo.',
     colRank: '#',
     colPair: 'Pareja',
     colPoints: 'Puntos',
@@ -38,11 +40,13 @@ const I18N = {
     statPlayers: 'Pairs',
     ranking: 'Live rankings',
     playerRanking: 'Player Rating · Elo',
+    padelLegendsTitle: 'PadelLegends',
+    padelLegendsDesc: 'Real Wikimedia Commons photos for the tournament players.',
     colRank: 'Pos',
     colPair: 'Pair',
     colPoints: 'Points',
     colDiff: 'Diff',
-    colWon: 'P',
+    colPlayed: 'P',
     active: 'Active',
     formatAmericano: 'Americano format · Gold Point enabled',
     pairEngine: 'AI Re-pairing Engine',
@@ -58,11 +62,13 @@ const I18N = {
     statPlayers: 'Paires',
     ranking: 'Classements en direct',
     playerRanking: 'Rating joueurs · Elo',
+    padelLegendsTitle: 'PadelLegends',
+    padelLegendsDesc: 'Photos réelles des joueurs depuis Wikimedia Commons.',
     statRank: '#',
     statPair: 'Paire',
     statPoints: 'Points',
     statDiff: 'Diff',
-    statWon: 'J',
+    colPlayed: 'J',
     active: 'Actif',
     formatAmericano: 'Format américain · Point d\'or',
     pair: 'Moteur d\'appariement IA',
@@ -78,11 +84,13 @@ const I18N = {
     statPlayers: 'Pares',
     ranking: 'Classificações ao vivo',
     playerRanking: 'Rating de Jogadores · Elo',
+    padelLegendsTitle: 'PadelLegends',
+    padelLegendsDesc: 'Fotos reais dos jogadores do Wikimedia Commons.',
     statRank: '#',
     statPair: 'Par',
     statPoints: 'Pontos',
     statDiff: 'Diff',
-    statWon: 'J',
+    colPlayed: 'J',
     active: 'Ativo',
     formatAmericano: 'Formato Americano · Ponto de Ouro ativado',
     pair: 'Motor de Re-Pareamento IA',
@@ -138,7 +146,9 @@ export default function PadelDashboard({ lang = 'es' }) {
   };
 
   const sortedPlayers = [...data.players].sort((a, b) => b.elo - a.elo);
-
+  const legendPlayers = sortedPlayers.filter(p => p.photo).slice(0, 8);
+  const placeholderPhoto = 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/User_icon_BLACK-01.svg/120px-User_icon_BLACK-01.svg.png';
+  
   return (
     <div style={{ padding: '24px', maxWidth: '1200px', margin: '0 auto' }}>
       {/* Header */}
@@ -196,7 +206,33 @@ export default function PadelDashboard({ lang = 'es' }) {
       <div style={{ marginBottom: '24px' }}>
         <PairingGenerator state={data} onAddRound={handleAddRound} />
       </div>
-
+ 
+      {/* PadelLegends — Fotos reales de Wikimedia */}
+      <div style={{ background: '#0a1a17', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '16px', padding: '24px', marginBottom: '24px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '10px', marginBottom: '16px' }}>
+          <div>
+            <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#fff', margin: '0 0 8px' }}>{T.padelLegendsTitle}</h3>
+            <p style={{ fontSize: '13px', color: '#94a3b8', margin: 0 }}>{T.padelLegendsDesc}</p>
+          </div>
+          <span style={{ fontSize: '12px', color: '#84cc16', fontWeight: 700 }}>Wikimedia Commons</span>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '12px' }}>
+          {legendPlayers.map((p) => (
+            <div key={p.id} style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'rgba(255,255,255,0.04)', borderRadius: '14px', padding: '12px' }}>
+              <img
+                src={p.photo || placeholderPhoto}
+                alt={p.name}
+                style={{ width: '62px', height: '62px', borderRadius: '18px', objectFit: 'cover', border: '1px solid rgba(255,255,255,0.12)' }}
+              />
+              <div>
+                <div style={{ fontWeight: 800, color: '#f8fafc', fontSize: '15px' }}>{p.name}</div>
+                <div style={{ fontSize: '13px', color: '#94a3b8' }}>{p.elo} Elo · Nivel {p.level.toFixed(1)}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+ 
       {/* Player rating (Elo) */}
       <div style={{ background: '#0a1a17', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '16px', padding: '24px', marginBottom: '24px' }}>
         <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#fff', margin: '0 0 16px' }}>⭐ {T.playerRanking}</h3>

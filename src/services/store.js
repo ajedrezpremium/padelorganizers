@@ -42,6 +42,21 @@ function emit() {
   listeners.forEach(fn => fn());
 }
 
+function syncStoreFromStorage() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    const next = raw ? JSON.parse(raw) : getInitialDemoTournamentData();
+    const currentState = JSON.stringify(state);
+    const nextState = JSON.stringify(next);
+    if (currentState !== nextState) {
+      state = next;
+      listeners.forEach(fn => fn());
+    }
+  } catch (e) {
+    /* ignore invalid storage content */
+  }
+}
+
 export function getState() {
   return state;
 }
@@ -119,13 +134,14 @@ export function useStore() {
 // Escucha cambios desde otras pestañas (storage event) y los publica
 if (typeof window !== 'undefined') {
   window.addEventListener('storage', (e) => {
-    if (e.key === STORAGE_KEY && e.newValue) {
-      try {
-        state = JSON.parse(e.newValue);
-        listeners.forEach(fn => fn());
-      } catch (err) {
-        /* ignore */
-      }
+    if (e.key === STORAGE_KEY) {
+      syncStoreFromStorage();
+    }
+  });
+
+  window.addEventListener('pageshow', (event) => {
+    if (event.persisted) {
+      syncStoreFromStorage();
     }
   });
 }
