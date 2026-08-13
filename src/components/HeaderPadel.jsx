@@ -188,7 +188,10 @@ const HeaderPadel = ({ lang = 'es', onLanguageChange }) => {
         <NavDrop tooltip={t.directory} to="/clubes" icon="map" color="#2dd4bf" active={location.pathname.startsWith('/clubes')} children={[]} />
 
         {/* 9 · Ranked League */}
-        <NavDrop tooltip={t.league} to="/league" icon="trophy" color="#a3e635" active={location.pathname.startsWith('/league')} children={[]} />
+        <NavDrop tooltip={t.league} to="/league" icon="trophy" color="#a3e635" active={location.pathname.startsWith('/league') || location.pathname.startsWith('/ranking')} children={[
+          ['🏆 ' + (t.league || 'Ranked League'), '/league'],
+          ['🌍 ' + (t.globalRanking || 'Global Ranking'), '/ranking'],
+        ]} />
 
         {/* 10 · Lanzamiento */}
         <NavDrop tooltip={t.launch} to="/lanzamiento" icon="rocket" color="#fb7185" active={location.pathname.startsWith('/lanzamiento')} children={[]} />
