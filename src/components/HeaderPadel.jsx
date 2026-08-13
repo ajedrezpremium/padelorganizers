@@ -153,10 +153,11 @@ const HeaderPadel = ({ lang = 'es', onLanguageChange }) => {
         />
 
         {/* 2 · Club (reservas, socios, mi carné) */}
-        <NavDrop tooltip={t.club} to="/club" icon="club" color="#10b981" active={location.pathname.startsWith('/club')} children={[
+        <NavDrop tooltip={t.club} to="/club" icon="club" color="#10b981" active={location.pathname.startsWith('/club') || location.pathname.startsWith('/iot')} children={[
           ['🏠 ' + t.club, '/club'],
           ['🪪 Socios & membresías', '/socios'],
           ['💳 Mi carné de socio', '/socio'],
+          ['💡 Luz QR · IoT', '/iot'],
         ]} />
 
         {/* 3 · Escuela (gestión + alumno) */}
