@@ -111,7 +111,8 @@ export async function saveCoach(coach, { cloud = isSupabaseConfigured } = {}) {
       level: rec.level, hourly_rate: rec.hourlyRate, active: rec.active,
     };
     const { error } = await supabase.from('coaches').upsert(payload, { onConflict: 'id' });
-    if (error && error.code === '42703') {
+    const colMissing = error && (error.code === '42703' || error.code === 'PGRST204' || /hourly_rate|hourlyRate|coaches level/.test(error.message || ''));
+    if (colMissing) {
       // columna level/hourly_rate aún no existe en la nube → reintentar sin ellas
       await supabase.from('coaches').upsert({
         id: rec.id, name: rec.name, email: rec.email, phone: rec.phone,
