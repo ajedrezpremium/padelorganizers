@@ -1,0 +1,11 @@
+idx,nombre,correo,direccion,plataforma,web,estado,fecha,error
+"0","Pádel Zaragoza","info@padelzaragoza.es","C/ San Juan Bautista de la Salle, 1, 50012 Zaragoza","Web Propia / Teléfono","https://padelzaragoza.es/","ok","2026-08-13T05:49:00.543Z",""
+"1","Pádel Indoor Aragón","","Camino de la Raya, s/n, 50002 Zaragoza","Web Propia / Teléfono","https://padelindooraragon.com/","sin-correo","2026-08-13T05:49:05.055Z","email inválido o vía web"
+"2","CD Montecanal","padel@cdmontecanal.com","C/ de la Mesta, 35 (s/n), 50012 Zaragoza","Web Propia / Teléfono","https://cdmontecanal.com/padel/","ok","2026-08-13T05:49:05.881Z",""
+"3","Regal Pádel Club","","CC Alcampo Los Enlaces, Antigua Carretera N-II, KM 315,2, Local 31, 50012 Zaragoza","Web Propia / Reserva Online","https://regalpadelclub.com/","sin-correo","2026-08-13T05:49:10.383Z","email inválido o vía web"
+"4","Pádel Plaza","","Av. Diagonal Plaza, 3, Nave C, 50197 Zaragoza","Web Propia (Reserva Online)","https://www.padelplaza.es/","sin-correo","2026-08-13T05:49:10.386Z","email inválido o vía web"
+"5","Zaragoza Pádel Club","info@zaragozapadelclub.es","C/ Madre Genoveva Torres Morales, 5, Local 17, 50006 Zaragoza","Web Propia / Teléfono","https://www.zaragozapadelclub.es/","ok","2026-08-13T05:49:11.240Z",""
+"6","C.N. Helios","cnhelios@cnhelios.com","Parque Macanaz, s/n, 50018 Zaragoza","Web Propia / Teléfono","https://www.cnhelios.com/instalaciones/pistas-de-padel","ok","2026-08-13T05:49:16.658Z",""
+"7","CDM Delicias (Zaragoza Pádel Club)","cdmdelicias@zaragoza.es","C/ Moreno Alcañiz, 2, 50017 Zaragoza","Web Propia / Teléfono","https://www.zaragozapadelclub.es/","ok","2026-08-13T05:49:21.979Z",""
+"8","CDM Almozara (Zaragoza Pádel Club)","cdmalmozara@zaragoza.es","Av. de la Almozara, 65, 50001 Zaragoza","Web Propia / Teléfono","https://www.zaragozapadelclub.es/","ok","2026-08-13T05:49:27.336Z",""
+"9","Real Zaragoza Club de Tenis","administracion@rzct.com","Carretera Aeropuerto, KM 5,8, 50190 Zaragoza","Playtomic","https://www.rzct.com/","ok","2026-08-13T05:49:32.663Z",""
