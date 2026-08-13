@@ -229,6 +229,7 @@ export default function ClubCrm({ lang = 'es' }) {
                 { to: '/club', label: '🏟️ ' + T.kind.reservation + 's' },
                 { to: '/socios', label: '👥 ' + T.kind.member + 's' },
                 { to: '/control', label: '🎛️ ' + T.kind.tournament },
+                { to: '/panel', label: '📈 Panel del dueño · RevPAC' },
               ].map((b) => (
                 <button key={b.to} onClick={() => nav(b.to)} style={{ ...ghostBtn, color: 'var(--padel-lime)', borderColor: 'rgba(163,230,53,0.3)' }}>
                   {b.label} {T.go}

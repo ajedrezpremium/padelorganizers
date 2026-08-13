@@ -15,6 +15,7 @@ import StudentPortal from './components/StudentPortal';
 import MarketingApp from './components/MarketingApp';
 import CommunityApp from './components/CommunityApp';
 import ClubCrm from './components/ClubCrm';
+import OwnerDashboard from './components/OwnerDashboard';
 import UserProfile from './components/UserProfile';
 import MatchmakingApp from './components/MatchmakingApp';
 import SchoolApp from './components/SchoolApp';
@@ -52,6 +53,7 @@ export default function App() {
         <Route path="/club" element={<ClubApp lang={lang} />} />
         <Route path="/socios" element={<MembersApp lang={lang} />} />
         <Route path="/crm" element={<ClubCrm lang={lang} />} />
+        <Route path="/panel" element={<OwnerDashboard lang={lang} />} />
         <Route path="/perfil" element={<UserProfile lang={lang} />} />
         <Route path="/match" element={<MatchmakingApp lang={lang} />} />
         <Route path="/socio" element={<MemberPortal lang={lang} />} />
