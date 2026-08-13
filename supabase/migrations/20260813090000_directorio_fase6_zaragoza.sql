@@ -70,4 +70,5 @@ values
    '+34 976 346 193', 'administracion@rzct.com', 'https://www.rzct.com/',
    '9 pistas de pádel + 19 de tenis', false, 'césped sintético', 'Playtomic', true, false,
    false, 'pendiente_verificacion',
-   'Club histórico (1907) con 9 pistas de pádel y 19 de tenis (13 de tierra batida), gimnasio, piscina y zonas verdes.');
+   'Club histórico (1907) con 9 pistas de pádel y 19 de tenis (13 de tierra batida), gimnasio, piscina y zonas verdes.')
+on conflict (slug) do nothing;
