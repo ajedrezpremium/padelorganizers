@@ -187,4 +187,68 @@ export async function listClubOptions() {
   try { return await listClubes(); } catch { return CLUBES_SEMILLA; }
 }
 
+// ---- PANEL DEL DUEÑO (#10): ocupación y facturación por pista + RevPAC ----
+const SLOTS_FULL = [];
+for (let h = 9; h <= 22; h++) SLOTS_FULL.push(String(h).padStart(2, '0') + ':00');
+
+// Precio dinámico de un slot (mismo yield que el grid Playtomic).
+// Valle (<18h) ×0.85 · Prime (18-19h) ×1 · Noche (>=20h) ×1.3
+const COURT_MULT = [1.25, 0.75, 1, 1];
+export function slotPriceFor(hour, courtIdx = 0) {
+  const h = parseInt(hour, 10);
+  const courtMult = COURT_MULT[courtIdx] || 1;
+  let timeMult = 1;
+  if (h < 18) timeMult = 0.85;
+  else if (h >= 20) timeMult = 1.3;
+  return Math.round((CLUB_PRICE.euro || 8) * courtMult * timeMult);
+}
+
+// Panel del dueño: RevPAC por pista/día, ocupación, comparativa precio fijo vs yield.
+export async function ownerDashboard() {
+  const res = await listReservations();
+  const courts = ['Pista 1 · Central', 'Pista 2 · Promo', 'Pista 3 · Cubierta', 'Pista 4 · Cubierta 2'];
+
+  const perCourt = courts.map((name, idx) => {
+    const rows = res.filter(r => r.court_name === name && r.status !== 'cancelled');
+    const slots = rows.length;
+    const ingresos = rows.reduce((s, r) => s + Number(r.price || slotPriceFor(r.time_slot, idx)), 0);
+    // horas ocupadas únicas (para ocupación) y cuál es la más cara/hora valle
+    const horas = rows.map(r => r.time_slot).filter(Boolean);
+    const uniqueHours = new Set(horas);
+    return { court: name, slots, ingresos, ocupadas: uniqueHours.size, idx };
+  });
+
+  const totalSlots = SLOTS_FULL.length; // slots por pista y día
+  const capacidad = courts.length * totalSlots;
+  const ocupacion = Math.round((perCourt.reduce((s, c) => s + c.ocupadas, 0) / capacidad) * 100);
+  const facturacionTotal = perCourt.reduce((s, c) => s + c.ingresos, 0);
+
+  // Simulación yield: mismo nº de reservas al precio fijo de 8€ vs precio dinámico.
+  const totalRes = res.filter(r => r.status !== 'cancelled');
+  const fijo8 = totalRes.reduce((s) => s + (CLUB_PRICE.euro || 8), 0);
+  const conYield = perCourt.reduce((s, c) => s + c.ingresos, 0);
+
+  // Facturación por hora (top horas): para ver picos de saturación
+  const porHora = {};
+  totalRes.forEach((r) => {
+    const h = r.time_slot || '—';
+    porHora[h] = (porHora[h] || 0) + Number(r.price || slotPriceFor(h, courts.indexOf(r.court_name) >= 0 ? courts.indexOf(r.court_name) : 0));
+  });
+  const topHoras = Object.entries(porHora).sort((a, b) => b[1] - a[1]).slice(0, 5);
+
+  return {
+    courts: perCourt,
+    capacidad,
+    ocupacion,
+    facturacionTotal,
+    fijo8,
+    conYield,
+    yieldGain: conYield - fijo8,
+    yieldPct: fijo8 > 0 ? Math.round(((conYield - fijo8) / fijo8) * 100) : 0,
+    topHoras,
+    revpac: totalSlots > 0 ? Math.round((facturacionTotal / totalSlots) * 100) / 100 : 0, // € por slot disponible
+    numReservas: totalRes.length,
+  };
+}
+
 export { fmtEuros };

@@ -166,7 +166,10 @@ const HeaderPadel = ({ lang = 'es', onLanguageChange }) => {
         ]} />
 
         {/* 4 · CRM */}
-        <NavDrop tooltip={t.crm} to="/crm" icon="crm" color="#2dd4bf" active={location.pathname.startsWith('/crm')} children={[]} />
+        <NavDrop tooltip={t.crm} to="/crm" icon="crm" color="#2dd4bf" active={location.pathname.startsWith('/crm') || location.pathname.startsWith('/panel')} children={[
+          ['👔 ' + (t.crm || 'CRM'), '/crm'],
+          ['📈 Panel del dueño · RevPAC', '/panel'],
+        ]} />
 
         {/* 5 · Marketing */}
         <NavDrop tooltip={t.marketing} to="/marketing" icon="marketing" color="#fb7185" active={location.pathname.startsWith('/marketing')} children={[]} />
