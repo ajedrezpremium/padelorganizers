@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { listPlans, listPromos, PLAN_BENEFITS } from '../services/membershipService';
 import { generateMarketingContent, CONTENT_KEYS } from '../services/marketingAiService';
 import { getState } from '../services/store';
@@ -24,6 +25,7 @@ const I18N = {
     aiTorName: 'Nombre del torneo', aiClub: 'Club', aiFormat: 'Formato', aiDate: 'Fecha', aiPlace: 'Lugar',
     aiFmtAmericano: 'Americano', aiFmtMexicano: 'Mexicano', aiFmtSuizo: 'Suizo', aiFmtKnockout: 'Eliminatorio',
     aiGen: '✨ Generar contenidos', aiLoading: 'Generando…', aiCopy: '📋 Copiar', aiCopied: '✓ Copiado', aiNew: '🔄 Regenerar (variante)',
+    openNewsletter: '📰 Newsletter agosto 2026',
   },
   en: {
     title: '📣 Marketing & Business',
@@ -45,6 +47,7 @@ const I18N = {
     aiTorName: 'Tournament name', aiClub: 'Club', aiFormat: 'Format', aiDate: 'Date', aiPlace: 'Venue',
     aiFmtAmericano: 'Americano', aiFmtMexicano: 'Mexicano', aiFmtSuizo: 'Swiss', aiFmtKnockout: 'Knockout',
     aiGen: '✨ Generate content', aiLoading: 'Generating…', aiCopy: '📋 Copy', aiCopied: '✓ Copied', aiNew: '🔄 Regenerate (variant)',
+    openNewsletter: '📰 August 2026 newsletter',
   },
   fr: {
     title: '📣 Marketing & Business',
@@ -66,6 +69,7 @@ const I18N = {
     aiTorName: "Nom du tournoi", aiClub: 'Club', aiFormat: 'Format', aiDate: 'Date', aiPlace: 'Lieu',
     aiFmtAmericano: 'Américain', aiFmtMexicano: 'Mexicain', aiFmtSuizo: 'Suisse', aiFmtKnockout: 'Élimination',
     aiGen: '✨ Générer le contenu', aiLoading: 'Génération…', aiCopy: '📋 Copier', aiCopied: '✓ Copié', aiNew: '🔄 Régénérer (variante)',
+    openNewsletter: '📰 Newsletter août 2026',
   },
   pt: {
     title: '📣 Marketing & Negócio',
@@ -87,6 +91,7 @@ const I18N = {
     aiTorName: 'Nome do torneio', aiClub: 'Clube', aiFormat: 'Formato', aiDate: 'Data', aiPlace: 'Local',
     aiFmtAmericano: 'Americano', aiFmtMexicano: 'Mexicano', aiFmtSuizo: 'Suíço', aiFmtKnockout: 'Eliminação',
     aiGen: '✨ Gerar conteúdo', aiLoading: 'A gerar…', aiCopy: '📋 Copiar', aiCopied: '✓ Copiado', aiNew: '🔄 Regenerar (variante)',
+    openNewsletter: '📰 Newsletter agosto 2026',
   },
 };
 
@@ -97,6 +102,7 @@ const btn = { background: 'linear-gradient(135deg,var(--padel-emerald),var(--pad
 
 export default function MarketingApp({ lang = 'es' }) {
   const T = I18N[lang] || I18N.es;
+  const navigate = useNavigate();
   const [tab, setTab] = useState('plans');
   const [plans, setPlans] = useState([]);
   const [promos, setPromos] = useState([]);
@@ -179,12 +185,17 @@ const PB = PLAN_BENEFITS(lang);
         <h1 style={{ fontSize: 28, fontWeight: 900, color: 'var(--padel-text)', margin: 0 }}>{T.title}</h1>
         <p style={{ fontSize: 13, color: 'var(--padel-muted)', margin: '6px 0 18px' }}>{T.subtitle}</p>
 
-        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 18 }}>
-          {[['plans', T.tabPlans], ['campaigns', T.tabCampaigns], ['events', T.tabEvents], ['news', T.tabNews], ['ai', T.tabAi]].map(([k, l]) => (
-            <button key={k} onClick={() => setTab(k)} style={{
-              padding: '9px 16px', borderRadius: 10, border: '1px solid var(--padel-border)', background: tab === k ? 'var(--padel-emerald)' : 'var(--padel-card-bg)', color: tab === k ? '#fff' : 'var(--padel-muted)', fontWeight: 800, fontSize: 13, cursor: 'pointer',
-            }}>{l}</button>
-          ))}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 10, marginBottom: 18 }}>
+          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
+            {[['plans', T.tabPlans], ['campaigns', T.tabCampaigns], ['events', T.tabEvents], ['news', T.tabNews], ['ai', T.tabAi]].map(([k, l]) => (
+              <button key={k} onClick={() => setTab(k)} style={{
+                padding: '9px 16px', borderRadius: 10, border: '1px solid var(--padel-border)', background: tab === k ? 'var(--padel-emerald)' : 'var(--padel-card-bg)', color: tab === k ? '#fff' : 'var(--padel-muted)', fontWeight: 800, fontSize: 13, cursor: 'pointer',
+              }}>{l}</button>
+            ))}
+          </div>
+          <button onClick={() => navigate('/newsletters')} style={{ background: 'rgba(251,191,36,0.12)', color: '#fbbf24', border: '1px solid rgba(251,191,36,0.4)', padding: '10px 18px', borderRadius: 12, fontWeight: 800, fontSize: 13, cursor: 'pointer' }}>
+            {T.openNewsletter}
+          </button>
         </div>
 
         {tab === 'plans' && (

@@ -44,7 +44,7 @@ cobros, bajas, cambios). Y a diferencia del tenis, el pádel requiere **4 person
 | 6 | Yield management | ❌ NO existe | Precio fijo 8 € |
 | 7 | IoT/QR luces | ❌ NO existe | Solo QR del link de Stripe |
 | 8 | ERP escuela | ✅ HECHO (v1.1) | Módulo 4C + cobro recurrente fin de mes: suscripciones por alumno, generación de facturas mensuales y marcar pagada (`SchoolApp` / `schoolService`) |
-| 9 | Carnet + ranking | 🟡 parcial | Ranked League global + Elo. Falta carnet digital y "retar al Nº4" |
+| 9 | Carnet + ranking | 🟢 parcial→HECHO | Player Public ID (`/player/:name`) con historial, rivalidades y curva ELO + analíticas de jugador (#6) |
 | 10 | Dashboard negocio | 🟡 parcial | `/analytics` (torneo); falta panel del dueño (ocupación/facturación/pista) |
 
 ## Estrategia de entrada al mercado

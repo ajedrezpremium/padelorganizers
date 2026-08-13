@@ -28,8 +28,8 @@ superior**:
 |---|---|---|
 | 1. Competition | Tournament & League Engine | 🟢 Motor americano/mexicano/suizo/eliminatorio, cuadros, Punto de Oro, ligas, elo |
 | 2. Automation | Smart Scheduling + Real-Time OS | 🟡 Torneo → resultado única vez, se propaga a cuadro/ranking/live. Falta optimización scheduling |
-| 3. AI | AI Tournament Manager + Marketing AI | 🟡 PadelAIAgent, pareo predictivo, re-pareos. Falta generador por lenguaje natural y asistente de marketing |
-| 4. Data | Player ID + Rankings + Analytics | 🟡 Perfiles, momentos, ranked league global. Falta Player ID global, player analytics |
+| 3. AI | AI Tournament Manager + Marketing AI | 🟢 PadelAIAgent, pareo predictivo, re-pareos + generador de marketing 4 idiomas (MarketingApp) |
+| 4. Data | Player ID + Rankings + Analytics | 🟢 Player Public ID (`/player/:name`), analíticas de jugador (forma/rachas/percentil/proyección), distribución de nivel, ranked league global |
 | 5. Business | Payments + Sponsorship + Marketplace | 🟡 Stripe (reservas/splits/inscripciones/escuela). Falta patrocinios, tienda, dashboard ROI |
 
 Leyenda: 🟢 hecho · 🟡 parcial · 🔴 por construir
@@ -43,12 +43,12 @@ Leyenda: 🟢 hecho · 🟡 parcial · 🔴 por construir
 | 1 | 🤖 AI Tournament Manager ("32 players, 4 courts, 3h → torneo óptimo") | 🟡 parcial (PadelAIAgent + pareo predictivo) | Alto |
 | 2 | 🧠 Smart Scheduling Engine (players+courts+time+format+level+availability) | 🟡 motor genera; sin optimización | Alto |
 | 3 | 🔄 Real-Time Tournament OS (todo a la vez, propagación automática) | 🟢 arquitectura actual | Es la base |
-| 4 | 🌐 Tournament-as-a-Service (`/tournament/XXXX`, cada torneo = producto digital) | 🔴 no existe | Medio |
-| 5 | 👤 Player Digital ID (historial internacional del jugador) | 🟡 perfiles; sin ID global | Medio |
-| 6 | 📊 Padel Data Intelligence (player/club analytics) | 🟡 analytics torneo; sin player | Medio |
+| 4 | 🌐 Tournament-as-a-Service (`/tournament/XXXX`, cada torneo = producto digital) | 🟢 HECHO | Medio |
+| 5 | 👤 Player Digital ID (historial internacional del jugador) | 🟢 HECHO | Medio |
+| 6 | 📊 Padel Data Intelligence (player/club analytics) | 🟢 HECHO | Medio |
 | 7 | 🏆 Global Padel Ranking Engine (mundial amateur) | 🟡 RankedLeague + Elo; sin nivel de torneo | Medio |
 | 8 | 💰 Tournament Monetization Engine (sponsors, banners, premium, ROI) | 🟡 pagos; sin sponsors/dashboard | Alto |
-| 9 | 📱 AI Marketing Assistant (auto-genera posts/web/email/poster 4 idiomas) | 🔴 no existe | Medio |
+| 9 | 📱 AI Marketing Assistant (auto-genera posts/web/email/poster 4 idiomas) | 🟢 HECHO | Medio |
 | 10 | 🌍 Global Padel Event Network (jugadores·clubes·organizadores·torneos·ranking·datos·sponsors·IA) | 🔴 meta estratégica | Marco |
 
 ---
