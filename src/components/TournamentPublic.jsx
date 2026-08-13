@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useStore } from '../services/store';
 import { pullState } from '../services/cloudService';
 import { COURT_STATUS } from '../services/padelEngine';
 import AnalyticsBoard from './AnalyticsBoard';
+import TournamentChat from './TournamentChat';
 
 const I18N = {
   es: {
     badge: '🎫 Torneo · Producto digital',
-    live: 'EN VIVO',
-    liveBadge: '🔴 Sigue el torneo en directo',
+    liveBadge: '🔴 En directo',
     sharedBy: 'Compartido por {club} · PADELORGANIZERS',
     players: '👥 Jugadores (Elo)',
     pairs: '📊 Parejas',
@@ -17,6 +17,27 @@ const I18N = {
     matches: '⚔️ Partidos',
     bracket: '🏆 Cuadro por rondas',
     analytics: '📈 Analíticas & datos',
+    signupTitle: '📝 Inscripción',
+    signupCount: '{n} jugadores inscritos · {p} parejas',
+    signupOpen: '🟢 Inscripciones abiertas',
+    signupClosed: '🔒 Inscripción cerrada',
+    signupBtn: '‘Inscríbete en el torneo’',
+    signupBtnDone: '✅ Solicitud enviada. {club} te confirmará plazas.',
+    scheduleTitle: '🕐 Horarios & calendario',
+    scheduleSub: 'Pistas, jornadas y estado de cada partido.',
+    scheduleRound: 'Jornada {r}',
+    scheduledTime: '{time} · Pista {court}',
+    streamingTitle: '📺 Transmisión en directo',
+    streamingSub: 'Sigue el marcador en tiempo real, sin instalar nada.',
+    streamBtn: '▶ Ver live del torneo',
+    sponsorsTitle: '🤝 Patrocinadores',
+    sponsorsSub: 'El torneo está abierto a patrocinadores: contacta con {club}.',
+    sponsorSlot: 'Tu marca aquí',
+    sponsorContact: 'Contactar como patrocinador',
+    photosTitle: '📸 Fotografías',
+    photosSub: 'Jugadores y momentos del torneo.',
+    newsTitle: '💬 Noticias & comunidad',
+    newsSub: 'Comentarios, animación y actualizaciones en directo.',
     free: 'Libre',
     inGame: 'En juego',
     completed: 'Finalizado',
@@ -29,8 +50,7 @@ const I18N = {
   },
   en: {
     badge: '🎫 Tournament · Digital product',
-    live: 'LIVE',
-    liveBadge: '🔴 Follow the tournament live',
+    liveBadge: '🔴 Live',
     sharedBy: 'Shared by {club} · PADELORGANIZERS',
     players: '👥 Players (Elo)',
     pairs: '📊 Pairs',
@@ -38,6 +58,27 @@ const I18N = {
     matches: '⚔️ Matches',
     bracket: '🏆 Bracket by round',
     analytics: '📈 Analytics & data',
+    signupTitle: '📝 Registration',
+    signupCount: '{n} players registered · {p} pairs',
+    signupOpen: '🟢 Registration open',
+    signupClosed: '🔒 Registration closed',
+    signupBtn: 'Sign up for the tournament',
+    signupBtnDone: '✅ Request sent. {club} will confirm your place.',
+    scheduleTitle: '🕐 Schedule & calendar',
+    scheduleSub: 'Courts, rounds and match status.',
+    scheduleRound: 'Round {r}',
+    scheduledTime: '{time} · Court {court}',
+    streamingTitle: '📺 Live streaming',
+    streamingSub: 'Follow the live scoreboard — no install needed.',
+    streamBtn: '▶ Watch tournament live',
+    sponsorsTitle: '🤝 Sponsors',
+    sponsorsSub: 'The tournament is open to sponsors: contact {club}.',
+    sponsorSlot: 'Your brand here',
+    sponsorContact: 'Contact as sponsor',
+    photosTitle: '📸 Photos',
+    photosSub: 'Players and moments of the tournament.',
+    newsTitle: '💬 News & community',
+    newsSub: 'Comments, cheering and live updates.',
     free: 'Free',
     inGame: 'In play',
     completed: 'Finished',
@@ -50,8 +91,7 @@ const I18N = {
   },
   fr: {
     badge: '🎫 Tournoi · Produit numérique',
-    live: 'EN DIRECT',
-    liveBadge: '🔴 Suivez le tournoi en direct',
+    liveBadge: '🔴 En direct',
     sharedBy: 'Partagé par {club} · PADELORGANIZERS',
     players: '👥 Joueurs (Elo)',
     pairs: '📊 Paires',
@@ -59,6 +99,27 @@ const I18N = {
     matches: '⚔️ Matchs',
     bracket: '🏆 Tableau par tours',
     analytics: '📈 Analyses & données',
+    signupTitle: '📝 Inscription',
+    signupCount: '{n} joueurs inscrits · {p} paires',
+    signupOpen: '🟢 Inscriptions ouvertes',
+    signupClosed: '🔒 Inscription fermée',
+    signupBtn: 'Inscrivez-vous au tournoi',
+    signupBtnDone: '✅ Demande envoyée. {club} confirmera votre place.',
+    scheduleTitle: '🕐 Horaires & calendrier',
+    scheduleSub: 'Pistes, tours et état de chaque match.',
+    scheduleRound: 'Tour {r}',
+    scheduledTime: '{time} · Piste {court}',
+    streamingTitle: '📺 Diffusion en direct',
+    streamingSub: 'Suivez le score en temps réel, sans rien installer.',
+    streamBtn: '▶ Voir le live du tournoi',
+    sponsorsTitle: '🤝 Sponsors',
+    sponsorsSub: 'Le tournoi est ouvert aux sponsors : contactez {club}.',
+    sponsorSlot: 'Votre marque ici',
+    sponsorContact: 'Contacter comme sponsor',
+    photosTitle: '📸 Photos',
+    photosSub: 'Joueurs et moments du tournoi.',
+    newsTitle: '💬 Infos & communauté',
+    newsSub: 'Commentaires, encouragements et mises à jour en direct.',
     free: 'Libre',
     inGame: 'En jeu',
     completed: 'Terminé',
@@ -71,8 +132,7 @@ const I18N = {
   },
   pt: {
     badge: '🎫 Torneio · Produto digital',
-    live: 'AO VIVO',
-    liveBadge: '🔴 Acompanhe o torneio ao vivo',
+    liveBadge: '🔴 Ao vivo',
     sharedBy: 'Partilhado por {club} · PADELORGANIZERS',
     players: '👥 Jogadores (Elo)',
     pairs: '📊 Pares',
@@ -80,6 +140,27 @@ const I18N = {
     matches: '⚔️ Partidas',
     bracket: '🏆 Quadro por rondas',
     analytics: '📈 Análises & dados',
+    signupTitle: '📝 Inscrição',
+    signupCount: '{n} jogadores inscritos · {p} pares',
+    signupOpen: '🟢 Inscrições abertas',
+    signupClosed: '🔒 Inscrição encerrada',
+    signupBtn: 'Inscreva-se no torneio',
+    signupBtnDone: '✅ Pedido enviado. {club} confirmará a sua vaga.',
+    scheduleTitle: '🕐 Horários & calendário',
+    scheduleSub: 'Pistas, rondas e estado de cada partida.',
+    scheduleRound: 'Ronda {r}',
+    scheduledTime: '{time} · Pista {court}',
+    streamingTitle: '📺 Transmissão ao vivo',
+    streamingSub: 'Acompanhe o marcador em tempo real, sem instalar nada.',
+    streamBtn: '▶ Ver o live do torneio',
+    sponsorsTitle: '🤝 Patrocinadores',
+    sponsorsSub: 'O torneio está aberto a patrocinadores: contacte {club}.',
+    sponsorSlot: 'A sua marca aqui',
+    sponsorContact: 'Contactar como patrocinador',
+    photosTitle: '📸 Fotografias',
+    photosSub: 'Jogadores e momentos do torneio.',
+    newsTitle: '💬 Notícias & comunidade',
+    newsSub: 'Comentários, incentivos e atualizações ao vivo.',
     free: 'Livre',
     inGame: 'Em jogo',
     completed: 'Concluído',
@@ -94,14 +175,17 @@ const I18N = {
 
 const card = { background: 'var(--padel-card-bg)', border: '1px solid var(--padel-border)', borderRadius: '16px', padding: '18px' };
 const rowCls = { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid rgba(255,255,255,0.06)', fontSize: '13px' };
+const placeholderPhoto = 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/User_icon_BLACK-01.svg/120px-User_icon_BLACK-01.svg.png';
 
 export default function TournamentPublic({ lang = 'es' }) {
   const T = I18N[lang] || I18N.es;
   const { id } = useParams();
+  const navigate = useNavigate();
   const store = useStore();
   const [remote, setRemote] = useState(null);
   const [loading, setLoading] = useState(false);
   const [missing, setMissing] = useState(false);
+  const [joined, setJoined] = useState(false);
 
   const isLive = store.tournament?.id === id;
   const state = isLive ? store : remote;
@@ -143,9 +227,25 @@ export default function TournamentPublic({ lang = 'es' }) {
   const sortedPlayers = [...state.players].sort((a, b) => b.elo - a.elo);
   const sortedPairs = [...state.pairs].sort((a, b) => b.points - a.points || b.diff - a.diff);
   const rounds = [...new Set(state.matches.map((m) => m.round))].sort((a, b) => a - b);
+  const photos = state.players.filter((p) => p.photo).slice(0, 12);
+  const currentMatch = state.matches.find((m) => m.status === 'in_progress');
 
   const statusLabel = (s) =>
     s === COURT_STATUS.FREE ? T.free : s === COURT_STATUS.IN_GAME ? T.inGame : s;
+
+  const fmtCourtTime = (m) => {
+    const court = state.courts.find((c) => c.id === m.courtId);
+    const start = court?.startTime;
+    const time = start
+      ? new Date(start).toLocaleTimeString(lang === 'es' ? 'es-ES' : lang === 'fr' ? 'fr-FR' : lang === 'pt' ? 'pt-PT' : 'en-US', { hour: '2-digit', minute: '2-digit' })
+      : '';
+    return T.scheduledTime.replace('{time}', time || '—').replace('{court}', court?.name || '—');
+  };
+
+  const signup = () => {
+    setJoined(true);
+    setTimeout(() => setJoined(false), 4000);
+  };
 
   return (
     <div style={{ padding: '24px', maxWidth: '1100px', margin: '0 auto' }}>
@@ -167,6 +267,38 @@ export default function TournamentPublic({ lang = 'es' }) {
         <span style={{ fontSize: '13px', color: '#94a3b8' }}>🟢 {t.totalCourts}</span>
       </div>
       <p style={{ fontSize: '12px', color: '#64748b', margin: '0 0 20px' }}>✨ {T.sharedBy.replace('{club}', t.club)}</p>
+
+      {/* INSCRIPCIÓN */}
+      <div style={{ ...card, marginBottom: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '14px' }}>
+        <div>
+          <h3 style={{ fontSize: '16px', fontWeight: 800, color: '#fff', margin: '0 0 4px' }}>{T.signupTitle}</h3>
+          <div style={{ fontSize: '13px', color: '#94a3b8' }}>{T.signupCount.replace('{n}', state.players.length).replace('{p}', state.pairs.length)}</div>
+          <div style={{ fontSize: '12px', fontWeight: 700, color: isRunning ? '#34d399' : '#fb923c', marginTop: 4 }}>
+            {isRunning ? T.signupOpen : T.signupClosed}
+          </div>
+        </div>
+        {isRunning && (
+          <button onClick={signup} style={{ background: 'linear-gradient(135deg,#10b981,#059669)', color: '#fff', border: 'none', padding: '12px 22px', borderRadius: '12px', fontWeight: 800, fontSize: '14px', cursor: 'pointer' }}>
+            {joined ? T.signupBtnDone.replace('{club}', t.club) : T.signupBtn}
+          </button>
+        )}
+      </div>
+
+      {/* STREAMING */}
+      {currentMatch && (
+        <div style={{ ...card, marginBottom: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '14px', borderColor: 'rgba(251,113,133,0.4)' }}>
+          <div>
+            <h3 style={{ fontSize: '16px', fontWeight: 800, color: '#fff', margin: '0 0 4px' }}>{T.streamingTitle}</h3>
+            <div style={{ fontSize: '13px', color: '#94a3b8' }}>{T.streamingSub}</div>
+            <div style={{ fontSize: '13px', fontWeight: 800, color: '#fb7185', marginTop: 6 }}>
+              ⚔️ {currentMatch.pair1Names} vs {currentMatch.pair2Names} · 🔴 {T.round}{currentMatch.round}
+            </div>
+          </div>
+          <button onClick={() => navigate('/live')} className="pulse-glow" style={{ background: 'rgba(251,113,133,0.15)', color: '#fb7185', border: '1px solid rgba(251,113,133,0.5)', padding: '12px 20px', borderRadius: '12px', fontWeight: 800, fontSize: '14px', cursor: 'pointer' }}>
+            {T.streamBtn}
+          </button>
+        </div>
+      )}
 
       {/* DATOS EN VIVO */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px', marginBottom: '16px' }}>
@@ -207,47 +339,64 @@ export default function TournamentPublic({ lang = 'es' }) {
         </div>
       </div>
 
-      {/* PARTIDOS */}
+      {/* HORARIOS */}
       <div style={{ ...card, marginBottom: '16px' }}>
-        <h3 style={{ fontSize: '16px', fontWeight: 800, color: '#fff', margin: '0 0 12px' }}>{T.matches}</h3>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '10px' }}>
-          {state.matches.map((m) => (
-            <div key={m.id} style={{ background: 'rgba(0,0,0,0.25)', borderRadius: '10px', padding: '12px', fontSize: '13px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: '#64748b', marginBottom: '6px' }}>
-                <span>{T.round}{m.round}</span>
-                <span style={{ color: m.status === 'completed' ? '#34d399' : '#fb923c', fontWeight: 700 }}>{m.status}</span>
-              </div>
-              <div style={{ fontWeight: 700, color: '#f0fdf4' }}>
-                {m.status === 'completed' ? `✓ ${m.pair1Names} ${m.scoreSet1}` : `⚔️ ${m.pair1Names} vs ${m.pair2Names}`}
-              </div>
+        <h3 style={{ fontSize: '16px', fontWeight: 800, color: '#fff', margin: '0 0 4px' }}>{T.scheduleTitle}</h3>
+        <p style={{ fontSize: '12px', color: '#94a3b8', margin: '0 0 12px' }}>{T.scheduleSub}</p>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '10px' }}>
+          {rounds.map((r) => (
+            <div key={r} style={{ background: 'rgba(0,0,0,0.2)', borderRadius: '10px', padding: '12px' }}>
+              <div style={{ fontSize: '11px', fontWeight: 800, color: '#84cc16', marginBottom: '8px', letterSpacing: 1 }}>{T.scheduleRound.replace('{r}', r)}</div>
+              {state.matches.filter((m) => m.round === r).map((m) => (
+                <div key={m.id} style={{ fontSize: '12px', color: '#cbd5e1', padding: '4px 0', borderBottom: '1px dashed rgba(255,255,255,0.06)' }}>
+                  <span style={{ fontWeight: 700, color: m.status === 'completed' ? '#34d399' : '#f0fdf4' }}>
+                    {m.status === 'completed' ? `✓ ${m.pair1Names} ${m.scoreSet1}` : `${m.pair1Names} vs ${m.pair2Names}`}
+                  </span>
+                  <div style={{ fontSize: '10px', color: '#64748b', marginTop: 1 }}>{fmtCourtTime(m)}</div>
+                </div>
+              ))}
             </div>
           ))}
         </div>
       </div>
 
-      {/* CUADRO */}
-      {rounds.length > 1 && (
+      {/* FOTOS */}
+      {photos.length > 0 && (
         <div style={{ ...card, marginBottom: '16px' }}>
-          <h3 style={{ fontSize: '16px', fontWeight: 800, color: '#fff', margin: '0 0 12px' }}>{T.bracket}</h3>
-          <div style={{ display: 'grid', gridTemplateColumns: `repeat(auto-fit, minmax(220px,1fr))`, gap: '14px' }}>
-            {rounds.map((r) => (
-              <div key={r}>
-                <div style={{ fontSize: '11px', fontWeight: 800, color: '#84cc16', marginBottom: '8px', letterSpacing: 1 }}>{T.round}{r}</div>
-                {state.matches.filter((m) => m.round === r).map((m) => (
-                  <div key={m.id} style={{ background: 'rgba(0,0,0,0.25)', borderLeft: m.status === 'completed' ? '3px solid #34d399' : '3px solid #10b981', borderRadius: '8px', padding: '10px', marginBottom: '8px', fontSize: '12px' }}>
-                    <div style={{ color: '#f0fdf4', fontWeight: 700 }}>{m.pair1Names}</div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', color: '#64748b' }}>
-                      <span style={{ fontSize: '11px' }}>vs</span>
-                      {m.scoreSet1 && <span style={{ color: '#a3e635', fontWeight: 800 }}>{m.scoreSet1}</span>}
-                    </div>
-                    <div style={{ color: '#f0fdf4', fontWeight: 700, marginTop: 2 }}>{m.pair2Names}</div>
-                  </div>
-                ))}
+          <h3 style={{ fontSize: '16px', fontWeight: 800, color: '#fff', margin: '0 0 4px' }}>{T.photosTitle}</h3>
+          <p style={{ fontSize: '12px', color: '#94a3b8', margin: '0 0 14px' }}>{T.photosSub}</p>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(80px, 1fr))', gap: '10px' }}>
+            {photos.map((p) => (
+              <div key={p.id} style={{ borderRadius: '12px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.08)' }}>
+                <img src={p.photo || placeholderPhoto} alt={p.name} loading="lazy" style={{ width: '100%', height: 80, objectFit: 'cover', display: 'block' }} />
               </div>
             ))}
           </div>
         </div>
       )}
+
+      {/* PATROCINIOS */}
+      <div style={{ ...card, marginBottom: '16px', textAlign: 'center' }}>
+        <h3 style={{ fontSize: '16px', fontWeight: 800, color: '#fff', margin: '0 0 4px' }}>{T.sponsorsTitle}</h3>
+        <p style={{ fontSize: '12px', color: '#94a3b8', margin: '0 auto 14px', maxWidth: 520 }}>{T.sponsorsSub.replace('{club}', t.club)}</p>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '12px', marginBottom: '14px' }}>
+          {[0, 1, 2].map((i) => (
+            <div key={i} style={{ border: '1px dashed rgba(255,255,255,0.15)', borderRadius: '12px', padding: '18px', fontSize: '13px', fontWeight: 800, color: '#475569' }}>
+              {T.sponsorSlot}
+            </div>
+          ))}
+        </div>
+        <button onClick={() => navigate('/club')} style={{ background: 'rgba(255,255,255,0.08)', color: '#fff', border: '1px solid rgba(255,255,255,0.2)', padding: '10px 18px', borderRadius: '10px', fontWeight: 700, fontSize: '13px', cursor: 'pointer' }}>
+          {T.sponsorContact}
+        </button>
+      </div>
+
+      {/* NOTICIAS / CHAT */}
+      <div style={{ marginBottom: '16px' }}>
+        <h3 style={{ fontSize: '18px', fontWeight: 900, color: '#fff', margin: '0 0 4px' }}>{T.newsTitle}</h3>
+        <p style={{ fontSize: '12px', color: '#94a3b8', margin: '0 0 12px' }}>{T.newsSub}</p>
+        <TournamentChat lang={lang} tournamentId={t.id || id} />
+      </div>
 
       {/* ANALYTICS */}
       <div style={{ marginTop: '16px' }}>
