@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { listReservations, addReservation, markReservationStatus, SLOTS, clubOnline } from '../services/clubService';
+import { listReservations, addReservation, markReservationStatus, cancelReservation, SLOTS, clubOnline, NOSHOW_DEPOSIT, listWaitlist, addWaitlist } from '../services/clubService';
 import { addSplit, listSplits, markSplitPaidLocal } from '../services/splitService';
 import { useAuth } from '../hooks/useAuth';
 
@@ -20,6 +20,12 @@ const I18N = {
     paid: 'Pagado', waiting: 'Pendiente', allPaid: '¡Todos pagaron! Reserva confirmada 🎉',
     simulatePaid: 'Simular pago',
     payWith: 'Método de pago', stripe: 'Tarjeta', paypal: 'PayPal',
+    noShow: '🛡️ Protección anti no-show (fianza reforzada)',
+    noShowHint: 'Fianza de {{XDEP}} € reembolsable si cancelas con 24h de antelación.',
+    deposit: 'Fianza reembolsable',
+    cancelBooking: 'Cancelar', cancelled: 'Cancelada',
+    waitTitle: 'Lista de espera', joinWaitlist: '🚶 Apuntarme a la espera', joinedWait: '✓ Estás en la lista de espera — te avisamos si queda libre.',
+    perSlot: 'por slot',
   },
   en: {
     title: '🏟️ Club Booking App', sub: 'Book courts and pay online in seconds',
@@ -32,6 +38,12 @@ const I18N = {
     paid: 'Paid', waiting: 'Pending', allPaid: 'Everyone paid! Booking complete 🎉',
     simulatePaid: 'Simulate payment',
     payWith: 'Payment method', stripe: 'Card', paypal: 'PayPal',
+    noShow: '🛡️ No-show protection (refundable deposit)',
+    noShowHint: '{{XDEP}} € deposit refundable if you cancel 24h ahead.',
+    deposit: 'Refundable deposit',
+    cancelBooking: 'Cancel', cancelled: 'Cancelled',
+    waitTitle: 'Waiting list', joinWaitlist: '🚶 Join the waiting list', joinedWait: '✓ You are on the waiting list — we\'ll notify you if a slot frees up.',
+    perSlot: 'per slot',
   },
   fr: {
     title: '🏫️ App Club de réservation', sub: 'Réservez des pistes et payez en ligne en un clin',
@@ -44,6 +56,12 @@ const I18N = {
     paid: 'Payé', waiting: 'En attente', allPaid: 'Tous payés ! Réservation complète 🎉',
     simulatePaid: 'Simuler le paiement',
     payWith: 'Moyen de paiement', stripe: 'Carte', paypal: 'PayPal',
+    noShow: '🛡️ Protection anti no-show (caution remboursable)',
+    noShowHint: 'Caution de {{XDEP}} € remboursable si annulation 24h avant.',
+    deposit: 'Caution remboursable',
+    cancelBooking: 'Annuler', cancelled: 'Annulée',
+    waitTitle: 'Liste d\'attente', joinWaitlist: '🚶 Rejoindre la liste d\'attente', joinedWait: '✓ Vous êtes sur la liste d\'attente — on vous prévient si un créneau se libère.',
+    perSlot: 'par créneau',
   },
   pt: {
     title: '🏫 App Clube de Reservas', sub: 'Reserve campos e pague online em segundos',
@@ -56,6 +74,12 @@ const I18N = {
     paid: 'Pago', waiting: 'Pendente', allPaid: 'Todos pagaram! Reserva completa 🎉',
     simulatePaid: 'Simular pagamento',
     payWith: 'Método de pagamento', stripe: 'Cartão', paypal: 'PayPal',
+    noShow: '🛡️ Proteção anti-no-show (caução reembolsável)',
+    noShowHint: 'Caução de {{XDEP}} € reembolsável se cancelar com 24h de antecedência.',
+    deposit: 'Caução reembolsável',
+    cancelBooking: 'Cancelar', cancelled: 'Cancelada',
+    waitTitle: 'Lista de espera', joinWaitlist: '🚶 Entrar na lista de espera', joinedWait: '✓ Está na lista de espera — avisamo-lo se ficar vago.',
+    perSlot: 'por slot',
   },
 };
 
@@ -78,8 +102,12 @@ export default function ClubApp({ lang = 'es' }) {
   const [players, setPlayers] = useState([{ name, email }]);
   const [splits, setSplits] = useState([]);
   const [gateway, setGateway] = useState('stripe'); // stripe | paypal
+  const [noShow, setNoShow] = useState(false);
+  const [waitlist, setWaitlist] = useState([]);
+  const [waitMsg, setWaitMsg] = useState('');
 
   useEffect(() => { listReservations().then(handleReturn).then(setBookings); }, []);
+  useEffect(() => { listWaitlist().then(setWaitlist); }, []);
   useEffect(() => { listSplits().then(setSplits); }, []);
 
   // Al volver de Stripe (?status=success) confirma la reserva pendiente del slot pagado.
@@ -127,6 +155,8 @@ export default function ClubApp({ lang = 'es' }) {
 
   const checkout = async () => {
     setMsg('');
+    const deposit = noShow ? NOSHOW_DEPOSIT : 0;
+    const withDeposit = (extra = {}) => ({ ...extra, deposit_eur: deposit, refundable: noShow });
     if (!name.trim() || !email.trim()) { setMsg(T.required); return; }
     if (!slotSel) { setMsg(T.required); return; }
     if (splitOn) {
@@ -150,6 +180,7 @@ export default function ClubApp({ lang = 'es' }) {
             player_name: all[0].name, player_email: all[0].email, user_id: user?.id || null,
             price: PRICE, currency: 'eur', status, payment_method: 'paypal',
             paypal_order: pay.demo ? null : pay.payments[0].id,
+            ...withDeposit({}),
           });
           for (const p of pay.payments) {
             await addSplit({
@@ -188,6 +219,7 @@ export default function ClubApp({ lang = 'es' }) {
           court_name: T.courts[courtSel], day: daySel, time_slot: slotSel,
           player_name: all[0].name, player_email: all[0].email, user_id: user?.id || null,
           price: PRICE, currency: 'eur', status, stripe_session: pay.demo ? null : pay.payments[0].sessionId,
+          ...withDeposit({}),
         });
         for (const p of pay.payments) {
           await addSplit({
@@ -230,6 +262,7 @@ export default function ClubApp({ lang = 'es' }) {
           price: PRICE, currency: 'eur', status, payment_method: 'paypal',
           paypal_order: pay.demo ? null : pay.id,
           stripe_session: null,
+          ...withDeposit({}),
         });
         setBookings(await listReservations());
         if (pay.demo) {
@@ -251,6 +284,7 @@ export default function ClubApp({ lang = 'es' }) {
           court_name: T.courts[courtSel], day: daySel, time_slot: slotSel,
           player_name: name, player_email: email, user_id: user?.id || null,
           price: PRICE, currency: 'eur', status, stripe_session: pay.sessionId || null,
+          ...withDeposit({}),
         });
         setBookings(await listReservations());
         if (pay.demo) {
@@ -302,14 +336,30 @@ export default function ClubApp({ lang = 'es' }) {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 8 }}>
             {SLOTS.map(s => {
               const occ = occupiedByOther(s);
+              const inWait = waitlist.some(w => w.status === 'waiting' && w.courtName === T.courts[courtSel] && w.day === daySel && w.timeSlot === s);
               return (
-                <button key={s} disabled={occ} onClick={() => setSlotSel(s)}
-                  style={{ padding: '10px', borderRadius: '10px', border: slotSel === s ? '2px solid #10b981' : '1px solid rgba(255,255,255,0.15)', background: slotSel === s ? 'rgba(16,185,129,0.15)' : occ ? 'rgba(244,63,94,0.08)' : 'rgba(255,255,255,0.03)', color: slotSel === s ? '#a3e635' : occ ? '#f87171' : '#cbd5e1', fontWeight: 700, fontSize: 13, cursor: occ ? 'not-allowed' : 'pointer' }}>
-                  {s} {occ ? '· Ocupado' : ''}
-                </button>
+                <div key={s} style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                  <button disabled={occ} onClick={() => setSlotSel(s)}
+                    style={{ padding: '10px', borderRadius: '10px', border: slotSel === s ? '2px solid #10b981' : '1px solid rgba(255,255,255,0.15)', background: slotSel === s ? 'rgba(16,185,129,0.15)' : occ ? 'rgba(244,63,94,0.08)' : 'rgba(255,255,255,0.03)', color: slotSel === s ? '#a3e635' : occ ? '#f87171' : '#cbd5e1', fontWeight: 700, fontSize: 13, cursor: occ ? 'not-allowed' : 'pointer' }}>
+                    {s} {occ ? '· Ocupado' : ''}
+                  </button>
+                  {occ && (
+                    <button
+                      onClick={async () => {
+                        if (!name.trim() || !email.trim()) { setWaitMsg(T.required); return; }
+                        await addWaitlist({ courtName: T.courts[courtSel], day: daySel, timeSlot: s, name: name.trim(), email: email.trim() });
+                        setWaitMsg(T.joinedWait);
+                        setWaitlist(await listWaitlist());
+                      }}
+                      style={{ padding: '6px', borderRadius: '8px', border: '1px dashed rgba(251,191,36,0.4)', background: 'rgba(251,191,36,0.06)', color: inWait ? '#a3e635' : '#fbbf24', fontSize: 11, fontWeight: 700, cursor: 'pointer' }}>
+                      {inWait ? '✓ '+T.waitTitle : T.joinWaitlist}
+                    </button>
+                  )}
+                </div>
               );
             })}
           </div>
+          {waitMsg && <p style={{ fontSize: 12, color: '#84cc16', margin: '6px 0 0' }}>{waitMsg}</p>}
 
           <input value={name} onChange={e => setName(e.target.value)} placeholder={T.name}
             style={inputStyle} />
@@ -339,6 +389,17 @@ export default function ClubApp({ lang = 'es' }) {
 
           {msg && <p style={{ fontSize: 13, color: '#84cc16', margin: '4px 0' }}>{msg}</p>}
 
+          {/* Anti no-show: fianza reembolsable */}
+          <label style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 12, cursor: 'pointer' }}>
+            <input type="checkbox" checked={noShow} onChange={e => setNoShow(e.target.checked)} />
+            <span style={{ fontSize: 13, color: '#e2e8f0', fontWeight: 700 }}>{T.noShow}</span>
+          </label>
+          {noShow && (
+            <div style={{ color: '#94a3b8', fontSize: 12, margin: '6px 0 0' }}>
+              {T.noShowHint.replace('{{XDEP}}', String(NOSHOW_DEPOSIT))} · +{NOSHOW_DEPOSIT} € ({T.perSlot})
+            </div>
+          )}
+
           {/* Selector de pasarela de pago */}
           <label style={{ ...labelStyle, marginTop: 14 }}>{T.payWith}</label>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
@@ -352,7 +413,7 @@ export default function ClubApp({ lang = 'es' }) {
 
           <button onClick={checkout} disabled={busy}
             style={{ width: '100%', padding: '13px', borderRadius: '10px', border: 'none', fontWeight: 800, fontSize: 15, cursor: 'pointer', background: busy ? '#64748b' : 'linear-gradient(135deg,#10b981,#059669)', color: '#fff', marginTop: 8 }}>
-            {busy ? '…' : splitOn ? `💳 Reservar · ${PRICE} € (${players.filter(pl => pl.name.trim() && pl.email.trim()).length} jug.)` : `💳 Reservar · ${PRICE} €`}
+            {busy ? '…' : splitOn ? `💳 Reservar · ${PRICE} € (${players.filter(pl => pl.name.trim() && pl.email.trim()).length} jug.)` : `💳 Reservar · ${PRICE + (noShow ? NOSHOW_DEPOSIT : 0)} €`}
           </button>
 
           {/* Panel: links de pago por jugador */}
@@ -392,11 +453,33 @@ export default function ClubApp({ lang = 'es' }) {
               <div>
                 <div style={{ fontSize: 14, fontWeight: 700, color: '#f0fdf4' }}>{b.court_name}</div>
                 <div style={{ fontSize: 12, color: '#94a3b8' }}>{b.day} · {b.time_slot} · {b.player_name}</div>
+                {Number(b.deposit_eur) > 0 && (
+                  <div style={{ fontSize: 11, color: '#a3e635' }}>🛡️ {T.deposit} +{b.deposit_eur} €</div>
+                )}
               </div>
-              <div style={{ textAlign: 'right' }}>
+              <div style={{ textAlign: 'right', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 4 }}>
                 <div style={{ fontSize: 13, fontWeight: 800, color: '#84cc16' }}>{b.price} €</div>
                 <div style={{ fontSize: 11, color: b.status === 'confirmed' ? '#34d399' : '#fbbf24' }}>{bookingStatus(b)}</div>
+                {b.status !== 'cancelled' && b.status !== 'completed' && (
+                  <button onClick={async () => { await cancelReservation(b.id); setBookings(await listReservations()); setWaitlist(await listWaitlist()); }} style={{ fontSize: 11, color: '#f87171', background: 'transparent', border: '1px solid rgba(248,113,113,0.4)', borderRadius: 8, padding: '4px 10px', cursor: 'pointer', fontWeight: 700 }}>
+                    ✕ {T.cancelBooking}
+                  </button>
+                )}
               </div>
+            </div>
+          ))}
+
+          <h3 style={{ fontSize: '14px', fontWeight: 800, color: '#e2e8f0', margin: '18px 0 8px' }}>🚶 {T.waitTitle}</h3>
+          {waitlist.length === 0 && <p style={{ color: '#64748b', fontSize: 13 }}>{T.empty}</p>}
+          {waitlist.map(w => (
+            <div key={w.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+              <div>
+                <div style={{ fontSize: 13, fontWeight: 700, color: '#f0fdf4' }}>{w.name}</div>
+                <div style={{ fontSize: 11, color: '#94a3b8' }}>{w.courtName} · {w.day} · {w.timeSlot}</div>
+              </div>
+              <span style={{ fontSize: 11, fontWeight: 800, color: w.status === 'promoted' ? '#34d399' : w.status === 'cancelled' ? '#94a3b8' : '#fbbf24' }}>
+                {w.status === 'promoted' ? '✅ ' + T.confirmed : w.status === 'cancelled' ? T.cancelled : '⏳ ' + T.waiting}
+              </span>
             </div>
           ))}
         </div>

@@ -17,6 +17,8 @@ const LS = {
   evals: 'padelorganizers-evals',
   bonuses: 'padelorganizers-bonuses',
   drills: 'padelorganizers-drills',
+  subscriptions: 'padelorganizers-subscriptions',
+  invoices: 'padelorganizers-invoices',
 };
 
 function readLocal(key) {
@@ -56,6 +58,8 @@ function mapRow(table, row) {
   if (table === 'attendance') return { id: row.id, classId: row.class_id, studentId: row.student_id, attended: row.attended, recovered: row.recovered, notes: row.notes };
   if (table === 'evals') return { id: row.id, studentId: row.student_id, coachId: row.coach_id, evaluatedOn: row.evaluated_on, technical: row.technical_score || 0, tactical: row.tactical_score || 0, movement: row.movement_score || 0, mental: row.mental_score || 0, level: row.level, notes: row.notes };
   if (table === 'bonuses') return { id: row.id, studentId: row.student_id, description: row.description, total: row.total_classes || 0, used: row.used_classes || 0, expiresOn: row.expires_on };
+  if (table === 'subscriptions') return { id: row.id, studentId: row.student_id, planName: row.plan_name || 'Clases mensuales', monthlyPrice: Number(row.monthly_price || 0), currency: row.currency || 'eur', billingDay: row.billing_day || 1, status: row.status || 'active', cancelOn: row.cancel_on, notes: row.notes, createdAt: row.created_at };
+  if (table === 'invoices') return { id: row.id, subscriptionId: row.subscription_id, studentId: row.student_id, period: row.period, amount: Number(row.amount || 0), currency: row.currency || 'eur', status: row.status || 'pending', stripeSession: row.stripe_session, dueOn: row.due_on, paidAt: row.paid_at, createdAt: row.created_at };
   return row;
 }
 
@@ -375,6 +379,100 @@ async function tableExists(table) {
   }
 }
 
+// ---------- cobro recurrente (suscripciones + facturas fin de mes) ----------
+export async function listSubscriptions({ cloud = isSupabaseConfigured } = {}) {
+  const local = readLocal(LS.subscriptions);
+  if (!cloud) return local;
+  const ok = await tableExists('student_subscriptions');
+  if (!ok) return local;
+  const rows = await cloudQuery('student_subscriptions');
+  return rows && rows.length ? rows : local;
+}
+
+export async function addSubscription(sub, { cloud = isSupabaseConfigured } = {}) {
+  const local = readLocal(LS.subscriptions);
+  const rec = {
+    id: localId(),
+    studentId: sub.studentId,
+    planName: sub.planName || 'Clases mensuales',
+    monthlyPrice: Number(sub.monthlyPrice || 0),
+    currency: 'eur',
+    billingDay: sub.billingDay || 1,
+    status: 'active',
+    cancelOn: null,
+    notes: sub.notes || '',
+    createdAt: new Date().toISOString(),
+  };
+  writeLocal(LS.subscriptions, [rec, ...local]);
+  if (cloud) {
+    await supabase.from('student_subscriptions').insert({
+      student_id: rec.studentId, plan_name: rec.planName, monthly_price: rec.monthlyPrice,
+      currency: rec.currency, billing_day: rec.billingDay, status: rec.status, notes: rec.notes,
+    });
+  }
+  return rec;
+}
+
+export async function updateSubscriptionStatus(id, status, { cloud = isSupabaseConfigured } = {}) {
+  const local = readLocal(LS.subscriptions);
+  const next = local.map(s => (s.id === id ? { ...s, status } : s));
+  writeLocal(LS.subscriptions, next);
+  if (cloud) await supabase.from('student_subscriptions').update({ status }).eq('id', id);
+  return next.find(s => s.id === id);
+}
+
+export async function listInvoices({ cloud = isSupabaseConfigured } = {}) {
+  const local = readLocal(LS.invoices);
+  if (!cloud) return local;
+  const ok = await tableExists('school_invoices');
+  if (!ok) return local;
+  const rows = await cloudQuery('school_invoices');
+  return rows && rows.length ? rows : local;
+}
+
+// Genera las facturas fin de mes de todas las suscripciones activas
+export async function generateMonthlyInvoices({ month, year, cloud = isSupabaseConfigured } = {}) {
+  const d = new Date();
+  const period = `${year || d.getFullYear()}-${String(month !== undefined ? month : d.getMonth() + 1).padStart(2, '0')}`;
+  const subs = await listSubscriptions({ cloud });
+  const invoices = await listInvoices({ cloud });
+  const created = [];
+  for (const s of subs) {
+    if (s.status !== 'active') continue;
+    const exists = invoices.find(i => i.subscriptionId === s.id && i.period === period);
+    if (exists) continue;
+    const rec = {
+      id: localId(),
+      subscriptionId: s.id,
+      studentId: s.studentId,
+      period,
+      amount: Number(s.monthlyPrice || 0),
+      currency: 'eur',
+      status: 'pending',
+      dueOn: `${period}-01`,
+      createdAt: new Date().toISOString(),
+    };
+    invoices.push(rec);
+    created.push(rec);
+    if (cloud) {
+      await supabase.from('school_invoices').insert({
+        subscription_id: s.id, student_id: s.studentId, period,
+        amount: rec.amount, currency: 'eur', status: 'pending', due_on: rec.dueOn,
+      });
+    }
+  }
+  writeLocal(LS.invoices, invoices);
+  return created;
+}
+
+export async function markInvoicePaid(id, { cloud = isSupabaseConfigured } = {}) {
+  const local = readLocal(LS.invoices);
+  const next = local.map(i => (i.id === id ? { ...i, status: 'paid', paidAt: new Date().toISOString() } : i));
+  writeLocal(LS.invoices, next);
+  if (cloud) await supabase.from('school_invoices').update({ status: 'paid', paid_at: new Date().toISOString() }).eq('id', id);
+  return next.find(i => i.id === id);
+}
+
 // ---------- planificador metodológico (drills) ----------
 // Biblioteca semilla de ejercicios organizada por ámbito (técnica/táctica/movimiento/mental) y nivel.
 const DRILL_SEED = [
@@ -448,15 +546,17 @@ export function drillAxisLabels(lang = 'es') {
 }
 
 // ---------- estadísticas de la escuela ----------
-export function schoolStats({ students, groups, classes, attendance, bonuses }) {  const activeGroups = (groups || []).filter(g => g.active).length;
+export function schoolStats({ students, groups, classes, attendance, bonuses, invoices }) {  const activeGroups = (groups || []).filter(g => g.active).length;
   const planned = (classes || []).filter(c => c.status === 'planned' && new Date(c.startsOn) > new Date()).length;
   const done = (classes || []).filter(c => c.status === 'done').length;
   const attendedCount = (attendance || []).filter(a => a.attended).length;
   const attendanceRate = (attendance || []).length
     ? Math.round((attendedCount / (attendance || []).length) * 100)
     : 0;
-  const minors = (students || []).filter(s => s.ageGroup === 'kids' || s.ageGroup === 'teens').length;
+const minors = (students || []).filter(s => s.ageGroup === 'kids' || s.ageGroup === 'teens').length;
   const available = (bonuses || []).reduce((acc, b) => acc + ((b.total || 0) - (b.used || 0)), 0);
+  const pendingDue = (invoices || []).filter(i => i.status === 'pending').reduce((acc, i) => acc + Number(i.amount || 0), 0);
+  const income = (invoices || []).filter(i => i.status === 'paid').reduce((acc, i) => acc + Number(i.amount || 0), 0);
   return {
     students: (students || []).length,
     activeGroups,
@@ -466,5 +566,7 @@ export function schoolStats({ students, groups, classes, attendance, bonuses }) 
     attendanceRate,
     minors,
     bonusAvailable: available,
+    pendingDue,
+    income,
   };
 }

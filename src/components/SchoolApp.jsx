@@ -8,6 +8,8 @@ import {
   recordAttendance,
   listEvaluations, addEvaluation,
   listBonuses, addBonus, useBonus,
+  listSubscriptions, addSubscription, updateSubscriptionStatus,
+  listInvoices, generateMonthlyInvoices, markInvoicePaid,
   schoolStats, LEVEL_LABELS, CATEGORY_LABELS, LEVELS, CATEGORIES,
   listDrills, saveDrill, deleteDrill, drillAxisLabels, drillSeed,
 } from '../services/schoolService';
@@ -36,7 +38,7 @@ const I18N = {
     movement: 'Movimiento', mental: 'Mental', notes: 'Notas', score: 'Media',
     addBonus: 'Añadir bono', saveBonus: 'Guardar bono', totalClasses: 'Nº de clases', useBonus: 'Usar clase',
     online: '🟢 Nube', local: '🟡 Local', empty: 'Sin datos todavía.', noStudents: 'Sin alumnos. Añade el primero.',
-    loading: 'Cargando…', members: 'miembros', coachForGroup: 'Selecciona entrenador',
+    loading: 'Cargando…', coachForGroup: 'Selecciona entrenador',
      groupForClass: 'Grupo', assigned: 'grupos', active: 'Activo', inactive: 'Inactivo',
     noGroups: 'Sin grupos creados.', bonusLeft: 'restantes', bonusTotal: 'clases',
     tabProgress: '📈 Progresión', tabDrills: '🗂️ Drills',
@@ -46,6 +48,12 @@ const I18N = {
     drillLevel: 'Nivel', drillMin: 'Duración (min)', drillFocus: 'Foco', drillSetup: 'Material / setup',
     axisTechnical: 'Técnica', axisTactical: 'Táctica', axisMovement: 'Movimiento', axisMental: 'Mental',
     noDrills: 'Sin ejercicios. Añade el primero.',
+    tabBilling: '💳 Cobros', billingSub: 'Suscripciones mensuales de alumnos y facturas fin de mes (ERP escuela)',
+    addSubscription: 'Nueva suscripción', saveSubscription: 'Guardar suscripción', planName: 'Plan', monthlyFee: 'Cuota mensual (€)',
+    subsActive: 'Suscripciones activas', pendingDue: 'Pendiente de cobro', income: 'Cobrado', statusActive: 'Activa', statusPaused: 'Pausada',
+    setPaused: 'Pausar', setActive: 'Activar', generateInvoices: '🧮 Generar cobros del mes', invoicesGenerated: 'Facturas generadas para el mes actual. Las pendientes se cobran al marcar como pagadas.',
+    markPaid: 'Marcar pagada', paidMarked: 'Factura marcada como pagada ✅', noSubscriptions: 'Sin suscripciones. Añade la primera.', noInvoices: 'Sin facturas para este mes. Pulsa "Generar cobros del mes".',
+    invoiceFor: 'Factura', student: 'Alumno', period: 'Periodo', amount: 'Importe',
   },
   en: {
     title: '🏫 School & Coaches',
@@ -79,6 +87,12 @@ const I18N = {
     drillLevel: 'Level', drillMin: 'Duration (min)', drillFocus: 'Focus', drillSetup: 'Equipment / setup',
     axisTechnical: 'Technical', axisTactical: 'Tactical', axisMovement: 'Movement', axisMental: 'Mental',
     noDrills: 'No drills. Add the first.',
+    tabBilling: '💳 Billing', billingSub: 'Monthly student subscriptions and end-of-month invoices (school ERP)',
+    addSubscription: 'New subscription', saveSubscription: 'Save subscription', planName: 'Plan', monthlyFee: 'Monthly fee (€)',
+    subsActive: 'Active subscriptions', pendingDue: 'Due', income: 'Collected', statusActive: 'Active', statusPaused: 'Paused',
+    setPaused: 'Pause', setActive: 'Activate', generateInvoices: '🧮 Generate month charges', invoicesGenerated: 'Invoices generated for the current month. Pending ones are collected when marked as paid.',
+    markPaid: 'Mark paid', paidMarked: 'Invoice marked as paid ✅', noSubscriptions: 'No subscriptions. Add the first.', noInvoices: 'No invoices for this month. Press "Generate month charges".',
+    invoiceFor: 'Invoice', student: 'Student', period: 'Period', amount: 'Amount',
   },
   fr: {
     title: '🏫 École & Entraîneurs',
@@ -109,6 +123,12 @@ const I18N = {
     drillLevel: 'Niveau', drillMin: 'Durée (min)', drillFocus: 'Focus', drillSetup: 'Matériel / setup',
     axisTechnical: 'Technique', axisTactical: 'Tactique', axisMovement: 'Déplacement', axisMental: 'Mental',
     noDrills: 'Aucun exercice. Ajoutez le premier.',
+    tabBilling: '💳 Factures', billingSub: 'Abonnements mensuels des élèves et factures de fin de mois (ERP école)',
+    addSubscription: 'Nouvel abonnement', saveSubscription: 'Enregistrer', planName: 'Formule', monthlyFee: 'Frais mensuels (€)',
+    subsActive: 'Abonnements actifs', pendingDue: 'À encaisser', income: 'Encaissé', statusActive: 'Actif', statusPaused: 'Suspendu',
+    setPaused: 'Suspendre', setActive: 'Activer', generateInvoices: '🧮 Générer les frais du mois', invoicesGenerated: 'Factures générées pour le mois en cours. Les impayées sont encaissées quand marquées payées.',
+    markPaid: 'Marquer payée', paidMarked: 'Facture marquée payée ✅', noSubscriptions: 'Aucun abonnement. Ajoutez le premier.', noInvoices: 'Aucune facture ce mois-ci. Cliquez sur « Générer les frais du mois ».',
+    invoiceFor: 'Facture', student: 'Élève', period: 'Période', amount: 'Montant',
   },
   pt: {
     title: '🏓 Escola & Treinadores',
@@ -139,6 +159,12 @@ const I18N = {
     drillLevel: 'Nível', drillMin: 'Duração (min)', drillFocus: 'Foco', drillSetup: 'Material / setup',
     axisTechnical: 'Técnica', axisTactical: 'Tática', axisMovement: 'Movimento', axisMental: 'Mental',
     noDrills: 'Sem exercícios. Adicione o primeiro.',
+    tabBilling: '💳 Cobranças', billingSub: 'Assinaturas mensais de alunos e faturas de fim de mês (ERP escola)',
+    addSubscription: 'Nova assinatura', saveSubscription: 'Salvar', planName: 'Plano', monthlyFee: 'Mensalidade (€)',
+    subsActive: 'Assinaturas ativas', pendingDue: 'A cobrar', income: 'Recebido', statusActive: 'Ativa', statusPaused: 'Pausada',
+    setPaused: 'Pausar', setActive: 'Ativar', generateInvoices: '🧮 Gerar cobranças do mês', invoicesGenerated: 'Faturas geradas para o mês atual. As pendentes são cobradas ao marcar como pagas.',
+    markPaid: 'Marcar paga', paidMarked: 'Fatura marcada como paga ✅', noSubscriptions: 'Sem assinaturas. Adicione a primeira.', noInvoices: 'Sem faturas este mês. Pressione "Gerar cobranças do mês".',
+    invoiceFor: 'Fatura', student: 'Aluno', period: 'Período', amount: 'Valor',
   },
 };
 
@@ -154,7 +180,11 @@ const Field = ({ label, value, onChange, type = 'text', options, placeholder }) 
     <input type={type} value={value || ''} onChange={onChange} style={input} placeholder={placeholder} list={options ? `dl-${label}` : undefined} />
     {options && (
       <datalist id={`dl-${label}`}>
-        {options.map(o => <option key={o} value={o} />)}
+        {options.map(o => {
+          const optValue = typeof o === 'string' ? o : o.value;
+          const optLabel = typeof o === 'string' ? o : (o.label || o.value);
+          return <option key={optValue} value={optValue}>{optLabel}</option>;
+        })}
       </datalist>
     )}
   </label>
@@ -175,6 +205,8 @@ export default function SchoolApp({ lang = 'es' }) {
   const [evals, setEvals] = useState([]);
   const [bonuses, setBonuses] = useState([]);
   const [drills, setDrills] = useState([]);
+  const [subscriptions, setSubscriptions] = useState([]);
+  const [invoices, setInvoices] = useState([]);
 
   const emptyStudent = () => ({ id: null, name: '', email: '', phone: '', birthdate: '', ageGroup: 'adults', level: 'BEGINNER', guardianName: '', guardianEmail: '', guardianPhone: '', notes: '' });
   const emptyStudentForm = emptyStudent;
@@ -190,6 +222,8 @@ export default function SchoolApp({ lang = 'es' }) {
   const [evalForm, setEvalForm] = useState(null);
   const [bonusForm, setBonusForm] = useState(emptyBonus());
   const [drillForm, setDrillForm] = useState({ name: '', axis: 'technical', level: 'BEGINNER', durationMin: 20, category: 'adults', focus: '', setup: '' });
+  const [subForm, setSubForm] = useState({ studentId: '', planName: 'Clases mensuales', monthlyPrice: '40' });
+  const [billMsg, setBillMsg] = useState('');
   const [progressStudent, setProgressStudent] = useState('');
   const [loading, setLoading] = useState(true);
   const [cloudOk, setCloudOk] = useState(false);
@@ -200,12 +234,14 @@ export default function SchoolApp({ lang = 'es' }) {
     const d = await safe(listDrills());
     setDrills(d);
     try {
-      const [c, s, g, m, cl, a, e, b] = await Promise.all([
+      const [c, s, g, m, cl, a, e, b, subs, inv] = await Promise.all([
         safe(listCoaches()), safe(listStudents()), safe(listGroups()), safe(listMembers()),
         safe(listClasses()), safe(listAttendanceByClass('__all__')), safe(listEvaluations()), safe(listBonuses()),
+        safe(listSubscriptions()), safe(listInvoices()),
       ]);
       setCoaches(c); setStudents(s); setGroups(g); setMembers(m);
       setClasses(cl); setAttendance(a); setEvals(e); setBonuses(b);
+      setSubscriptions(subs); setInvoices(inv);
       setCloudOk(c.length > 0 || s.length > 0 || g.length > 0 || a.length > 0);
     } catch (err) {
       console.error('School load', err);
@@ -215,9 +251,13 @@ export default function SchoolApp({ lang = 'es' }) {
 
   useEffect(() => { loadAll(); }, []);
 
-  const stats = schoolStats({ students, groups, classes, attendance, bonuses });
+  const stats = schoolStats({ students, groups, classes, attendance, bonuses, invoices });
   const nameOf = (id, list) => (list.find(x => x.id === id) || {}).name || '—';
   const membersOf = (groupId) => members.filter(m => m.groupId === groupId);
+  const periodLabel = (() => {
+    const d = new Date();
+    return `${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`;
+  })();
   const studentsOfGroup = (groupId) => {
     const ids = membersOf(groupId).map(m => m.studentId);
     return students.filter(s => ids.includes(s.id));
@@ -265,6 +305,31 @@ export default function SchoolApp({ lang = 'es' }) {
   };
   const submitEval = async () => { await addEvaluation(evalForm); setEvalForm(null); loadAll(); };
   const submitBonus = async () => { await addBonus({ ...bonusForm, studentId: evalForm ? evalForm.studentId : bonusForm.studentId }); loadAll(); };
+
+  const submitSubscription = async () => {
+    if (!subForm.studentId || !subForm.monthlyPrice) return;
+    await addSubscription({ studentId: subForm.studentId, planName: subForm.planName, monthlyPrice: Number(subForm.monthlyPrice) });
+    setSubForm({ studentId: '', planName: 'Clases mensuales', monthlyPrice: '40' });
+    setBillMsg('');
+    loadAll();
+  };
+
+  const doGenerateInvoices = async () => {
+    const created = await generateMonthlyInvoices();
+    setBillMsg(created.length ? T.invoicesGenerated : T.noInvoices);
+    loadAll();
+  };
+
+  const doMarkPaid = async (id) => {
+    await markInvoicePaid(id);
+    setBillMsg(T.paidMarked);
+    loadAll();
+  };
+
+  const doToggleSub = async (id, current) => {
+    await updateSubscriptionStatus(id, current === 'active' ? 'paused' : 'active');
+    loadAll();
+  };
   const submitDrill = async () => { await saveDrill(drillForm); setDrillForm({ name: '', axis: 'technical', level: 'BEGINNER', durationMin: 20, category: 'adults', focus: '', setup: '' }); setDrills(await listDrills()); };
   const AX = drillAxisLabels(lang);
   const progressEvals = progressStudent
@@ -312,7 +377,7 @@ export default function SchoolApp({ lang = 'es' }) {
 
         {/* tabs */}
         <div style={{ display: 'flex', gap: 8, marginBottom: 20, flexWrap: 'wrap' }}>
-          {[['students', T.tabStudents], ['groups', T.tabGroups], ['classes', T.tabClasses], ['coaches', T.tabCoaches], ['progress', T.tabProgress], ['drills', T.tabDrills]].map(([k, l]) => (
+          {[['students', T.tabStudents], ['groups', T.tabGroups], ['classes', T.tabClasses], ['coaches', T.tabCoaches], ['progress', T.tabProgress], ['drills', T.tabDrills], ['billing', T.tabBilling]].map(([k, l]) => (
             <button key={k} onClick={() => setTab(k)} style={{ ...(tab === k ? btnPrimary : btnGhost) }}>{l}</button>
           ))}
         </div>
@@ -632,6 +697,66 @@ export default function SchoolApp({ lang = 'es' }) {
                       </div>
                     );
                   })}
+                </div>
+              </div>
+            )}
+
+            {/* ===== COBRO RECURRENTE (ERP escuela) ===== */}
+            {tab === 'billing' && (
+              <div>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 16 }}>
+                  <div style={card}>
+                    <h3 style={{ fontSize: 16, fontWeight: 800, color: 'var(--padel-text)', marginBottom: 14 }}>{T.addSubscription}</h3>
+                    <label style={{ display: 'block', marginBottom: 10 }}>
+                      <span style={{ fontSize: 12, color: 'var(--padel-muted)', fontWeight: 600, display: 'block', marginBottom: 4 }}>{T.student}</span>
+                      <select value={subForm.studentId} onChange={e => setSubForm({ ...subForm, studentId: e.target.value })} style={input}>
+                        <option value="">…</option>
+                        {students.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
+                      </select>
+                    </label>
+                    <Field label={T.planName} value={subForm.planName} onChange={e => setSubForm({ ...subForm, planName: e.target.value })} />
+                    <Field label={T.monthlyFee} type="number" value={subForm.monthlyPrice} onChange={e => setSubForm({ ...subForm, monthlyPrice: e.target.value })} />
+                    <button onClick={submitSubscription} style={{ ...btnPrimary, width: '100%' }}>{T.saveSubscription}</button>
+                    <button onClick={doGenerateInvoices} style={{ ...btnGhost, width: '100%', marginTop: 10, borderColor: 'rgba(16,185,129,0.4)', color: '#34d399' }}>{T.generateInvoices}</button>
+                    {billMsg && <p style={{ fontSize: 12, color: '#84cc16', marginTop: 8 }}>{billMsg}</p>}
+                  </div>
+
+                  <div style={card}>
+                    <h3 style={{ fontSize: 16, fontWeight: 800, color: 'var(--padel-text)', marginBottom: 14 }}>{T.subsActive}</h3>
+                    {subscriptions.length === 0 && <p style={{ fontSize: 13, color: 'var(--padel-muted)' }}>{T.noSubscriptions}</p>}
+                    {subscriptions.map(s => (
+                      <div key={s.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '9px 0', borderBottom: '1px solid var(--padel-border)' }}>
+                        <div>
+                          <div style={{ fontWeight: 700, color: 'var(--padel-text)' }}>{nameOf(s.studentId, students)}</div>
+                          <div style={{ fontSize: 12, color: 'var(--padel-muted)' }}>{s.planName} · {s.monthlyPrice} €/{periodLabel} · {s.status === 'active' ? '🟢 ' + T.statusActive : '⏸ ' + T.statusPaused}</div>
+                        </div>
+                        <button onClick={() => doToggleSub(s.id, s.status)} style={{ ...btnGhost, fontSize: 11, padding: '5px 10px' }}>
+                          {s.status === 'active' ? T.setPaused : T.setActive}
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div style={{ ...card, marginTop: 16 }}>
+                  <h3 style={{ fontSize: 16, fontWeight: 800, color: 'var(--padel-text)', marginBottom: 6 }}>🧾 {T.invoiceFor} — {periodLabel}</h3>
+                  <div style={{ fontSize: 12, color: 'var(--padel-muted)', marginBottom: 12 }}>{T.billingSub}</div>
+                  {invoices.length === 0 && <p style={{ fontSize: 13, color: 'var(--padel-muted)' }}>{T.noInvoices}</p>}
+                  {invoices.map(inv => (
+                    <div key={inv.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '9px 0', borderBottom: '1px solid var(--padel-border)' }}>
+                      <div>
+                        <div style={{ fontWeight: 700, color: 'var(--padel-text)' }}>{nameOf(inv.studentId, students)}</div>
+                        <div style={{ fontSize: 12, color: 'var(--padel-muted)' }}>{T.period}: {inv.period} · {inv.amount} €</div>
+                      </div>
+                      {inv.status === 'pending' ? (
+                        <button onClick={() => doMarkPaid(inv.id)} style={{ ...btnGhost, fontSize: 11, padding: '5px 10px', borderColor: 'rgba(16,185,129,0.4)', color: '#34d399' }}>
+                          {T.markPaid} · {inv.amount} €
+                        </button>
+                      ) : (
+                        <span style={{ fontSize: 12, fontWeight: 800, color: '#34d399' }}>✅ {T.statusActive}</span>
+                      )}
+                    </div>
+                  ))}
                 </div>
               </div>
             )}
