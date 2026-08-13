@@ -36,15 +36,15 @@ cobros, bajas, cambios). Y a diferencia del tenis, el pádel requiere **4 person
 
 | # | Función core | Estado en el repo | Notas |
 |---|---|---|---|
-| 1 | Split payments | ❌ NO existe | ClubApp + api/checkout crean 1 sola sesión de pago |
-| 2 | Matchmaking | ❌ NO existe | Sin tablón “buscamos cuarto” |
-| 3 | Anti no-show | ❌ NO existe | Sin fianza ni lista de espera |
+| 1 | Split payments | ✅ HECHO | `splitService.js` + migración `20260808040000` aplicada |
+| 2 | Matchmaking | ✅ HECHO | `matchmakingService.js` + `/match` (bolsa + anuncios "busco cuarto") |
+| 3 | Anti no-show | ✅ HECHO (v1.1) | Fianza reembolsable + lista de espera con promoción al cancelar (`ClubApp`, migración `20260815000000`) |
 | 4 | Motor torneos | ✅ HECHO | Americano/Mexicano/Suizo/Eliminatorio, cuadros, Punto de Oro |
 | 5 | Live scoring | ✅ HECHO | LiveScore Pro, marcador set a set, resultados en vivo |
 | 6 | Yield management | ❌ NO existe | Precio fijo 8 € |
 | 7 | IoT/QR luces | ❌ NO existe | Solo QR del link de Stripe |
-| 8 | ERP escuela | 🟡 en curso | Módulo 4C ya: grupos, clases, asistencia, evaluación, bonos. Falta cobro recurrente fin de mes |
-| 9 | Carnet + ranking | 🟡 parcial | Ranked League global + Elo. Falta carnet digital y “retar al Nº4” |
+| 8 | ERP escuela | ✅ HECHO (v1.1) | Módulo 4C + cobro recurrente fin de mes: suscripciones por alumno, generación de facturas mensuales y marcar pagada (`SchoolApp` / `schoolService`) |
+| 9 | Carnet + ranking | 🟡 parcial | Ranked League global + Elo. Falta carnet digital y "retar al Nº4" |
 | 10 | Dashboard negocio | 🟡 parcial | `/analytics` (torneo); falta panel del dueño (ocupación/facturación/pista) |
 
 ## Estrategia de entrada al mercado
