@@ -3,11 +3,11 @@ import { useNavigate } from 'react-router-dom';
 
 const I18N = {
   es: {
-    badge: 'LANZAMIENTO v1.0',
-    title: 'Da el salto',
-    title2: 'y organiza como un club profesional',
+    badge: 'CREATE. CONNECT. WIN.',
+    title: 'La infraestructura digital',
+    title2: 'de los eventos globales de pádel',
     subtitle:
-      'PADELORGANIZERS.COM es la plataforma SaaS con IA para torneos, pistas, marcador en vivo, pagos integrados (Stripe), analíticas y Ranked League. Todo gratis para empezar.',
+      'PADELORGANIZERS.COM es la capa tecnológica que conecta jugadores, clubes, organizadores, datos y patrocinadores: IA para crear el torneo óptimo, resultado en directo que se propaga a cuadro, ranking y perfil, y monetización de cada evento. Cada torneo se convierte en un producto digital.',
     ctaDemo: '🚀 Probar la demo',
     ctaClub: 'Solicitar plan club',
     offerTitle: 'Oferta de lanzamiento',
@@ -25,14 +25,14 @@ const I18N = {
     proofTitle: 'Qué te llevas al probarlo',
     proof: ['Organizas un torneo en 5 min', 'Compartes el enlace de retransmisión', 'Cobras las reservas sin efectivo', 'Cada jugador sale con su tarjeta social'],
     cta: 'Lanza tu próximo evento, sin coste.',
-    footer: 'PADELORGANIZERS.COM — El mejor software del deporte de moda.',
+    footer: 'PADELORGANIZERS.COM — La infraestructura digital de los eventos globales de pádel.',
   },
   en: {
-    badge: 'v1.0 LAUNCH',
-    title: 'Upgrade to',
-    title2: 'pro club management',
+    badge: 'CREATE. CONNECT. WIN.',
+    title: 'The digital infrastructure',
+    title2: 'for global padel events',
     subtitle:
-      'PADELORGANIZERS.COM is an AI tournament platform for clubs, courts, live scoring, integrated Payments (Stripe), analytics and a global Ranked League. Free to start.',
+      'PADELORGANIZERS.COM is the tech layer connecting players, clubs, organizers, data and sponsors: AI builds the optimal tournament, live results propagate to the draw, ranking and profile, and every event gets monetized. Each tournament becomes a digital product.',
     ctaDemo: '● Try the demo',
     ctaClub: 'Request club plan',
     offerTitle: 'Launch offer',
@@ -50,12 +50,13 @@ const I18N = {
     whyTitle: 'What you will be',
     proof: ['Run a tournament in 5 min', 'Share a live retransmission link', 'Get paid without paperwork', 'Each player gets their social card'],
     cta: 'Launch your first club, free.',
-    footer: 'PADELORGANIZERS.COM — The best software of the moment.',
+    footer: 'PADELORGANIZERS.COM — The digital infrastructure for global padel events.',
   },
   fr: {
-    title: 'Lancez votre club',
-    title2: 'comme un pro',
-    subtitle: "Plateforme SaaS avec IA pour tournois, pistes, marquage en direct, paiements Stripe intégrés et ligue classée. Gratuit pour commencer.",
+    badge: 'CREATE. CONNECT. WIN.',
+    title: "L'infrastructure numérique",
+    title2: 'des événements mondiaux de padel',
+    subtitle: "PADELORGANIZERS.COM est la couche technologique qui relie joueurs, clubs, organisateurs, données et sponsors : l'IA crée le tournoi optimal, le résultat en direct se propage au tableau, au classement et au profil, chaque événement est monétisé. Chaque tournoi devient un produit numérique.",
     ctaDemo: 'Essayer la démo',
     ctaClub: 'Demander le plan club',
     offerTitle: 'Offre de lancement',
@@ -69,13 +70,13 @@ const I18N = {
       { icon: '🎌', who: 'Fédérations', title: 'Vos données, votre app officielle', desc: ['Moteur Elo', 'Classements', 'Diffusion en direct'] },
       { icon: '🔥', who: 'Champions & Influenceurs', title: 'Votre marque, sur tous les terrains', desc: ['Carte sociale automatique', 'LiveScore en direct', 'Profil & badge'] },
     ],
-    footer: 'PADELORGANIZERS.COM — Le meilleur logiciel du sport.',
+    footer: "PADELORGANIZERS.COM — L'infrastructure numérique des événements mondiaux de padel.",
   },
   pt: {
-    badge: 'LANÇAMENTO v1.0',
-    title: 'Dê o salto',
-    title2: 'e organize como um clube profissional',
-    subtitle: 'Plataforma SaaS com IA para torneios, pistas, marcador ao vivo, pagamentos integrados (Stripe), análises e Ranked League. Grátis para começar.',
+    badge: 'CREATE. CONNECT. WIN.',
+    title: 'A infraestrutura digital',
+    title2: 'dos eventos globais de padel',
+    subtitle: 'PADELORGANIZERS.COM é a camada tecnológica que liga jogadores, clubes, organizadores, dados e patrocinadores: IA cria o torneio ótimo, o resultado ao vivo propaga-se para o quadro, ranking e perfil, e cada evento é monetizado. Cada torneio torna-se um produto digital.',
     ctaDemo: '🚀 Experimentar a demo',
     ctaClub: 'Pedir plano de clube',
     offerTitle: 'Oferta de lançamento',
@@ -91,7 +92,7 @@ const I18N = {
     ],
     whyTitle: 'O que ganha em testar',
     cta: 'Lance o seu próximo evento, sem custo.',
-    footer: 'PADELORGANIZERS.COM — O melhor software do desporto da moda.',
+    footer: 'PADELORGANIZERS.COM — A infraestrutura digital dos eventos globais de padel.',
   },
 };
 
@@ -166,7 +167,7 @@ export default function LaunchPage({ lang = 'es' }) {
                 <h3 style={{ fontSize: 15, fontWeight: 800, color: '#84cc16', margin: 0, letterSpacing: 0.5 }}>{s.who}</h3>
                 <div style={{ fontSize: 16, fontWeight: 800, color: '#fff', margin: '4px 0 8px' }}>{s.title}</div>
                 <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-                  {(s.desc || []).map((d, j) => (
+                  {(s.points || s.desc || []).map((d, j) => (
                     <li key={j} style={{ fontSize: 13, color: '#94a3b8', padding: '4px 0' }}>· {d}</li>
                   ))}
                 </ul>
