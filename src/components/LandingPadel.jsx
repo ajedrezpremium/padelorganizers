@@ -133,6 +133,17 @@ const I18N = {
     ],
     ctaSectionTitle: 'El sistema operativo de tu club de pádel',
     ctaSectionDesc: 'Torneos, reservas, escuela, socios y tienda en una sola plataforma conectada. Lánzalo hoy.',
+    showBadge: 'Así se ve por dentro',
+    showTitle: 'Una sola plataforma, todo integrado',
+    showDesc: 'Torneos, CourtManager, IA y pagos conectados en una interfaz limpia.',
+    audienceTitle: 'Creada para cada perfil de tu club',
+    audienceSubtitle: 'Cada rol, con su vista: dirigir, competir, entrenar y crecer.',
+    audience: [
+      { icon: '🎾', title: 'Organizador / Club', desc: 'Torneos, pistas, reservas y cobros desde un solo panel.' },
+      { icon: '🏆', title: 'Jugador', desc: 'Cuadro en vivo, marcador con Punto de Oro y su rating al día.' },
+      { icon: '🎓', title: 'Técnico / Escuela', desc: 'Grupos, niveles y cobro recurrente de alumnos en segundos.' },
+      { icon: '📈', title: 'Patrocinador', desc: 'Analíticas y visibilidad de cada evento en tiempo real.' },
+    ],
     footer: 'PADELORGANIZERS.COM — El mejor software para el deporte de moda.'
   },
   en: {
@@ -212,6 +223,17 @@ const I18N = {
     ],
     ctaSectionTitle: 'The operating system of your padel club',
     ctaSectionDesc: 'Tournaments, bookings, school, members and shop in one connected platform. Launch today.',
+    showBadge: 'See it from the inside',
+    showTitle: 'One platform, everything connected',
+    showDesc: 'Tournaments, CourtManager, AI and payments tied together in one clean interface.',
+    audienceTitle: 'Built for every role in your club',
+    audienceSubtitle: 'Each role, its view: run, compete, coach and grow.',
+    audience: [
+      { icon: '🎾', title: 'Organizer / Club', desc: 'Tournaments, courts, bookings and payments from one panel.' },
+      { icon: '🏆', title: 'Player', desc: 'Live bracket, Gold Point scoreboard and updated rating.' },
+      { icon: '🎓', title: 'Coach / School', desc: 'Groups, levels and recurring student billing in seconds.' },
+      { icon: '📈', title: 'Sponsor', desc: 'Analytics and visibility for every event in real time.' },
+    ],
     footer: 'PADELORGANIZERS.COM — The best software for the sport of the moment.',
   },
   fr: {
@@ -291,6 +313,17 @@ const I18N = {
     ],
     ctaSectionTitle: 'Le système d\'exploitation de votre club de padel',
     ctaSectionDesc: 'Tournois, réservations, école, membres et boutique sur une seule plateforme connectée. Lancez-le aujourd\'hui.',
+    showBadge: "Découvrez l'intérieur",
+    showTitle: 'Une seule plateforme, tout est connecté',
+    showDesc: 'Tournois, CourtManager, IA et paiements réunis dans une interface épurée.',
+    audienceTitle: 'Conçue pour chaque profil de votre club',
+    audienceSubtitle: 'Chaque rôle, sa vue : diriger, jouer, entraîner et développer.',
+    audience: [
+      { icon: '🎾', title: 'Organisateur / Club', desc: 'Tournois, pistes, réservations et paiements depuis un seul panneau.' },
+      { icon: '🏆', title: 'Joueur', desc: 'Tableau en direct, score avec Point d\'Or et rating à jour.' },
+      { icon: '🎓', title: 'Technicien / École', desc: 'Groupes, niveaux et facturation récurrente des élèves en quelques secondes.' },
+      { icon: '📈', title: 'Sponsor', desc: 'Analytiques et visibilité de chaque événement en temps réel.' },
+    ],
     footer: 'PADELORGANIZERS.COM — Le meilleur logiciel du sport à la mode.',
   },
   pt: {
@@ -370,6 +403,17 @@ const I18N = {
     ],
     ctaSectionTitle: 'O sistema operativo do seu clube de pádel',
     ctaSectionDesc: 'Torneios, reservas, escola, sócios e loja numa única plataforma ligada. Lance hoje.',
+    showBadge: 'Veja por dentro',
+    showTitle: 'Uma só plataforma, tudo integrado',
+    showDesc: 'Torneios, CourtManager, IA e pagamentos ligados numa interface limpa.',
+    audienceTitle: 'Feita para cada perfil do seu clube',
+    audienceSubtitle: 'Cada papel, a sua vista: dirigir, competir, treinar e crescer.',
+    audience: [
+      { icon: '🎾', title: 'Organizador / Clube', desc: 'Torneios, pistas, reservas e cobranças num só painel.' },
+      { icon: '🏆', title: 'Jogador', desc: 'Quadro em direto, marcador com Ponto de Ouro e rating atualizado.' },
+      { icon: '🎓', title: 'Técnico / Escola', desc: 'Grupos, níveis e cobrança recorrente de alunos em segundos.' },
+      { icon: '📈', title: 'Patrocinador', desc: 'Analíticas e visibilidade de cada evento em tempo real.' },
+    ],
     footer: 'PADELORGANIZERS.COM — O melhor software do desporto da moda.',
   },
 };
@@ -530,6 +574,21 @@ export default function LandingPadel({ lang = 'es' }) {
         </div>
       </section>
 
+      {/* APP SHOWCASE */}
+      <section style={{ padding: '0 0 70px' }}>
+        <div style={sectionStyle}>
+          <div style={{ textAlign: 'center', marginBottom: '24px' }}>
+            <span style={{ display: 'inline-block', background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.3)', color: 'var(--padel-lime)', padding: '5px 12px', borderRadius: '16px', fontWeight: 700, fontSize: '11px', letterSpacing: '1px' }}>👁️ {T.showBadge}</span>
+            <h2 style={{ fontSize: '30px', fontWeight: 900, color: 'var(--padel-text)', margin: '16px 0 6px' }}>{T.showTitle}</h2>
+            <p style={{ fontSize: '15px', color: 'var(--padel-muted)', maxWidth: '560px', margin: '0 auto' }}>{T.showDesc}</p>
+          </div>
+          <div style={{ position: 'relative', borderRadius: '20px', overflow: 'hidden', border: '1px solid rgba(16,185,129,0.25)', boxShadow: '0 24px 60px rgba(0,0,0,0.45)', maxWidth: '980px', margin: '0 auto' }}>
+            <img src="/images/padelorganizers.com.png" alt="PADELORGANIZERS.COM" style={{ width: '100%', display: 'block' }} loading="lazy" />
+            <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.06)' }} />
+          </div>
+        </div>
+      </section>
+
       {/* COMPARISON */}
       <section style={{ padding: '70px 0', background: 'var(--padel-card-bg)', borderTop: '1px solid var(--padel-border)', borderBottom: '1px solid var(--padel-border)' }}>
         <div style={sectionStyle}>
@@ -583,6 +642,26 @@ export default function LandingPadel({ lang = 'es' }) {
                 </ul>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* AUDIENCE / PERFILES */}
+      <section style={{ padding: '80px 0', background: 'var(--padel-card-bg)', borderTop: '1px solid var(--padel-border)', borderBottom: '1px solid var(--padel-border)' }}>
+        <div style={sectionStyle}>
+          <h2 style={{ fontSize: '34px', fontWeight: 900, color: 'var(--padel-text)', textAlign: 'center', marginBottom: '8px' }}>{T.audienceTitle}</h2>
+          <p style={{ fontSize: '15px', color: 'var(--padel-muted)', textAlign: 'center', marginBottom: '36px' }}>{T.audienceSubtitle}</p>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '14px', marginBottom: '40px' }}>
+            {T.audience.map((a, i) => (
+              <div key={i} style={{ background: 'var(--padel-bg)', border: '1px solid var(--padel-border)', borderRadius: '16px', padding: '24px', textAlign: 'center' }}>
+                <div style={{ fontSize: '34px', marginBottom: '12px' }}>{a.icon}</div>
+                <h3 style={{ fontSize: '17px', fontWeight: 800, color: 'var(--padel-text)', margin: '0 0 6px' }}>{a.title}</h3>
+                <p style={{ fontSize: '14px', color: 'var(--padel-muted)', lineHeight: 1.6, margin: 0 }}>{a.desc}</p>
+              </div>
+            ))}
+          </div>
+          <div style={{ borderRadius: '20px', overflow: 'hidden', border: '1px solid rgba(16,185,129,0.25)', boxShadow: '0 24px 60px rgba(0,0,0,0.45)', maxWidth: '980px', margin: '0 auto' }}>
+            <img src="/images/padel-perfil-clientes.png" alt={T.audienceTitle} style={{ width: '100%', display: 'block' }} loading="lazy" />
           </div>
         </div>
       </section>
