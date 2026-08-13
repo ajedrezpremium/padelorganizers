@@ -25,7 +25,7 @@ export async function ensureCoachSeed({ cloud = false } = {}) {
   const seeded = [...(existing || [])];
   for (const c of COACH_SEED) {
     if (names.has((c.name || '').toLowerCase())) continue;
-    const rec = await saveCoach({ ...c, cloud });
+    const rec = await saveCoach({ ...c }, { cloud });
     seeded.push(rec);
   }
   return seeded;
