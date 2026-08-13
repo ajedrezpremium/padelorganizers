@@ -78,10 +78,10 @@ const HeaderPadel = ({ lang = 'es', onLanguageChange }) => {
   const [role, setRole] = useState(null);
 
   const TOOLTIPS = {
-    es: { tournaments: 'Torneos & eventos', club: 'Club & reservas', school: 'Escuela & entrenadores', crm: 'CRM · Gestión de negocio', marketing: 'Marketing · Planes, campañas y newsletter', community: 'Comunidad · Tablón, chat y grupos', shop: 'Tienda', directory: 'Directorio de clubes y escuelas', league: 'Ranked League', launch: 'Lanzamiento y ofertas' },
-    en: { tournaments: 'Tournaments & events', club: 'Club & bookings', school: 'School & coaches', crm: 'CRM · Business management', marketing: 'Marketing · Plans, campaigns & newsletter', community: 'Community · Board, chat & groups', shop: 'Shop', directory: 'Clubs & schools directory', league: 'Ranked League', launch: 'Launch & offers' },
-    fr: { tournaments: 'Tournois & événements', club: 'Club & réservations', school: 'École & entraîneurs', crm: 'CRM · Gestion d\'affaires', marketing: 'Marketing · Plans, campagnes & newsletter', community: 'Communauté · Tableau, chat & groupes', shop: 'Boutique', directory: 'Annuaire des clubs et écoles', league: 'Ligue classée', launch: 'Lancement et offres' },
-    pt: { tournaments: 'Torneios & eventos', club: 'Clube & reservas', school: 'Escola & treinadores', crm: 'CRM · Gestão de negócio', marketing: 'Marketing · Planos, campanhas & newsletter', community: 'Comunidade · Quadro, chat & grupos', shop: 'Loja', directory: 'Diretório de clubes e escolas', league: 'Liga ranqueada', launch: 'Lançamento e ofertas' },
+    es: { tournaments: 'Torneos & eventos', calendar: 'Calendario del circuito', club: 'Club & reservas', school: 'Escuela & entrenadores', crm: 'CRM · Gestión de negocio', marketing: 'Marketing · Planes, campañas y newsletter', community: 'Comunidad · Tablón, chat y grupos', shop: 'Tienda', directory: 'Directorio de clubes y escuelas', league: 'Ranked League', launch: 'Lanzamiento y ofertas' },
+    en: { tournaments: 'Tournaments & events', calendar: 'Circuit calendar', club: 'Club & bookings', school: 'School & coaches', crm: 'CRM · Business management', marketing: 'Marketing · Plans, campaigns & newsletter', community: 'Community · Board, chat & groups', shop: 'Shop', directory: 'Clubs & schools directory', league: 'Ranked League', launch: 'Launch & offers' },
+    fr: { tournaments: 'Tournois & événements', calendar: 'Calendrier du circuit', club: 'Club & réservations', school: 'École & entraîneurs', crm: 'CRM · Gestion d\'affaires', marketing: 'Marketing · Plans, campagnes & newsletter', community: 'Communauté · Tableau, chat & groupes', shop: 'Boutique', directory: 'Annuaire des clubs et écoles', league: 'Ligue classée', launch: 'Lancement et offres' },
+    pt: { tournaments: 'Torneios & eventos', calendar: 'Calendário do circuito', club: 'Clube & reservas', school: 'Escola & treinadores', crm: 'CRM · Gestão de negócio', marketing: 'Marketing · Planos, campanhas & newsletter', community: 'Comunidade · Quadro, chat & grupos', shop: 'Loja', directory: 'Diretório de clubes e escolas', league: 'Liga ranqueada', launch: 'Lançamento e ofertas' },
   };
   const t = TOOLTIPS[lang] || TOOLTIPS.es;
 
@@ -142,6 +142,7 @@ const HeaderPadel = ({ lang = 'es', onLanguageChange }) => {
           highlight
           children={[
             ['🏟️ ' + t.tournaments, '/torneo'],
+            ['🗓️ ' + t.calendar, '/calendario'],
             ['📊 Dashboard pistas', '/dashboard'],
             ['🎬 LiveScore Pro', '/livepro'],
             ['📺 Vista en vivo', '/live'],
