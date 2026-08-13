@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import TorneoCalendario from './TorneoCalendario';
 
 const I18N = {
   es: {
@@ -207,6 +208,8 @@ export default function TorneoOrganizer({ lang = 'es' }) {
           </div>
         </div>
       </section>
+
+      <TorneoCalendario lang={lang} />
 
       <section style={{ padding: '24px 0 72px' }}>
         <div style={sectionStyle}>
