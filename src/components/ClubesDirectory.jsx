@@ -51,6 +51,7 @@ const I18N = {
     sourceNote: 'Vigo · campaña de presentación',
     results: 'clubes',
     claimCta: '¿Eres el club? Verifica tu ficha',
+    registerCta: '¿No encuentras tu club? Dalo de alta',
     verifiedNote: '✅ Ficha verificada: este club aparece antes en la búsqueda y en Google.',
   },
   en: {
@@ -85,6 +86,7 @@ const I18N = {
     sourceNote: 'Vigo · launch campaign',
     results: 'clubs',
     claimCta: 'Are you the club? Verify your listing',
+    registerCta: "Can't find your club? Register it",
     verifiedNote: '✅ Verified listing: this club appears first in search and on Google.',
   },
   fr: {
@@ -119,6 +121,7 @@ const I18N = {
     sourceNote: 'Vigo · campagne de lancement',
     results: 'clubs',
     claimCta: 'Vous êtes le club ? Vérifiez votre fiche',
+    registerCta: 'Vous ne trouvez pas votre club ? Enregistrez-le',
     verifiedNote: '✅ Fiche vérifiée : ce club apparaît en premier dans la recherche et sur Google.',
   },
   pt: {
@@ -153,6 +156,7 @@ const I18N = {
     sourceNote: 'Vigo · campanha de lançamento',
     results: 'clubes',
     claimCta: 'É o clube? Verifique a sua ficha',
+    registerCta: 'Não encontra o seu clube? Registe-o',
     verifiedNote: '✅ Ficha verificada: este clube aparece primeiro na pesquisa e no Google.',
   },
 };
@@ -349,6 +353,11 @@ export default function ClubesDirectory({ lang = 'es' }) {
               <h1 style={cardStyles.h1}>{t.title}</h1>
               <p style={cardStyles.sub}>{t.subtitle}</p>
               <span style={cardStyles.chip}>{online ? t.cloud : t.local} · {clubes.length} {t.results}</span>
+              <div style={{ marginTop: 14 }}>
+                <a href="/clubes/alta" style={{ display: 'inline-block', padding: '10px 18px', borderRadius: 10, background: 'var(--padel-emerald)', color: '#fff', textDecoration: 'none', fontWeight: 700, fontSize: 14 }}>
+                  {t.registerCta} →
+                </a>
+              </div>
             </header>
             <div style={cardStyles.toolbar}>
               <input

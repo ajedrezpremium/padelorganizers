@@ -25,6 +25,7 @@ import TorneoOrganizer from './components/TorneoOrganizer';
 import TorneoCalendario from './components/TorneoCalendario';
 import ClubesDirectory from './components/ClubesDirectory';
 import VerificarFicha from './components/VerificarFicha';
+import AltaClub from './components/AltaClub';
 import Tienda from './components/Tienda';
 import LegalNotice from './components/LegalNotice';
 import CookieBanner from './components/CookieBanner';
@@ -60,6 +61,7 @@ export default function App() {
         <Route path="/analytics" element={<AnalyticsBoard lang={lang} state={store} />} />
         <Route path="/league" element={<RankedLeague lang={lang} />} />
         <Route path="/clubes" element={<ClubesDirectory lang={lang} />} />
+        <Route path="/clubes/alta" element={<AltaClub lang={lang} />} />
         <Route path="/tienda" element={<Tienda lang={lang} />} />
         <Route path="/verificar" element={<VerificarFicha lang={lang} />} />
         <Route path="/legal" element={<LegalNotice lang={lang} />} />

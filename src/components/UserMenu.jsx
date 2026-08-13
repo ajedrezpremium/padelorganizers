@@ -4,8 +4,8 @@ import AuthModal from './AuthModal';
 import { useAuth } from '../hooks/useAuth';
 
 const I18N = {
-  es: { login: 'Iniciar sesión', logout: 'Cerrar sesión' },
-  en: { login: 'Sign in', logout: 'Sign out' },
+  es: { login: 'Iniciar sesión', logout: 'Cerrar sesión', director: 'Mi club' },
+  en: { login: 'Sign in', logout: 'Sign out', director: 'My club' },
 };
 
 export default function UserMenu({ lang = 'es' }) {
@@ -32,9 +32,21 @@ export default function UserMenu({ lang = 'es' }) {
 
   const display = profile?.display_name || user.email?.split('@')[0] || 'Jugador';
   const levelText = profile?.level ? `${display} · Nivel ${profile.level} · ELO ${profile.elo || 1500}` : `${display} · ELO ${profile?.elo || 1500}`;
+  const isDirector = profile?.role === 'director';
 
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+      {isDirector ? (
+        <Link
+          to="/clubes/alta"
+          data-tooltip={T.director}
+          aria-label={T.director}
+          className="nav-ico"
+          style={{ display: 'flex', alignItems: 'center', background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.3)', borderRadius: 12, padding: '6px 10px', textDecoration: 'none', color: 'inherit' }}
+        >
+          <span style={{ fontSize: 18 }}>👔</span>
+        </Link>
+      ) : null}
       <Link
         to="/perfil"
         data-tooltip={levelText}
