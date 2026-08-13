@@ -12,8 +12,8 @@ Estado: pre-lanzamiento. Flags ⬜ pendiente · ✅ listo · 🔴 bloqueante.
 | 1 | `PAYPAL_CLIENT_ID` + `PAYPAL_CLIENT_SECRET` (live) en Vercel | ✅ verificado en prod | Usuario |
 | 2 | **Aplicar migración `20260808040000_split_payments.sql` en Supabase SQL Editor** | ✅ verificado: tabla accesible, insert/delete con `payment_method`/`paypal_order` OK | Usuario |
 | 3 | **Rotar Google Client Secret** (expirado por filtración en chat) y actualizarlo en Supabase → Authentication → Google | ✅ rotado (pendiente test login) | Usuario |
-| 4 | Confirmar `STRIPE_SECRET_KEY` live (no test) en Vercel | ⬜ | Usuario |
-| 5 | Configurar **webhook de Stripe** → `https://padelorganizers.vercel.app/api/webhook` (evento `checkout.session.completed`) | ⬜ | Usuario |
+| 4 | Confirmar `STRIPE_SECRET_KEY` live (no test) en Vercel | ⬜ 🔴 (v1.1) | Usuario |
+| 5 | Configurar **webhook de Stripe** → `https://padelorganizers.vercel.app/api/webhook` (evento `checkout.session.completed`) | ⬜ 🔴 (v1.1) | Usuario |
 | 6 | URL de autorización de Google OAuth en Supabase = dominio canónico (https / sin www) | ⬜ | Usuario |
 
 ## 2. Correcciones de código aplicadas este sprint
@@ -42,7 +42,7 @@ Flujo organizador:
 - [ ] Ver estado de splits pagados en el panel
 
 Flujo escuela/técnico:
-- [ ] Alta de alumno, grupo, asistencia, cobro recurrente
+- [x] Alta de alumno, grupo, asistencia, cobro recurrente (**v1.1**: suscripciones + facturas por mes implementadas)
 
 Calidad:
 - [ ] En los 4 idiomas (ES/EN/FR/PT) — comprobar al menos la compra y el chat IA
