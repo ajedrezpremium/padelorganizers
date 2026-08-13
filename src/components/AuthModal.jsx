@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PhoneInput from './PhoneInput';
 
 const I18N = {
   es: {
@@ -8,11 +9,20 @@ const I18N = {
     error: 'Error', close: 'Cerrar', title: 'Accede a tu perfil de jugador',
     desc: 'Guarda tu nivel, tu Elo y tus torneos en la nube.',
     showPass: 'Mostrar contraseña', hidePass: 'Ocultar contraseña',
-forgot: '¿Olvidaste tu contraseña?', recoverTitle: 'Recuperar contraseña',
+    forgot: '¿Olvidaste tu contraseña?', recoverTitle: 'Recuperar contraseña',
     recoverDesc: 'Introduce tu email y te enviaremos un enlace para restablecerla.',
     emailBtn: 'Enviar enlace', recoverSent: 'Revisa tu bandeja de entrada: te hemos enviado el enlace de recuperación.',
     backToLogin: 'Volver al inicio de sesión',
     google: 'Continuar con Google', orSeparator: 'o con tu email',
+    roleLabel: '¿Cuál es tu perfil?',
+    rolePlayer: 'Jugador',
+    roleDirector: 'Dirigente de club o escuela',
+    phone: 'Teléfono (opcional)',
+    dirTitle: '👔 Bienvenido, dirigente',
+    dirDesc: 'Elige cómo quieres aparecer en el directorio nacional.',
+    dirVerify: '📋 Mi club ya está → Confirmar datos y verificar ficha',
+    dirRegister: '➕ Mi club no está → Darlo de alta',
+    dirLater: 'Ahora no, gracias',
   },
   en: {
     login: 'Sign in', signup: 'Create account', email: 'Email', password: 'Password',
@@ -26,6 +36,15 @@ forgot: '¿Olvidaste tu contraseña?', recoverTitle: 'Recuperar contraseña',
     emailBtn: 'Send link', recoverSent: 'Check your inbox: we have sent you the reset link.',
     backToLogin: 'Back to sign in',
     google: 'Continue with Google', orContinue: 'or with your email',
+    roleLabel: 'What is your profile?',
+    rolePlayer: 'Player',
+    roleDirector: 'Club or school director',
+    phone: 'Phone (optional)',
+    dirTitle: '👔 Welcome, director',
+    dirDesc: 'Choose how you want to appear in the national directory.',
+    dirVerify: '📋 My club is listed → Confirm details & verify',
+    dirRegister: '➕ My club is not listed → Register it',
+    dirLater: 'Not now, thanks',
   },
   fr: {
     login: 'Se connecter', signup: 'Créer un compte', email: 'Email', password: 'Mot de passe',
@@ -39,6 +58,15 @@ forgot: '¿Olvidaste tu contraseña?', recoverTitle: 'Recuperar contraseña',
     emailBtn: "Envoyer le lien", recoverSent: 'Vérifiez votre boîte mail : le lien a été envoyé.',
     backToLogin: 'Retour au connexion',
     google: 'Continuer avec Google', orContinue: 'ou avec votre email',
+    roleLabel: 'Quel est votre profil ?',
+    rolePlayer: 'Joueur',
+    roleDirector: 'Dirigeant de club ou d’école',
+    phone: 'Téléphone (optionnel)',
+    dirTitle: '👔 Bienvenue, dirigeant',
+    dirDesc: 'Choisissez comment apparaître dans l’annuaire national.',
+    dirVerify: '📋 Mon club existe → Confirmer les données et vérifier',
+    dirRegister: '➕ Mon club n’existe pas → L’enregistrer',
+    dirLater: 'Pas maintenant, merci',
   },
   pt: {
     login: 'Entrar', signup: 'Criar conta', email: 'Email', password: 'Senha',
@@ -52,15 +80,26 @@ forgot: '¿Olvidaste tu contraseña?', recoverTitle: 'Recuperar contraseña',
     emailBtn: 'Enviar link', recoverSent: 'Verifique a sua caixa de entrada: o link foi enviado.',
     backToLogin: 'Voltar ao login',
     google: 'Continuar com Google', orContinue: 'ou com o seu email',
+    roleLabel: 'Qual é o seu perfil?',
+    rolePlayer: 'Jogador',
+    roleDirector: 'Dirigente de clube ou escola',
+    phone: 'Telefone (opcional)',
+    dirTitle: '👔 Bem-vindo, dirigente',
+    dirDesc: 'Escolha como quer aparecer no diretório nacional.',
+    dirVerify: '📋 O meu clube existe → Confirmar dados e verificar',
+    dirRegister: '➕ O meu clube não existe → Registá-lo',
+    dirLater: 'Agora não, obrigado',
   },
 };
 
 export default function AuthModal({ lang = 'es', onClose, onAuthed }) {
   const T = I18N[lang] || I18N.es;
-  const [mode, setMode] = useState('login'); // login | signup | recover
+  const [mode, setMode] = useState('login'); // login | signup | recover | roleDirector
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
+  const [role, setRole] = useState('player');
+  const [phone, setPhone] = useState('');
   const [showPass, setShowPass] = useState(false);
   const [err, setErr] = useState('');
   const [ok, setOk] = useState('');
@@ -85,7 +124,14 @@ export default function AuthModal({ lang = 'es', onClose, onAuthed }) {
     if (mode === 'login') {
       res = await supabase.auth.signInWithPassword({ email, password });
     } else {
-      res = await supabase.auth.signUp({ email, password, options: { data: { display_name: name } } });
+      const meta = { display_name: name };
+      if (role) meta.role = role;
+      if (phone) {
+        const clean = (phone.match(/[+\d]/g) || []).join('');
+        meta.phone_country = clean.match(/^\+\d{1,4}/)?.[0] || '';
+        meta.phone = clean.replace(/^\+\d{1,4}/, '');
+      }
+      res = await supabase.auth.signUp({ email, password, options: { data: meta } });
     }
     setBusy(false);
     if (res.error) {
@@ -93,6 +139,11 @@ export default function AuthModal({ lang = 'es', onClose, onAuthed }) {
       return;
     }
     if (onAuthed) onAuthed(res);
+    // Dirigente recién registrado → guía de alta/verificación antes de cerrar.
+    if (mode === 'signup' && role === 'director') {
+      setMode('roleDirector');
+      return;
+    }
     if (res.data.session) onClose();
   };
 
@@ -113,18 +164,50 @@ export default function AuthModal({ lang = 'es', onClose, onAuthed }) {
       <div style={{ background: '#0e1e1b', border: '1px solid rgba(16,185,129,0.3)', borderRadius: 20, padding: 30, width: 400, maxWidth: '100%', margin: 'auto', position: 'relative', boxShadow: '0 20px 60px rgba(0,0,0,0.6)', maxHeight: 'calc(100vh - 40px)', overflowY: 'auto' }} onClick={e => e.stopPropagation()}>
         <button onClick={onClose} style={{ position: 'absolute', top: 14, right: 16, background: 'none', border: 'none', color: '#94a3b8', fontSize: 20, cursor: 'pointer' }}>✕</button>
 
-        <div style={{ fontSize: 30, marginBottom: 6 }}>{mode === 'recover' ? '🔑' : '👤'}</div>
+        <div style={{ fontSize: 30, marginBottom: 6 }}>{mode === 'recover' ? '🔑' : mode === 'roleDirector' ? '👔' : '👤'}</div>
         <h3 style={{ fontSize: 20, fontWeight: 900, color: '#fff', margin: '0 0 4px' }}>
-          {mode === 'recover' ? T.recoverTitle : T.title}
+          {mode === 'recover' ? T.recoverTitle : mode === 'roleDirector' ? T.dirTitle : T.title}
         </h3>
         <p style={{ fontSize: 13, color: '#94a3b8', margin: '0 0 20px' }}>
-          {mode === 'recover' ? T.recoverDesc : T.desc}
+          {mode === 'recover' ? T.recoverDesc : mode === 'roleDirector' ? T.dirDesc : T.desc}
         </p>
 
+        {mode === 'roleDirector' ? (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            <a href="/clubes/alta" onClick={onClose} style={{ padding: '14px 16px', borderRadius: 12, border: '1px solid rgba(16,185,129,0.4)', color: '#fff', textDecoration: 'none', fontWeight: 700, fontSize: 14, background: 'rgba(16,185,129,0.12)' }}>
+              {T.dirRegister} →
+            </a>
+            <a href="/clubes" onClick={onClose} style={{ padding: '14px 16px', borderRadius: 12, border: '1px solid rgba(255,255,255,0.2)', color: '#fff', textDecoration: 'none', fontWeight: 700, fontSize: 14, background: 'rgba(0,0,0,0.3)' }}>
+              {T.dirVerify} →
+            </a>
+            <button onClick={onClose} style={{ padding: '12px', borderRadius: 10, background: 'none', border: '1px solid rgba(255,255,255,0.2)', color: '#94a3b8', fontWeight: 700, fontSize: 13, cursor: 'pointer' }}>
+              {T.dirLater}
+            </button>
+          </div>
+        ) : (
         <form onSubmit={handleSubmit}>
           {mode === 'signup' && (
-            <input value={name} onChange={e => setName(e.target.value)} placeholder={T.name}
-              style={inputStyle} />
+            <>
+              <input value={name} onChange={e => setName(e.target.value)} placeholder={T.name}
+                style={inputStyle} />
+
+              <p style={{ fontSize: 12, color: '#94a3b8', margin: '4px 0 6px' }}>{T.roleLabel}</p>
+              <div style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
+                <button type="button" onClick={() => setRole('player')}
+                  style={{ flex: 1, padding: '10px', borderRadius: 10, border: role === 'player' ? '2px solid #10b981' : '1px solid rgba(255,255,255,0.2)', background: 'rgba(0,0,0,0.3)', color: '#fff', fontWeight: 700, fontSize: 13, cursor: 'pointer' }}>
+                🏅 {T.rolePlayer}
+                </button>
+                <button type="button" onClick={() => setRole('director')}
+                  style={{ flex: 1, padding: '10px', borderRadius: 10, border: role === 'director' ? '2px solid #10b981' : '1px solid rgba(255,255,255,0.2)', background: 'rgba(0,0,0,0.3)', color: '#fff', fontWeight: 700, fontSize: 13, cursor: 'pointer' }}>
+                👔 {T.roleDirector}
+                </button>
+              </div>
+
+              <p style={{ fontSize: 12, color: '#94a3b8', margin: '4px 0 6px' }}>{T.phone}</p>
+              <div style={{ marginBottom: 12 }}>
+                <PhoneInput value={phone} onChange={setPhone} placeholder="600 000 000" />
+              </div>
+            </>
           )}
           <div style={{ position: 'relative', marginBottom: 12 }}>
             <input value={email} onChange={e => setEmail(e.target.value)} type="email" required placeholder={T.email}
@@ -183,8 +266,9 @@ export default function AuthModal({ lang = 'es', onClose, onAuthed }) {
             </>
           )}
         </form>
+        )}
 
-        {mode !== 'recover' && (
+        {mode !== 'recover' && mode !== 'roleDirector' && (
           <p style={{ fontSize: 13, color: '#84cc16', cursor: 'pointer', textAlign: 'center', marginTop: 16 }} onClick={() => setModeAndClear(mode === 'login' ? 'signup' : 'login')}>
             {mode === 'login' ? T.noAccount : T.haveAccount}
           </p>
