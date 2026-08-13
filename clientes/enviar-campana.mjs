@@ -46,7 +46,6 @@ if (!GMAIL_USER || !GMAIL_APP_PASS) {
 const BASE_URL = 'https://padelorganizers.vercel.app'
 const BANNER_URL = `${BASE_URL}/images/banner-email.jpg`
 const DEMO_URL = `${BASE_URL}/torneo?utm_source=email&utm_medium=campana&utm_campaign=presentacion&utm_content=demo`
-const LOG_FILE = join(__dirname, 'campana_log.csv')
 const LOCK = join(__dirname, '.campana_lock')
 
 const args = {}
@@ -54,6 +53,13 @@ for (const a of process.argv.slice(2)) {
   const m = a.match(/^--([a-z]+)(?:=(.*))?$/)
   if (m) args[m[1]] = m[2] === undefined ? true : m[2]
 }
+
+// CSV de la tanda actual (por defecto Vigo). El log se separa por ciudad
+// (campana_log_<ciudad>.csv) para que cada CSV tenga su propio índice y
+// las tandas no se pisen. --max limita los envíos de esta ejecución (tandas planificadas).
+const CSV_FILE = args.csv ? args.csv : args.ciudad ? `leads_${args.ciudad}.csv` : 'leads_vigo.csv'
+const MAX_ENVIOS = args.max !== undefined ? Number(args.max) : 999999
+const LOG_FILE = join(__dirname, `campana_log_${CSV_FILE.replace(/\.csv$/i, '')}.csv`)
 
 function parseCsv(text) {
   const rows = []
@@ -79,7 +85,15 @@ function parseCsv(text) {
 
 function buildLog() {
   if (!existsSync(LOG_FILE)) {
-    writeFileSync(LOG_FILE, 'idx,nombre,correo,direccion,plataforma,web,estado,fecha,error\n', 'utf8')
+    // Si existe el histórico de la campaña Vigo (campana_log.csv), se asume
+    // que corresponde al CSV Vigo y se usa como base, migrándolo a su log por ciudad.
+    const oldFile = join(__dirname, 'campana_log.csv')
+    if (CSV_FILE === 'leads_vigo.csv' && existsSync(oldFile)) {
+      writeFileSync(LOG_FILE, readFileSync(oldFile, 'utf8'), 'utf8')
+      try { writeFileSync(oldFile, '', 'utf8') } catch { /* noop */ }
+    } else {
+      writeFileSync(LOG_FILE, 'idx,nombre,correo,direccion,plataforma,web,estado,fecha,error\n', 'utf8')
+    }
   }
   const text = readFileSync(LOG_FILE, 'utf8')
   const rows = parseCsv(text)
@@ -118,7 +132,7 @@ function marcar(idx, estado, error = '', club = {}) {
   writeFileSync(LOG_FILE, lines.join('\n'), 'utf8')
 }
 
-const clubes = parseCsv(readFileSync(join(__dirname, 'leads_vigo.csv'), 'utf8'))
+const clubes = parseCsv(readFileSync(join(__dirname, CSV_FILE), 'utf8'))
 const headers = clubes[0]
 const clubs = clubes.slice(1).map((r) => {
   const o = {}
@@ -165,16 +179,25 @@ if (args.dry !== undefined) {
 }
 
 async function main() {
-  console.log(`Transporte Gmail configurado para ${GMAIL_USER}. Clubes: ${clubs.length}.`)
+  console.log(`Transporte Gmail configurado para ${GMAIL_USER}. CSV: ${CSV_FILE} (${clubs.length} clubes). Enviaré máx ${MAX_ENVIOS} esta ejecución.`)
+  let enviados = 0
   for (let i = 0; i < clubs.length; i++) {
     if (targetIdx !== null && i !== targetIdx) continue
-    const club = clubs[i]
-    const correo = (club['Correo'] || '').trim()
     const estado = estadoDe(i)
     if (estado === 'ok') {
-      console.log(`- [${i}] ${club['Nombre']}: ya enviado, salto.`)
+      console.log(`- [${i}] ${clubs[i]['Nombre']}: ya enviado, salto.`)
       continue
     }
+    if (este_sinCorreo(estado)) {
+      console.log(`- [${i}] ${clubs[i]['Nombre']}: ${estado}, salto.`)
+      continue
+    }
+    if (enviados >= MAX_ENVIOS) {
+      console.log(`\n[*] Toca máx diario (${MAX_ENVIOS}). El resto queda 'pendiente' para la próxima tanda.`)
+      break
+    }
+    const club = clubs[i]
+    const correo = (club['Correo'] || '').trim()
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(correo)) {
       console.log(`- [${i}] ${club['Nombre']}: correo no válido ("${correo}"), registro como 'sin-correo'.`)
       marcar(i, 'sin-correo', 'email inválido o vía web', club)
@@ -190,6 +213,7 @@ async function main() {
     try {
       await transporter.sendMail(mail)
       marcar(i, 'ok', '', club)
+      enviados++
       console.log(`- [${i}] ENVIADO a ${correo} (${club['Nombre']}).`)
     } catch (err) {
       marcar(i, 'fallo', String(err.message || err), club)
@@ -197,7 +221,11 @@ async function main() {
     }
     await new Promise((r) => setTimeout(r, 4500))
   }
-  console.log('\nListo. Registro completo en clientes/campana_log.csv (base del CRM).')
+  console.log(`\nListo. ${enviados} enviados esta ejecución. Registro en ${LOG_FILE} (base del CRM).`)
+}
+
+function este_sinCorreo(estado) {
+  return estado === 'sin-correo'
 }
 
 main().catch((e) => { console.error(e); process.exit(1) })
