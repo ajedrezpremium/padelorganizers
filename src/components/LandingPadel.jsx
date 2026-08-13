@@ -468,7 +468,7 @@ export default function LandingPadel({ lang = 'es' }) {
       </section>
 
       {/* APP SHOWCASE */}
-      <section style={{ padding: '0 0 70px' }}>
+      <section style={{ padding: '56px 0 70px' }}>
         <div style={sectionStyle}>
           <div style={{ textAlign: 'center', marginBottom: '24px' }}>
             <span style={{ display: 'inline-block', background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.3)', color: 'var(--padel-lime)', padding: '5px 12px', borderRadius: '16px', fontWeight: 700, fontSize: '11px', letterSpacing: '1px' }}>👁️ {T.showBadge}</span>
