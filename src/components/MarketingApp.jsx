@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { listPlans, listPromos, PLAN_BENEFITS } from '../services/membershipService';
+import { generateMarketingContent, CONTENT_KEYS } from '../services/marketingAiService';
+import { getState } from '../services/store';
 
 const I18N = {
   es: {
@@ -16,6 +18,12 @@ const I18N = {
     newsletter: 'Newsletter del club', newsletterDesc: 'Crea y guarda boletines para tu comunidad.',
     newsTitle: 'Asunto', newsBody: 'Contenido', saveNews: 'Guardar boletín', news: 'Boletines guardados', noNews: 'Sin boletines todavía.',
     saved: '✓ Guardado', saving: 'Guardando…',
+    tabAi: '🤖 AI Marketing',
+    aiTitle: '🤖 AI Marketing Assistant',
+    aiSub: 'Describe tu torneo y genera al instante todos los contenidos de promoción en el idioma seleccionado.',
+    aiTorName: 'Nombre del torneo', aiClub: 'Club', aiFormat: 'Formato', aiDate: 'Fecha', aiPlace: 'Lugar',
+    aiFmtAmericano: 'Americano', aiFmtMexicano: 'Mexicano', aiFmtSuizo: 'Suizo', aiFmtKnockout: 'Eliminatorio',
+    aiGen: '✨ Generar contenidos', aiLoading: 'Generando…', aiCopy: '📋 Copiar', aiCopied: '✓ Copiado', aiNew: '🔄 Regenerar (variante)',
   },
   en: {
     title: '📣 Marketing & Business',
@@ -31,6 +39,12 @@ const I18N = {
     newsletter: 'Club newsletter', newsletterDesc: 'Create and save newsletters for your community.',
     newsTitle: 'Subject', newsBody: 'Content', saveNews: 'Save newsletter', news: 'Saved newsletters', noNews: 'No newsletters yet.',
     saved: '✓ Saved', saving: 'Saving…',
+    tabAi: '🤖 AI Marketing',
+    aiTitle: '🤖 AI Marketing Assistant',
+    aiSub: 'Describe your tournament and instantly generate every promotional asset in the selected language.',
+    aiTorName: 'Tournament name', aiClub: 'Club', aiFormat: 'Format', aiDate: 'Date', aiPlace: 'Venue',
+    aiFmtAmericano: 'Americano', aiFmtMexicano: 'Mexicano', aiFmtSuizo: 'Swiss', aiFmtKnockout: 'Knockout',
+    aiGen: '✨ Generate content', aiLoading: 'Generating…', aiCopy: '📋 Copy', aiCopied: '✓ Copied', aiNew: '🔄 Regenerate (variant)',
   },
   fr: {
     title: '📣 Marketing & Business',
@@ -46,6 +60,12 @@ const I18N = {
     newsletter: 'Newsletter du club', newsletterDesc: 'Créez et enregistrez des bulletins pour votre communauté.',
     newsTitle: 'Objet', newsBody: 'Contenu', saveNews: 'Enregistrer', news: 'Bulletins enregistrés', noNews: 'Aucun bulletin.',
     saved: '✓ Enregistré', saving: 'Enregistrement…',
+    tabAi: '🤖 AI Marketing',
+    aiTitle: '🤖 AI Marketing Assistant',
+    aiSub: "Décrivez votre tournoi et générez instantanément tous les contenus promotionnels dans la langue choisie.",
+    aiTorName: "Nom du tournoi", aiClub: 'Club', aiFormat: 'Format', aiDate: 'Date', aiPlace: 'Lieu',
+    aiFmtAmericano: 'Américain', aiFmtMexicano: 'Mexicain', aiFmtSuizo: 'Suisse', aiFmtKnockout: 'Élimination',
+    aiGen: '✨ Générer le contenu', aiLoading: 'Génération…', aiCopy: '📋 Copier', aiCopied: '✓ Copié', aiNew: '🔄 Régénérer (variante)',
   },
   pt: {
     title: '📣 Marketing & Negócio',
@@ -61,6 +81,12 @@ const I18N = {
     newsletter: 'Newsletter do clube', newsletterDesc: 'Crie e guarde boletins para a sua comunidade.',
     newsTitle: 'Assunto', newsBody: 'Conteúdo', saveNews: 'Guardar boletim', news: 'Boletins guardados', noNews: 'Sem boletins ainda.',
     saved: '✓ Guardado', saving: 'Guardando…',
+    tabAi: '🤖 AI Marketing',
+    aiTitle: '🤖 AI Marketing Assistant',
+    aiSub: 'Descreva o seu torneio e gere instantaneamente todos os conteúdos promocionais no idioma selecionado.',
+    aiTorName: 'Nome do torneio', aiClub: 'Clube', aiFormat: 'Formato', aiDate: 'Data', aiPlace: 'Local',
+    aiFmtAmericano: 'Americano', aiFmtMexicano: 'Mexicano', aiFmtSuizo: 'Suíço', aiFmtKnockout: 'Eliminação',
+    aiGen: '✨ Gerar conteúdo', aiLoading: 'A gerar…', aiCopy: '📋 Copiar', aiCopied: '✓ Copiado', aiNew: '🔄 Regenerar (variante)',
   },
 };
 
@@ -80,6 +106,14 @@ export default function MarketingApp({ lang = 'es' }) {
   const [newsForm, setNewsForm] = useState({ title: '', body: '' });
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [aiForm, setAiForm] = useState(() => {
+    const st = getState();
+    const t = st?.tournament;
+    return { name: t?.name || 'Open Pádel Pro 2026', club: t?.club || 'Mi Club', modality: t?.modality || 'americano', date: '', place: '' };
+  });
+  const [aiOut, setAiOut] = useState(null);
+  const [aiBusy, setAiBusy] = useState(false);
+  const [aiCopied, setAiCopied] = useState(false);
 
   const LS_EVENTS = 'padelorganizers-marketing-events';
   const LS_NEWS = 'padelorganizers-marketing-news';
@@ -122,6 +156,23 @@ const PB = PLAN_BENEFITS(lang);
 
   const planName = (key) => PLANS && (PLANS.find?.(x => x.key === key)?.key || key);
 
+  const genAi = async (regenerate) => {
+    setAiBusy(true);
+    await new Promise(r => setTimeout(r, 350));
+    setAiOut(generateMarketingContent({ lang, ...aiForm, seed: Date.now() + (regenerate ? 1 : 0) }));
+    setAiBusy(false);
+  };
+
+  const copyAi = async (text) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setAiCopied(true);
+      setTimeout(() => setAiCopied(false), 1600);
+    } catch { /* ignore */ }
+  };
+
+  const fmtLabel = (k) => T['aiFmt' + k[0].toUpperCase() + k.slice(1)] || k;
+
   return (
     <div style={{ padding: '28px 0 64px', minHeight: '80vh' }}>
       <div style={section}>
@@ -129,7 +180,7 @@ const PB = PLAN_BENEFITS(lang);
         <p style={{ fontSize: 13, color: 'var(--padel-muted)', margin: '6px 0 18px' }}>{T.subtitle}</p>
 
         <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 18 }}>
-          {[['plans', T.tabPlans], ['campaigns', T.tabCampaigns], ['events', T.tabEvents], ['news', T.tabNews]].map(([k, l]) => (
+          {[['plans', T.tabPlans], ['campaigns', T.tabCampaigns], ['events', T.tabEvents], ['news', T.tabNews], ['ai', T.tabAi]].map(([k, l]) => (
             <button key={k} onClick={() => setTab(k)} style={{
               padding: '9px 16px', borderRadius: 10, border: '1px solid var(--padel-border)', background: tab === k ? 'var(--padel-emerald)' : 'var(--padel-card-bg)', color: tab === k ? '#fff' : 'var(--padel-muted)', fontWeight: 800, fontSize: 13, cursor: 'pointer',
             }}>{l}</button>
@@ -232,6 +283,68 @@ const PB = PLAN_BENEFITS(lang);
                   ))}
                 </div>
               ) : <p style={{ color: 'var(--padel-muted)', fontSize: 13, margin: 0 }}>{T.noNews}</p>}
+            </div>
+          </div>
+        )}
+
+        {tab === 'ai' && (
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(300px,1fr))', gap: 16 }}>
+            <div style={{ ...card }}>
+              <h2 style={{ fontSize: 15, fontWeight: 800, color: 'var(--padel-text)', margin: '0 0 4px' }}>{T.aiTitle}</h2>
+              <p style={{ fontSize: 12, color: 'var(--padel-muted)', margin: '0 0 14px' }}>{T.aiSub}</p>
+              <label style={{ fontSize: 11, fontWeight: 700, color: 'var(--padel-muted)', display: 'block', marginBottom: 4 }}>{T.aiTorName}</label>
+              <input style={input} value={aiForm.name} onChange={(e) => setAiForm({ ...aiForm, name: e.target.value })} />
+              <label style={{ fontSize: 11, fontWeight: 700, color: 'var(--padel-muted)', display: 'block', margin: '10px 0 4px' }}>{T.aiClub}</label>
+              <input style={input} value={aiForm.club} onChange={(e) => setAiForm({ ...aiForm, club: e.target.value })} />
+              <label style={{ fontSize: 11, fontWeight: 700, color: 'var(--padel-muted)', display: 'block', margin: '10px 0 4px' }}>{T.aiFormat}</label>
+              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                {[['americano', T.aiFmtAmericano], ['mexicano', T.aiFmtMexicano], ['suizo', T.aiFmtSuizo], ['knockout', T.aiFmtKnockout]].map(([k, l]) => (
+                  <button key={k} onClick={() => setAiForm({ ...aiForm, modality: k })} style={{
+                    padding: '7px 12px', borderRadius: 10, border: '1px solid var(--padel-border)', background: aiForm.modality === k ? 'var(--padel-emerald)' : 'var(--padel-bg)', color: aiForm.modality === k ? '#fff' : 'var(--padel-muted)', fontWeight: 800, fontSize: 12, cursor: 'pointer',
+                  }}>{l}</button>
+                ))}
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginTop: 10 }}>
+                <div>
+                  <label style={{ fontSize: 11, fontWeight: 700, color: 'var(--padel-muted)', display: 'block', marginBottom: 4 }}>{T.aiDate}</label>
+                  <input style={input} type="date" value={aiForm.date} onChange={(e) => setAiForm({ ...aiForm, date: e.target.value })} />
+                </div>
+                <div>
+                  <label style={{ fontSize: 11, fontWeight: 700, color: 'var(--padel-muted)', display: 'block', marginBottom: 4 }}>{T.aiPlace}</label>
+                  <input style={input} value={aiForm.place} onChange={(e) => setAiForm({ ...aiForm, place: e.target.value })} />
+                </div>
+              </div>
+              <button onClick={() => genAi(false)} style={{ ...btn, width: '100%' }}>{aiBusy ? T.aiLoading : T.aiGen}</button>
+            </div>
+
+            <div style={{ ...card, minHeight: 320 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+                <h2 style={{ fontSize: 15, fontWeight: 800, color: 'var(--padel-text)', margin: 0 }}>📦 {T.tabAi}</h2>
+                {aiOut && (
+                  <button onClick={() => genAi(true)} style={{ background: 'rgba(16,185,129,0.12)', color: 'var(--padel-lime)', border: '1px solid rgba(16,185,129,0.3)', padding: '7px 12px', borderRadius: 10, fontWeight: 800, fontSize: 12, cursor: 'pointer' }}>
+                    {T.aiNew}
+                  </button>
+                )}
+              </div>
+              {aiOut ? (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 12, maxHeight: 520, overflowY: 'auto', paddingRight: 4 }}>
+                  {(CONTENT_KEYS[lang] || CONTENT_KEYS.es).map(([key, label]) => (
+                    <div key={key} style={{ background: 'var(--padel-bg)', borderRadius: 12, padding: 12, border: '1px solid rgba(16,185,129,0.15)' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+                        <span style={{ fontSize: 13, fontWeight: 800, color: 'var(--padel-text)' }}>{label}</span>
+                        <button onClick={() => copyAi(aiOut[key])} style={{ background: 'rgba(255,255,255,0.08)', color: aiCopied ? '#86efac' : 'var(--padel-muted)', border: '1px solid rgba(255,255,255,0.2)', padding: '5px 10px', borderRadius: 8, fontWeight: 700, fontSize: 11, cursor: 'pointer' }}>
+                          {aiCopied ? T.aiCopied : T.aiCopy}
+                        </button>
+                      </div>
+                      <pre style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word', fontFamily: 'inherit', fontSize: 12.5, lineHeight: 1.55, color: 'var(--padel-muted)', margin: 0 }}>{aiOut[key]}</pre>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div style={{ height: 260, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--padel-muted)', fontSize: 13 }}>
+                  {T.aiGen}
+                </div>
+              )}
             </div>
           </div>
         )}
