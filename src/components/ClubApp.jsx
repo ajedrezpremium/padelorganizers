@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { listReservations, addReservation, markReservationStatus, cancelReservation, SLOTS, clubOnline, NOSHOW_DEPOSIT, listWaitlist, addWaitlist } from '../services/clubService';
 import { addSplit, listSplits, markSplitPaidLocal } from '../services/splitService';
 import { useAuth } from '../hooks/useAuth';
+import CourtReservationGrid, { slotPrice } from './CourtReservationGrid';
 
 const I18N = {
   es: {
@@ -26,6 +27,7 @@ const I18N = {
     cancelBooking: 'Cancelar', cancelled: 'Cancelada',
     waitTitle: 'Lista de espera', joinWaitlist: '🚶 Apuntarme a la espera', joinedWait: '✓ Estás en la lista de espera — te avisamos si queda libre.',
     perSlot: 'por slot',
+    gridaView: '▼ Vista Playtomic', gridbView: '▲ Vista formulario', gridHint: 'Cuadrante pista × hora con precios por slot',
   },
   en: {
     title: '🏟️ Club Booking App', sub: 'Book courts and pay online in seconds',
@@ -44,6 +46,7 @@ const I18N = {
     cancelBooking: 'Cancel', cancelled: 'Cancelled',
     waitTitle: 'Waiting list', joinWaitlist: '🚶 Join the waiting list', joinedWait: '✓ You are on the waiting list — we\'ll notify you if a slot frees up.',
     perSlot: 'per slot',
+    gridaView: '▼ Playtomic grid', gridbView: '▲ Form view', gridHint: 'Court × hour grid with per-slot pricing',
   },
   fr: {
     title: '🏫️ App Club de réservation', sub: 'Réservez des pistes et payez en ligne en un clin',
@@ -62,6 +65,7 @@ const I18N = {
     cancelBooking: 'Annuler', cancelled: 'Annulée',
     waitTitle: 'Liste d\'attente', joinWaitlist: '🚶 Rejoindre la liste d\'attente', joinedWait: '✓ Vous êtes sur la liste d\'attente — on vous prévient si un créneau se libère.',
     perSlot: 'par créneau',
+    gridaView: '▼ Vue Playtomic', gridbView: '▲ Vue formulaire', gridHint: 'Grille piste × heure avec prix par créneau',
   },
   pt: {
     title: '🏫 App Clube de Reservas', sub: 'Reserve campos e pague online em segundos',
@@ -80,6 +84,7 @@ const I18N = {
     cancelBooking: 'Cancelar', cancelled: 'Cancelada',
     waitTitle: 'Lista de espera', joinWaitlist: '🚶 Entrar na lista de espera', joinedWait: '✓ Está na lista de espera — avisamo-lo se ficar vago.',
     perSlot: 'por slot',
+    gridaView: '▼ Vista Playtomic', gridbView: '▲ Vista formulário', gridHint: 'Quadrante campo × hora com preço por slot',
   },
 };
 
@@ -97,7 +102,7 @@ export default function ClubApp({ lang = 'es' }) {
   const [msg, setMsg] = useState('');
   const [busy, setBusy] = useState(false);
   const [online] = useState(clubOnline());
-  const PRICE = 8;
+  const PRICE = slotSel ? slotPrice(slotSel, courtSel) : 8;
   const [splitOn, setSplitOn] = useState(false);
   const [players, setPlayers] = useState([{ name, email }]);
   const [splits, setSplits] = useState([]);
@@ -105,6 +110,7 @@ export default function ClubApp({ lang = 'es' }) {
   const [noShow, setNoShow] = useState(false);
   const [waitlist, setWaitlist] = useState([]);
   const [waitMsg, setWaitMsg] = useState('');
+  const [gridView, setGridView] = useState(false);
 
   useEffect(() => { listReservations().then(handleReturn).then(setBookings); }, []);
   useEffect(() => { listWaitlist().then(setWaitlist); }, []);
@@ -314,6 +320,28 @@ export default function ClubApp({ lang = 'es' }) {
           {online ? '🟢 Nube' : '🟡 Local'}
         </span>
       </div>
+
+      {/* Toggle vista formulario / grid Playtomic */}
+      <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'flex-end' }}>
+        <button onClick={() => setGridView(v => !v)} title={T.gridHint}
+          style={{ padding: '8px 14px', borderRadius: 10, border: '1px solid rgba(16,185,129,0.35)', background: gridView ? 'rgba(16,185,129,0.12)' : 'rgba(16,185,129,0.04)', color: '#a3e635', fontWeight: 700, fontSize: 13, cursor: 'pointer' }}>
+          {gridView ? T.gridbView : T.gridaView}
+        </button>
+      </div>
+
+      {gridView && (
+        <div style={{ marginBottom: 20 }}>
+          <CourtReservationGrid
+            lang={lang}
+            courts={T.courts}
+            bookings={bookings}
+            selectedCourt={courtSel}
+            selectedDay={daySel}
+            selectedSlot={slotSel}
+            onPick={(i, h, d) => { if (i !== undefined) setCourtSel(i); if (h) setSlotSel(h); if (d) setDaySel(d); }}
+          />
+        </div>
+      )}
 
       <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: 20, alignItems: 'start' }}>
         {/* Form de reserva */}
