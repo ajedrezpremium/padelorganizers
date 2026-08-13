@@ -46,6 +46,7 @@ Leyenda: 🟢 hecho · 🟡 parcial · 🔴 por construir
 | 4 | 🌐 Tournament-as-a-Service (`/tournament/XXXX`, cada torneo = producto digital) | 🟢 HECHO | Medio |
 | 5 | 👤 Player Digital ID (historial internacional del jugador) | 🟢 HECHO | Medio |
 | 6 | 📊 Padel Data Intelligence (player/club analytics) | 🟢 HECHO | Medio |
+| 6b | 👨‍🏫 Coach Discovery + Private Lesson Booking | 🟢 HECHO: `/coaches` (seed entrenadores, directorio con filtros, ficha y reserva de lección privada que registra clase en la escuela) — benchmark Playtomic Manager/Coach | Medio |
 | 7 | 🏆 Global Padel Ranking Engine (mundial amateur) | 🟢 HECHO: `/ranking` agrega jugadores del torneo activo + Ranked League con nivel de torneo, percentil y movimiento (▲/▼) sobre snapshot; podio mundial + filtros | Medio |
 | 8 | 💰 Tournament Monetization Engine (sponsors, banners, premium, ROI) | 🟢 HECHO: `/sponsors` (tiers oro/plata/bronce, XPm/impresiones) + banners en página pública del torneo | Alto |
 | 9 | 📱 AI Marketing Assistant (auto-genera posts/web/email/poster 4 idiomas) | 🟢 HECHO | Medio |
