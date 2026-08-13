@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import {
-  forecastFinalStandings, eloSeries, matchupHeatmap, tournamentKpis,
+  forecastFinalStandings, eloSeries, matchupHeatmap, tournamentKpis, eloDistribution,
 } from '../services/analyticsService';
 import { getInitialDemoTournamentData } from '../services/padelEngine';
 
@@ -19,6 +19,8 @@ const I18N = {
     formSub: 'Evolución estimada del rating',
     heatTitle: 'Heatmap de nivel (rivalidad)',
     heatSub: 'Probabilidad de victoria de fila frente a columna',
+    distTitle: 'Distribución de nivel',
+    distSub: 'Cómo se reparte el ELO de los jugadores inscritos',
   },
   en: {
     title: '📊 Analytics & Forecasts',
@@ -34,6 +36,8 @@ const I18N = {
     formSub: 'Estimated rating evolution',
     heatTitle: 'Matchup heatmap (rivalry)',
     heatSub: 'Win probability of row vs column',
+    distTitle: 'Level distribution',
+    distSub: 'How the ELO of registered players is spread',
   },
   fr: {
     title: '📊 Analyses & Pronostics',
@@ -49,6 +53,8 @@ const I18N = {
     formSub: 'Évolution estimée du classement',
     heatTitle: 'Heatmap des confrontations',
     heatSub: 'Probabilité de victoire ligne contre colonne',
+    distTitle: 'Répartition des niveaux',
+    distSub: 'Comment l’ELO des joueurs inscrits est réparti',
   },
   pt: {
     title: '📊 Análises & Prognósticos',
@@ -64,6 +70,8 @@ const I18N = {
     formSub: 'Evolução estimada do rating',
     heatTitle: 'Heatmap de confrontos',
     heatSub: 'Probabilidade de vitória da linha contra a coluna',
+    distTitle: 'Distribuição de nível',
+    distSub: 'Como o ELO dos jogadores inscritos está distribuído',
   },
 };
 
@@ -87,6 +95,7 @@ export default function AnalyticsBoard({ state, lang = 'es' }) {
   const kpis = useMemo(() => tournamentKpis(data), [data]);
   const forecast = useMemo(() => forecastFinalStandings(data), [data]);
   const heatmap = useMemo(() => matchupHeatmap(data), [data]);
+  const dist = useMemo(() => eloDistribution(data), [data]);
 
   const leaderPair = [...(data.pairs || [])].sort((a, b) => b.points - a.points)[0];
   const series = useMemo(() => leaderPair ? eloSeries(data, leaderPair.id) : [], [data, leaderPair]);
@@ -140,6 +149,22 @@ export default function AnalyticsBoard({ state, lang = 'es' }) {
             </div>
           </div>
         ))}
+      </div>
+
+      <div style={{ ...card, marginBottom: 20 }}>
+        <h3 style={{ fontSize: '16px', fontWeight: 800, color: '#fff', margin: '0 0 4px' }}>{T.distTitle}</h3>
+        <p style={{ fontSize: '12px', color: '#94a3b8', margin: '0 0 14px' }}>{T.distSub}</p>
+        {dist.length ? (
+          <div style={{ display: 'flex', alignItems: 'flex-end', gap: 10, height: 110 }}>
+            {dist.map((b, i) => (
+              <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, height: '100%', justifyContent: 'flex-end' }}>
+                <span style={{ fontSize: 11, fontWeight: 800, color: '#f0fdf4' }}>{b.count}</span>
+                <div style={{ width: '100%', maxWidth: 60, height: `${Math.max(8, b.pct)}%`, borderRadius: '6px 6px 0 0', background: 'linear-gradient(180deg,#84cc16,#059669)' }} />
+                <span style={{ fontSize: 9.5, fontWeight: 700, color: '#94a3b8', textAlign: 'center', lineHeight: 1.2 }}>{b.label}</span>
+              </div>
+            ))}
+          </div>
+        ) : <p style={{ fontSize: 12, color: '#94a3b8', margin: 0 }}>—</p>}
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>

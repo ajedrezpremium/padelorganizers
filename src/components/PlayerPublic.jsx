@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { useStore } from '../services/store';
 import { pullState } from '../services/cloudService';
-import { eloSeries } from '../services/analyticsService';
+import { eloSeries, formTrend, streakStats, eloPercentile, playerProjection, qualityOfWins, eloDistribution } from '../services/analyticsService';
 
 const I18N = {
   es: {
@@ -16,6 +16,12 @@ const I18N = {
     notFound: 'Jugador no encontrado', notFoundSub: 'Este perfil no aparece en el torneo activo.',
     sharedBy: 'PADELORGANIZERS · THE DIGITAL INFRASTRUCTURE FOR GLOBAL PADEL EVENTS',
     win: 'Victoria', loss: 'Derrota', live: 'En directo', r: 'R',
+    diTitle: '🧠 Padel Data Intelligence',
+    diSub: 'Analíticas del jugador generadas a partir de los datos del torneo.',
+    form: 'Estado de forma', bestStreak: 'Mejor racha', curStreak: 'Racha actual',
+    percentile: 'Percentil ELO', projection: 'Proyección final', podium: 'Podio',
+    qualityTitle: 'Calidad de victorias', qualityTough: 'vs rivales superiores', qualityEasy: 'vs rivales inferiores',
+    distribution: 'Nivel del torneo', yourBand: 'Tu franja',
   },
   en: {
     playerId: 'PADELORGANIZERS ID',
@@ -28,6 +34,12 @@ const I18N = {
     notFound: 'Player not found', notFoundSub: 'This profile is not in the active tournament.',
     sharedBy: 'PADELORGANIZERS · THE DIGITAL INFRASTRUCTURE FOR GLOBAL PADEL EVENTS',
     win: 'Win', loss: 'Loss', live: 'Live', r: 'R',
+    diTitle: '🧠 Padel Data Intelligence',
+    diSub: 'Player analytics generated from tournament data.',
+    form: 'Form', bestStreak: 'Best streak', curStreak: 'Current streak',
+    percentile: 'ELO percentile', projection: 'Final projection', podium: 'Podium',
+    qualityTitle: 'Quality of wins', qualityTough: 'vs higher-ranked', qualityEasy: 'vs lower-ranked',
+    distribution: 'Tournament level', yourBand: 'Your band',
   },
   fr: {
     playerId: 'PADELORGANIZERS ID',
@@ -40,6 +52,12 @@ const I18N = {
     notFound: 'Joueur introuvable', notFoundSub: 'Ce profil n’est pas dans le tournoi actif.',
     sharedBy: 'PADELORGANIZERS · THE DIGITAL INFRASTRUCTURE FOR GLOBAL PADEL EVENTS',
     win: 'Victoire', loss: 'Défaite', live: 'En direct', r: 'T',
+    diTitle: '🧠 Padel Data Intelligence',
+    diSub: 'Analyses du joueur générées à partir des données du tournoi.',
+    form: 'Forme', bestStreak: 'Meilleure série', curStreak: 'Série en cours',
+    percentile: 'Percentile ELO', projection: 'Projection finale', podium: 'Podium',
+    qualityTitle: 'Qualité des victoires', qualityTough: 'vs adversaires supérieurs', qualityEasy: 'vs adversaires inférieurs',
+    distribution: 'Niveau du tournoi', yourBand: 'Votre tranche',
   },
   pt: {
     playerId: 'PADELORGANIZERS ID',
@@ -52,6 +70,12 @@ const I18N = {
     notFound: 'Jogador não encontrado', notFoundSub: 'Este perfil não está no torneio ativo.',
     sharedBy: 'PADELORGANIZERS · THE DIGITAL INFRASTRUCTURE FOR GLOBAL PADEL EVENTS',
     win: 'Vitória', loss: 'Derrota', live: 'Ao vivo', r: 'R',
+    diTitle: '🧠 Padel Data Intelligence',
+    diSub: 'Análises do jogador geradas a partir dos dados do torneio.',
+    form: 'Forma', bestStreak: 'Melhor sequência', curStreak: 'Sequência atual',
+    percentile: 'Percentil ELO', projection: 'Projeção final', podium: 'Pódio',
+    qualityTitle: 'Qualidade das vitórias', qualityTough: 'vs adversários superiores', qualityEasy: 'vs adversários inferiores',
+    distribution: 'Nível do torneio', yourBand: 'Sua faixa',
   },
 };
 
@@ -110,6 +134,14 @@ export default function PlayerPublic({ lang = 'es' }) {
   const rivalries = Object.values(agg).sort((a, b) => b.played - a.played);
   const curve = myPairId ? eloSeries(state, myPairId, { points: 8 }) : [];
   const winRate = Math.round(((self?.wins || 0) / Math.max(1, self?.matchesPlayed || 0)) * 100);
+
+  const trend = myPairId ? formTrend(state, myPairId) : [];
+  const streaks = streakStats(trend);
+  const pct = self?.id ? eloPercentile(state, self.id) : 50;
+  const projection = self?.id ? playerProjection(state, self.id) : null;
+  const qWins = self?.id ? qualityOfWins(state, self.id) : null;
+  const dist = eloDistribution(state);
+  const myElo = self?.elo ?? 1500;
 
   const copyId = async () => {
     try {
@@ -173,6 +205,106 @@ export default function PlayerPublic({ lang = 'es' }) {
           <div style={{ ...card, textAlign: 'center' }}>
             <div style={{ fontSize: 24, fontWeight: 900, color: '#10b981' }}>{winRate}%</div>
             <div style={{ fontSize: 11.5, color: 'var(--padel-muted)', fontWeight: 700 }}>{T.winRate}</div>
+          </div>
+        </div>
+
+        {/* 🧠 Padel Data Intelligence */}
+        <div style={{ ...card, marginTop: 16, borderColor: 'rgba(56,189,248,0.3)', background: 'linear-gradient(135deg,#0c1c23,#0e1e1b)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 8 }}>
+            <h2 style={{ fontSize: 15, fontWeight: 800, color: 'var(--padel-text)', margin: 0 }}>{T.diTitle}</h2>
+            <span style={{ fontSize: 10.5, fontWeight: 800, letterSpacing: 1, color: '#38bdf8', padding: '3px 10px', borderRadius: 99, background: 'rgba(56,189,248,0.12)' }}>DATA LAYER</span>
+          </div>
+          <p style={{ fontSize: 12, color: 'var(--padel-muted)', margin: '6px 0 14px' }}>{T.diSub}</p>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(160px,1fr))', gap: 12 }}>
+            {/* Forma (W/L chips) */}
+            <div style={{ background: 'rgba(0,0,0,0.22)', borderRadius: 12, padding: 14 }}>
+              <div style={{ fontSize: 11, fontWeight: 800, color: 'var(--padel-muted)', letterSpacing: 0.5 }}>{T.form}</div>
+              <div style={{ display: 'flex', gap: 5, marginTop: 10, flexWrap: 'wrap' }}>
+                {trend.length ? trend.slice().reverse().map((m) => (
+                  <span key={m.id} title={m.round ? `${T.r}${m.round}` : ''} style={{
+                    width: 26, height: 26, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontSize: 11, fontWeight: 900, color: m.status === 'win' ? '#062c24' : '#fff',
+                    background: m.status === 'win' ? '#84cc16' : m.status === 'loss' ? 'rgba(251,113,133,0.85)' : m.status === 'live' ? '#fbbf24' : 'rgba(255,255,255,0.15)',
+                  }}>{m.status === 'win' ? 'W' : m.status === 'loss' ? 'L' : m.status === 'live' ? '•' : '–'}</span>
+                )) : <span style={{ fontSize: 12, color: 'var(--padel-muted)' }}>—</span>}
+              </div>
+            </div>
+
+            {/* Rachas */}
+            <div style={{ background: 'rgba(0,0,0,0.22)', borderRadius: 12, padding: 14 }}>
+              <div style={{ fontSize: 11, fontWeight: 800, color: 'var(--padel-muted)', letterSpacing: 0.5 }}>{T.bestStreak}</div>
+              <div style={{ fontSize: 26, fontWeight: 900, color: '#a3e635', marginTop: 4 }}>{streaks.bestWinStreak}<span style={{ fontSize: 13, color: 'var(--padel-muted)', fontWeight: 700 }}>W</span></div>
+              <div style={{ fontSize: 11, fontWeight: 800, color: 'var(--padel-muted)', letterSpacing: 0.5, marginTop: 8 }}>{T.curStreak}</div>
+              <div style={{ fontSize: 20, fontWeight: 900, color: streaks.currentWinStreak > 0 ? '#84cc16' : '#fb7185', marginTop: 2 }}>
+                {streaks.currentWinStreak}<span style={{ fontSize: 12, color: 'var(--padel-muted)', fontWeight: 700 }}>{streaks.currentWinStreak > 0 ? 'W' : 'L'}</span>
+              </div>
+            </div>
+
+            {/* Percentil */}
+            <div style={{ background: 'rgba(0,0,0,0.22)', borderRadius: 12, padding: 14 }}>
+              <div style={{ fontSize: 11, fontWeight: 800, color: 'var(--padel-muted)', letterSpacing: 0.5 }}>{T.percentile}</div>
+              <div style={{ fontSize: 26, fontWeight: 900, color: '#38bdf8', marginTop: 4 }}>P{pct}</div>
+              <div style={{ width: '100%', height: 6, background: 'rgba(255,255,255,0.1)', borderRadius: 99, marginTop: 10, overflow: 'hidden' }}>
+                <div style={{ width: `${pct}%`, height: '100%', background: 'linear-gradient(90deg,#38bdf8,#84cc16)', borderRadius: 99 }} />
+              </div>
+            </div>
+
+            {/* Proyección */}
+            {projection && (
+              <div style={{ background: 'rgba(0,0,0,0.22)', borderRadius: 12, padding: 14 }}>
+                <div style={{ fontSize: 11, fontWeight: 800, color: 'var(--padel-muted)', letterSpacing: 0.5 }}>{T.projection}</div>
+                <div style={{ fontSize: 26, fontWeight: 900, color: '#fbbf24', marginTop: 4 }}>#{projection.projectedRank}<span style={{ fontSize: 13, color: 'var(--padel-muted)', fontWeight: 700 }}>/{projection.total}</span></div>
+                <div style={{ fontSize: 11.5, fontWeight: 800, color: '#10b981', marginTop: 6 }}>{T.podium} {projection.chanceTop}%</div>
+              </div>
+            )}
+          </div>
+
+          {/* Calidad de victorias + distribución */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(240px,1fr))', gap: 12, marginTop: 12 }}>
+            {qWins ? (
+              <div style={{ background: 'rgba(0,0,0,0.22)', borderRadius: 12, padding: 14 }}>
+                <div style={{ fontSize: 11, fontWeight: 800, color: 'var(--padel-muted)', letterSpacing: 0.5 }}>{T.qualityTitle}</div>
+                <div style={{ display: 'flex', alignItems: 'flex-end', gap: 10, marginTop: 10 }}>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontSize: 20, fontWeight: 900, color: '#84cc16' }}>{qWins.tough}<span style={{ fontSize: 11, color: 'var(--padel-muted)', fontWeight: 700 }}> {T.qualityTough}</span></div>
+                    <div style={{ height: 6, background: 'rgba(255,255,255,0.1)', borderRadius: 99, marginTop: 4, overflow: 'hidden' }}>
+                      <div style={{ width: `${Math.max(4, qWins.pct)}%`, height: '100%', background: '#84cc16', borderRadius: 99 }} />
+                    </div>
+                  </div>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontSize: 20, fontWeight: 900, color: '#94a3b8' }}>{qWins.easy}<span style={{ fontSize: 11, color: 'var(--padel-muted)', fontWeight: 700 }}> {T.qualityEasy}</span></div>
+                    <div style={{ height: 6, background: 'rgba(255,255,255,0.1)', borderRadius: 99, marginTop: 4, overflow: 'hidden' }}>
+                      <div style={{ width: `${Math.max(4, 100 - qWins.pct)}%`, height: '100%', background: '#64748b', borderRadius: 99 }} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div style={{ background: 'rgba(0,0,0,0.22)', borderRadius: 12, padding: 14 }}>
+                <div style={{ fontSize: 11, fontWeight: 800, color: 'var(--padel-muted)', letterSpacing: 0.5 }}>{T.qualityTitle}</div>
+                <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--padel-muted)', marginTop: 12 }}>
+                  {T.qualityTough} 0 · {T.qualityEasy} 0
+                </div>
+              </div>
+            )}
+            {dist.length > 0 && (
+              <div style={{ background: 'rgba(0,0,0,0.22)', borderRadius: 12, padding: 14 }}>
+                <div style={{ fontSize: 11, fontWeight: 800, color: 'var(--padel-muted)', letterSpacing: 0.5 }}>{T.distribution}</div>
+                <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, height: 64, marginTop: 8 }}>
+                  {dist.map((b, i) => {
+                    const mine = myElo >= Number(b.label.split('–')[0]) && myElo <= Number(b.label.split('–')[1]);
+                    return (
+                      <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
+                        <div style={{ width: '100%', maxWidth: 34, height: `${Math.max(8, b.pct)}%`, borderRadius: '4px 4px 0 0', background: mine ? 'linear-gradient(180deg,#38bdf8,#10b981)' : 'rgba(16,185,129,0.35)' }} />
+                        <span style={{ fontSize: 9, fontWeight: 700, color: mine ? '#38bdf8' : 'var(--padel-muted)', letterSpacing: 0 }}>{b.label}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+                <div style={{ fontSize: 10, color: 'var(--padel-muted)', marginTop: 6 }}>{T.yourBand}: <b style={{ color: '#38bdf8' }}>{myElo} ELO</b></div>
+              </div>
+            )}
           </div>
         </div>
 
