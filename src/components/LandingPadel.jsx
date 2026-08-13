@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import LogoPadel from './LogoPadel';
+import PadelAIAgent from './PadelAIAgent';
 
 const FeatureIcon = ({ name, size = 28, color = 'var(--padel-lime)' }) => {
   const icons = {
@@ -111,18 +112,17 @@ const I18N = {
       { icon: 'cloud', title: 'SaaS + Reservas', desc: 'Modelo de monetización recurrente por club con reservas de pistas y membresías.', tooltip: 'Modelo SaaS con reservas y pagos integrados (Stripe)' },
     ],
     comparisonTitle: 'Comparativa de mercado',
-    comparisonCols: ['Característica', 'PADELORGANIZERS', 'Playtomic', 'MATCHi', 'Padel Mates', 'PadelRanking'],
+    comparisonCols: ['Característica', 'PADELORGANIZERS', 'Playtomic', 'Excel/WhatsApp'],
     comparison: [
-      ['Formato Americano/Mexicano automático', '✓', '✓', '✗', '✓', '✓'],
-      ['Punto de Oro digital', '✓', '✗', '✗', '✗', '✗'],
-      ['Coach IA con voz (ES/EN/FR/PT)', '✓', '✗', '✗', '✗', '✗'],
-      ['Marcador en vivo + análisis', '✓', '✗', '✗', '✗', '✗'],
-      ['Pago dividido entre jugadores (Split)', '✓', '✓', '✓', '✓', 'Parcial'],
-      ['Pago PayPal (live)', '✓', 'Parcial', 'Parcial', '✓', 'Parcial'],
-      ['Escuela con cobro recurrente', '✓', '✗', '✓', 'Parcial', '✓'],
-      ['Control de pistas en tiempo real', '✓', 'Parcial', '✓', 'Parcial', '✓'],
-      ['Ranking del club con desempates', '✓', 'Parcial', 'Parcial', 'Parcial', '✓'],
-      ['Sin cuota de 100-350 €/mes al club', '✓', '✗', '✗', '✗', '✗'],
+      ['Formato Americano/Mexicano automático', '✓', '✓', '✗'],
+      ['Punto de Oro digital', '✓', '✗', '✗'],
+      ['Pago dividido entre jugadores (Split)', '✓', 'Parcial', '✗'],
+      ['Anti no-show y lista de espera', '✓', 'Parcial', '✗'],
+      ['Escuela con cobro recurrente', '✓', 'Parcial', '✗'],
+      ['Ranking del club con desempates', '✓', 'Parcial', '✗'],
+      ['Control de pistas en tiempo real', '✓', 'Parcial', '✗'],
+      ['Multi-idioma (ES/EN/FR/PT)', '✓', '✗', '✗'],
+      ['Sin instalación, en la nube', '✓', 'App', 'PC'],
     ],
     pricingTitle: 'Modelo de monetización',
     pricingSubtitle: 'Crece con tu club. Empieza gratis y escala cuando lo necesites.',
@@ -133,17 +133,6 @@ const I18N = {
     ],
     ctaSectionTitle: 'El sistema operativo de tu club de pádel',
     ctaSectionDesc: 'Torneos, reservas, escuela, socios y tienda en una sola plataforma conectada. Lánzalo hoy.',
-    showBadge: 'Así se ve por dentro',
-    showTitle: 'Una sola plataforma, todo integrado',
-    showDesc: 'Torneos, CourtManager, IA y pagos conectados en una interfaz limpia.',
-    audienceTitle: 'Creada para cada perfil de tu club',
-    audienceSubtitle: 'Cada rol, con su vista: dirigir, competir, entrenar y crecer.',
-    audience: [
-      { icon: '🎾', title: 'Organizador / Club', desc: 'Torneos, pistas, reservas y cobros desde un solo panel.' },
-      { icon: '🏆', title: 'Jugador', desc: 'Cuadro en vivo, marcador con Punto de Oro y su rating al día.' },
-      { icon: '🎓', title: 'Técnico / Escuela', desc: 'Grupos, niveles y cobro recurrente de alumnos en segundos.' },
-      { icon: '📈', title: 'Patrocinador', desc: 'Analíticas y visibilidad de cada evento en tiempo real.' },
-    ],
     footer: 'PADELORGANIZERS.COM — El mejor software para el deporte de moda.'
   },
   en: {
@@ -202,18 +191,17 @@ const I18N = {
       { icon: 'cloud', title: 'SaaS + Bookings', desc: 'Recurring club monetization with court bookings and memberships.', tooltip: 'SaaS model with integrated bookings and payments (Stripe)' },
     ],
     comparisonTitle: 'Market comparison',
-    comparisonCols: ['Feature', 'PADELORGANIZERS', 'Playtomic', 'MATCHi', 'Padel Mates', 'PadelRanking'],
+    comparisonCols: ['Feature', 'PADELORGANIZERS', 'Playtomic', 'Excel/WhatsApp'],
     comparison: [
-      ['Automatic Americano/Mexicano format', '✓', '✓', '✗', '✓', '✓'],
-      ['Digital Gold Point', '✓', '✗', '✗', '✗', '✗'],
-      ['AI Coach with voice (ES/EN/FR/PT)', '✓', '✗', '✗', '✗', '✗'],
-      ['Live scoreboard + analytics', '✓', '✗', '✗', '✗', '✗'],
-      ['Split payment between players', '✓', '✓', '✓', '✓', 'Partial'],
-      ['PayPal payment (live)', '✓', 'Partial', 'Partial', '✓', 'Partial'],
-      ['School with recurring billing', '✓', '✗', '✓', 'Partial', '✓'],
-      ['Real-time court control', '✓', 'Partial', '✓', 'Partial', '✓'],
-      ['Club ranking with tiebreakers', '✓', 'Partial', 'Partial', 'Partial', '✓'],
-      ['No 100-350 €/month club fee', '✓', '✗', '✗', '✗', '✗'],
+      ['Automatic Americano/Mexicano format', '✓', '✓', '✗'],
+      ['Digital Gold Point', '✓', '✗', '✗'],
+      ['Split payment between players', '✓', 'Partial', '✗'],
+      ['No-show protection and waitlist', '✓', 'Partial', '✗'],
+      ['School with recurring billing', '✓', 'Partial', '✗'],
+      ['Club ranking with tiebreakers', '✓', 'Partial', '✗'],
+      ['Real-time court control', '✓', 'Partial', '✗'],
+      ['Multi-language (ES/EN/FR/PT)', '✓', '✗', '✗'],
+      ['No installation, cloud-based', '✓', 'App', 'PC'],
     ],
     pricingTitle: 'Monetization model',
     pricingSubtitle: 'Grow with your club. Start free and scale when you need it.',
@@ -224,17 +212,6 @@ const I18N = {
     ],
     ctaSectionTitle: 'The operating system of your padel club',
     ctaSectionDesc: 'Tournaments, bookings, school, members and shop in one connected platform. Launch today.',
-    showBadge: 'See it from the inside',
-    showTitle: 'One platform, everything connected',
-    showDesc: 'Tournaments, CourtManager, AI and payments tied together in one clean interface.',
-    audienceTitle: 'Built for every role in your club',
-    audienceSubtitle: 'Each role, its view: run, compete, coach and grow.',
-    audience: [
-      { icon: '🎾', title: 'Organizer / Club', desc: 'Tournaments, courts, bookings and payments from one panel.' },
-      { icon: '🏆', title: 'Player', desc: 'Live bracket, Gold Point scoreboard and updated rating.' },
-      { icon: '🎓', title: 'Coach / School', desc: 'Groups, levels and recurring student billing in seconds.' },
-      { icon: '📈', title: 'Sponsor', desc: 'Analytics and visibility for every event in real time.' },
-    ],
     footer: 'PADELORGANIZERS.COM — The best software for the sport of the moment.',
   },
   fr: {
@@ -293,18 +270,17 @@ const I18N = {
       { icon: 'cloud', title: 'SaaS + Réservations', desc: 'Monétisation récurrente par club avec réservations de pistes et adhésions.', tooltip: 'Modèle SaaS avec réservations et paiements intégrés (Stripe)' },
     ],
     comparisonTitle: 'Comparaison du marché',
-    comparisonCols: ['Fonctionnalité', 'PADELORGANIZERS', 'Playtomic', 'MATCHi', 'Padel Mates', 'PadelRanking'],
+    comparisonCols: ['Fonctionnalité', 'PADELORGANIZERS', 'Playtomic', 'Excel/WhatsApp'],
     comparison: [
-      ['Format Américain/Mexicain automatique', '✓', '✓', '✗', '✓', '✓'],
-      ['Point d\'Or numérique', '✓', '✗', '✗', '✗', '✗'],
-      ['Coach IA avec voix (ES/EN/FR/PT)', '✓', '✗', '✗', '✗', '✗'],
-      ['Score en direct + analyses', '✓', '✗', '✗', '✗', '✗'],
-      ['Paiement divisé entre joueurs (Split)', '✓', '✓', '✓', '✓', 'Partiel'],
-      ['Paiement PayPal (live)', '✓', 'Partiel', 'Partiel', '✓', 'Partiel'],
-      ['École avec facturation récurrente', '✓', '✗', '✓', 'Partiel', '✓'],
-      ['Contrôle des pistes en temps réel', '✓', 'Partiel', '✓', 'Partiel', '✓'],
-      ['Classement du club avec égalités', '✓', 'Partiel', 'Partiel', 'Partiel', '✓'],
-      ['Sans frais de 100-350 €/mois au club', '✓', '✗', '✗', '✗', '✗'],
+      ['Format Américain/Mexicain automatique', '✓', '✓', '✗'],
+      ['Point d\'Or numérique', '✓', '✗', '✗'],
+      ['Paiement divisé entre joueurs (Split)', '✓', 'Partiel', '✗'],
+      ['Anti no-show et liste d\'attente', '✓', 'Partiel', '✗'],
+      ['École avec facturation récurrente', '✓', 'Partiel', '✗'],
+      ['Classement du club avec égalités', '✓', 'Partiel', '✗'],
+      ['Contrôle des pistes en temps réel', '✓', 'Partiel', '✗'],
+      ['Multilingue (ES/EN/FR/PT)', '✓', '✗', '✗'],
+      ['Sans installation, dans le cloud', '✓', 'App', 'PC'],
     ],
     pricingTitle: 'Modèle de monétisation',
     pricingSubtitle: 'Développez votre club. Commencez gratuitement et évoluez si besoin.',
@@ -315,17 +291,6 @@ const I18N = {
     ],
     ctaSectionTitle: 'Le système d\'exploitation de votre club de padel',
     ctaSectionDesc: 'Tournois, réservations, école, membres et boutique sur une seule plateforme connectée. Lancez-le aujourd\'hui.',
-    showBadge: "Découvrez l'intérieur",
-    showTitle: 'Une seule plateforme, tout est connecté',
-    showDesc: 'Tournois, CourtManager, IA et paiements réunis dans une interface épurée.',
-    audienceTitle: 'Conçue pour chaque profil de votre club',
-    audienceSubtitle: 'Chaque rôle, sa vue : diriger, jouer, entraîner et développer.',
-    audience: [
-      { icon: '🎾', title: 'Organisateur / Club', desc: 'Tournois, pistes, réservations et paiements depuis un seul panneau.' },
-      { icon: '🏆', title: 'Joueur', desc: 'Tableau en direct, score avec Point d\'Or et rating à jour.' },
-      { icon: '🎓', title: 'Technicien / École', desc: 'Groupes, niveaux et facturation récurrente des élèves en quelques secondes.' },
-      { icon: '📈', title: 'Sponsor', desc: 'Analytiques et visibilité de chaque événement en temps réel.' },
-    ],
     footer: 'PADELORGANIZERS.COM — Le meilleur logiciel du sport à la mode.',
   },
   pt: {
@@ -384,18 +349,17 @@ const I18N = {
       { icon: 'cloud', title: 'SaaS + Reservas', desc: 'Modelo de monetização recorrente por clube com reservas de pistas e assinaturas.', tooltip: 'Modelo SaaS com reservas e pagamentos integrados (Stripe)' },
     ],
     comparisonTitle: 'Comparação de mercado',
-    comparisonCols: ['Característica', 'PADELORGANIZERS', 'Playtomic', 'MATCHi', 'Padel Mates', 'PadelRanking'],
+    comparisonCols: ['Característica', 'PADELORGANIZERS', 'Playtomic', 'Excel/WhatsApp'],
     comparison: [
-      ['Formato Americano/Mexicano automático', '✓', '✓', '✗', '✓', '✓'],
-      ['Ponto de Ouro digital', '✓', '✗', '✗', '✗', '✗'],
-      ['Coach IA com voz (ES/EN/FR/PT)', '✓', '✗', '✗', '✗', '✗'],
-      ['Marcador ao vivo + análises', '✓', '✗', '✗', '✗', '✗'],
-      ['Pagamento dividido entre jogadores', '✓', '✓', '✓', '✓', 'Parcial'],
-      ['Pagamento PayPal (live)', '✓', 'Parcial', 'Parcial', '✓', 'Parcial'],
-      ['Escola com cobrança recorrente', '✓', '✗', '✓', 'Parcial', '✓'],
-      ['Controlo de pistas em tempo real', '✓', 'Parcial', '✓', 'Parcial', '✓'],
-      ['Classificação do clube com desempates', '✓', 'Parcial', 'Parcial', 'Parcial', '✓'],
-      ['Sem taxa de 100-350 €/mês ao clube', '✓', '✗', '✗', '✗', '✗'],
+      ['Formato Americano/Mexicano automático', '✓', '✓', '✗'],
+      ['Ponto de Ouro digital', '✓', '✗', '✗'],
+      ['Pagamento dividido entre jogadores', '✓', 'Parcial', '✗'],
+      ['Anti no-show e lista de espera', '✓', 'Parcial', '✗'],
+      ['Escola com cobrança recorrente', '✓', 'Parcial', '✗'],
+      ['Classificação do clube com desempates', '✓', 'Parcial', '✗'],
+      ['Controlo de pistas em tempo real', '✓', 'Parcial', '✗'],
+      ['Multi-idioma (ES/EN/FR/PT)', '✓', '✗', '✗'],
+      ['Sem instalação, na nuvem', '✓', 'App', 'PC'],
     ],
     pricingTitle: 'Modelo de monetização',
     pricingSubtitle: 'Cresça com o seu clube. Comece grátis e escale quando precisar.',
@@ -406,17 +370,6 @@ const I18N = {
     ],
     ctaSectionTitle: 'O sistema operativo do seu clube de pádel',
     ctaSectionDesc: 'Torneios, reservas, escola, sócios e loja numa única plataforma ligada. Lance hoje.',
-    showBadge: 'Veja por dentro',
-    showTitle: 'Uma só plataforma, tudo integrado',
-    showDesc: 'Torneios, CourtManager, IA e pagamentos ligados numa interface limpa.',
-    audienceTitle: 'Feita para cada perfil do seu clube',
-    audienceSubtitle: 'Cada papel, a sua vista: dirigir, competir, treinar e crescer.',
-    audience: [
-      { icon: '🎾', title: 'Organizador / Clube', desc: 'Torneios, pistas, reservas e cobranças num só painel.' },
-      { icon: '🏆', title: 'Jogador', desc: 'Quadro em direto, marcador com Ponto de Ouro e rating atualizado.' },
-      { icon: '🎓', title: 'Técnico / Escola', desc: 'Grupos, níveis e cobrança recorrente de alunos em segundos.' },
-      { icon: '📈', title: 'Patrocinador', desc: 'Analíticas e visibilidade de cada evento em tempo real.' },
-    ],
     footer: 'PADELORGANIZERS.COM — O melhor software do desporto da moda.',
   },
 };
@@ -437,45 +390,24 @@ export default function LandingPadel({ lang = 'es' }) {
   return (
     <div style={{ minHeight: '100vh', background: 'var(--padel-bg)', color: 'var(--padel-text)' }}>
       {/* HERO */}
-      <section style={{ position: 'relative', padding: '44px 0 60px', overflow: 'hidden' }}>
+      <section style={{ position: 'relative', padding: '28px 0 48px', minHeight: 'calc(100vh - 92px)', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at 20% 20%, rgba(16,185,129,0.18), transparent 40%), radial-gradient(circle at 80% 0%, rgba(132,204,22,0.12), transparent 40%)' }} />
-        <div style={{ ...sectionStyle, position: 'relative' }}>
+        <div style={{ ...sectionStyle, position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}>
           <span style={{ display: 'inline-block', background: 'rgba(16,185,129,0.15)', border: '1px solid rgba(16,185,129,0.35)', color: 'var(--padel-lime)', padding: '6px 14px', borderRadius: '20px', fontWeight: 700, fontSize: '12px', letterSpacing: '1.5px' }}>
             🎾 {T.badge}
           </span>
-          <h1 style={{ fontSize: '56px', lineHeight: 1.05, fontWeight: 900, color: 'var(--padel-text)', margin: '24px 0 16px', letterSpacing: '-1.5px' }}>
+          <h1 style={{ fontSize: '56px', lineHeight: 1.05, fontWeight: 900, color: 'var(--padel-text)', margin: '14px 0 12px', letterSpacing: '-1.5px', maxWidth: '760px' }}>
             {T.title1}
             <br />
             <span style={{ background: 'linear-gradient(135deg, var(--padel-emerald) 0%, var(--padel-lime) 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>{T.title2}</span>
           </h1>
-          <p style={{ fontSize: '18px', color: 'var(--padel-muted)', maxWidth: '640px', lineHeight: 1.7, marginBottom: '32px' }}>{T.subtitle}</p>
-          <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap' }}>
-            <button onClick={() => navigate('/demo')} className="pulse-glow" style={{ background: 'linear-gradient(135deg, var(--padel-emerald) 0%, var(--padel-emerald-dark) 100%)', color: '#fff', border: 'none', padding: '16px 30px', borderRadius: '12px', fontWeight: 800, fontSize: '16px', cursor: 'pointer' }}>
-              🚀 {T.ctaDemoStrong}
-            </button>
-            <button onClick={() => navigate('/clubes')} style={{ background: 'rgba(45,212,191,0.12)', border: '1px solid rgba(45,212,191,0.4)', color: 'var(--padel-teal, #2dd4bf)', padding: '16px 26px', borderRadius: '12px', fontWeight: 800, fontSize: '15px', cursor: 'pointer' }}>
-              🗺️ Directorio · 105 clubes
-            </button>
-            <button onClick={() => navigate('/tienda')} style={{ background: 'rgba(251,191,36,0.12)', border: '1px solid rgba(251,191,36,0.4)', color: '#fbbf24', padding: '16px 26px', borderRadius: '12px', fontWeight: 800, fontSize: '15px', cursor: 'pointer' }}>
-              🛒 Tienda del Circuito
+          <p style={{ fontSize: '18px', color: 'var(--padel-muted)', maxWidth: '700px', lineHeight: 1.7, marginBottom: '22px' }}>{T.subtitle}</p>
+          <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap', justifyContent: 'center', marginTop: '14px' }}>
+            <button onClick={() => navigate('/torneo')} className="pulse-glow" style={{ background: 'linear-gradient(135deg, var(--padel-emerald) 0%, var(--padel-emerald-dark) 100%)', color: '#fff', border: 'none', padding: '14px 30px', borderRadius: '12px', fontWeight: 800, fontSize: '15px', cursor: 'pointer' }}>
+              {T.ctaDemoStrong}
             </button>
           </div>
-          <p style={{ fontSize: '13px', color: 'var(--padel-muted)', marginTop: '12px', fontWeight: 600 }}>{T.ctaDemoSub}</p>
-        </div>
-      </section>
-
-      {/* APP SHOWCASE */}
-      <section style={{ padding: '0 0 70px' }}>
-        <div style={sectionStyle}>
-          <div style={{ textAlign: 'center', marginBottom: '24px' }}>
-            <span style={{ display: 'inline-block', background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.3)', color: 'var(--padel-lime)', padding: '5px 12px', borderRadius: '16px', fontWeight: 700, fontSize: '11px', letterSpacing: '1px' }}>👁️ {T.showBadge}</span>
-            <h2 style={{ fontSize: '30px', fontWeight: 900, color: 'var(--padel-text)', margin: '16px 0 6px' }}>{T.showTitle}</h2>
-            <p style={{ fontSize: '15px', color: 'var(--padel-muted)', maxWidth: '560px', margin: '0 auto' }}>{T.showDesc}</p>
-          </div>
-          <div style={{ position: 'relative', borderRadius: '20px', overflow: 'hidden', border: '1px solid rgba(16,185,129,0.25)', boxShadow: '0 24px 60px rgba(0,0,0,0.45)', maxWidth: '980px', margin: '0 auto' }}>
-            <img src="/images/padelorganizers.com.png" alt="PADELORGANIZERS.COM" style={{ width: '100%', display: 'block' }} loading="lazy" />
-            <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.06)' }} />
-          </div>
+          <p style={{ fontSize: '13px', color: 'var(--padel-muted)', marginTop: '10px', fontWeight: 600 }}>{T.ctaDemoSub}</p>
         </div>
       </section>
 
@@ -549,26 +481,6 @@ export default function LandingPadel({ lang = 'es' }) {
         </div>
       </section>
 
-      {/* AUDIENCE / PERFILES */}
-      <section style={{ padding: '80px 0', background: 'var(--padel-card-bg)', borderTop: '1px solid var(--padel-border)', borderBottom: '1px solid var(--padel-border)' }}>
-        <div style={sectionStyle}>
-          <h2 style={{ fontSize: '34px', fontWeight: 900, color: 'var(--padel-text)', textAlign: 'center', marginBottom: '8px' }}>{T.audienceTitle}</h2>
-          <p style={{ fontSize: '15px', color: 'var(--padel-muted)', textAlign: 'center', marginBottom: '36px' }}>{T.audienceSubtitle}</p>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px', marginBottom: '40px' }}>
-            {T.audience.map((a, i) => (
-              <div key={i} style={{ background: 'var(--padel-bg)', border: '1px solid var(--padel-border)', borderRadius: '16px', padding: '24px', textAlign: 'center' }}>
-                <div style={{ fontSize: '34px', marginBottom: '12px' }}>{a.icon}</div>
-                <h3 style={{ fontSize: '17px', fontWeight: 800, color: 'var(--padel-text)', margin: '0 0 6px' }}>{a.title}</h3>
-                <p style={{ fontSize: '14px', color: 'var(--padel-muted)', lineHeight: 1.6, margin: 0 }}>{a.desc}</p>
-              </div>
-            ))}
-          </div>
-          <div style={{ borderRadius: '20px', overflow: 'hidden', border: '1px solid rgba(16,185,129,0.25)', boxShadow: '0 24px 60px rgba(0,0,0,0.45)', maxWidth: '980px', margin: '0 auto' }}>
-            <img src="/images/padel-perfil-clientes.png" alt={T.audienceTitle} style={{ width: '100%', display: 'block' }} loading="lazy" />
-          </div>
-        </div>
-      </section>
-
       {/* ROI CALCULATOR */}
       <section style={{ padding: '70px 0', background: 'var(--padel-card-bg)', borderTop: '1px solid var(--padel-border)', borderBottom: '1px solid var(--padel-border)' }}>
         <div style={sectionStyle}>
@@ -591,7 +503,7 @@ export default function LandingPadel({ lang = 'es' }) {
               <div style={{ fontSize: '52px', fontWeight: 900, color: 'var(--padel-lime)', lineHeight: 1.1 }}>{roiTotal} €<span style={{ fontSize: '18px' }}>/mes</span></div>
               <div style={{ fontSize: '13px', color: 'var(--padel-text)', marginTop: '10px' }}>{T.roiOutputSub}</div>
               <button onClick={() => navigate('/demo')} style={{ background: 'linear-gradient(135deg, var(--padel-emerald), var(--padel-emerald-dark))', color: '#fff', border: 'none', padding: '12px 22px', borderRadius: '10px', fontWeight: 800, fontSize: '14px', cursor: 'pointer', marginTop: '18px' }}>
-                🚀 {T.ctaDemoStrong}
+                {T.ctaDemoStrong}
               </button>
             </div>
           </div>
@@ -623,7 +535,7 @@ export default function LandingPadel({ lang = 'es' }) {
         <div style={sectionStyle}>
           <h2 style={{ fontSize: '34px', fontWeight: 900, color: 'var(--padel-text)', textAlign: 'center', marginBottom: '36px' }}>{T.comparisonTitle}</h2>
           <div style={{ overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '820px' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '600px' }}>
               <thead>
                 <tr>
                   {T.comparisonCols.map((c, i) => (
@@ -684,7 +596,7 @@ export default function LandingPadel({ lang = 'es' }) {
           <h2 style={{ fontSize: '36px', fontWeight: 900, color: 'var(--padel-text)', marginBottom: '12px' }}>{T.ctaSectionTitle}</h2>
           <p style={{ fontSize: '16px', color: 'var(--padel-muted)', maxWidth: '560px', margin: '0 auto 28px' }}>{T.ctaSectionDesc}</p>
           <button onClick={() => navigate('/demo')} className="pulse-glow" style={{ background: 'linear-gradient(135deg, #eab308 0%, #a16207 100%)', color: '#fff', border: 'none', padding: '16px 34px', borderRadius: '12px', fontWeight: 800, fontSize: '16px', cursor: 'pointer', boxShadow: '0 8px 24px rgba(234,179,8,0.35)' }}>
-            🚀 {T.ctaDemoStrong}
+            {T.ctaDemoStrong}
           </button>
           <p style={{ fontSize: '13px', color: 'var(--padel-muted)', marginTop: '14px', fontWeight: 600 }}>{T.ctaDemoSub}</p>
         </div>
@@ -693,11 +605,11 @@ export default function LandingPadel({ lang = 'es' }) {
       {/* FOOTER */}
       <footer style={{ padding: '24px', textAlign: 'center', fontSize: '13px', color: 'var(--padel-muted)', borderTop: '1px solid var(--padel-border)' }}>
         © 2026 {T.footer} ·{' '}
-        <a href="/clubes" style={{ color: '#2dd4bf', textDecoration: 'none', fontWeight: 600 }}>Directorio de clubes</a> ·{' '}
-        <a href="/tienda" style={{ color: '#fbbf24', textDecoration: 'none', fontWeight: 600 }}>Tienda</a> ·{' '}
-        <a href="/legal" style={{ color: '#38bdf8', textDecoration: 'none', fontWeight: 600 }}>Aviso legal / Cookies</a> ·{' '}
-        <a href="https://www.padelfip.com/es/fip-rankings/" target="_blank" rel="noopener noreferrer" style={{ color: '#a3e635', textDecoration: 'none', fontWeight: 600 }}>Ranking mundial FIP ↗</a>
+        <a href="/legal" style={{ color: '#38bdf8', textDecoration: 'none', fontWeight: 600 }}>Aviso legal / Cookies</a>
       </footer>
+
+      {/* Agente IA experto en pádel — permanente abajo a la derecha */}
+      <PadelAIAgent lang={lang} />
     </div>
   );
 }
