@@ -20,6 +20,7 @@ const I18N = {
     reset: '↺ Torneo demo',
     build: 'Generar cuadro',
     go: '← Ir',
+    importPlayers: '📥 Importar jugadores',
     phaseNames: {
       prep: 'Preparación', signups: 'Inscripciones', draw: 'Cuadro & pistas',
       day: 'Día de competición', results: 'Resultados & ranking', close: 'Cierre & publicación',
@@ -43,6 +44,7 @@ const I18N = {
     reset: '↺ Demo tournament',
     build: 'Generate bracket',
     go: 'Go →',
+    importPlayers: '📥 Import players',
     phaseNames: {
       prep: 'Setup', signups: 'Sign-ups', draw: 'Bracket & courts',
       day: 'Match day', results: 'Results & ranking', close: 'Wrap-up & publish',
@@ -65,6 +67,7 @@ const I18N = {
     reset: '↺ Tournoi démo',
     build: 'Générer le tableau',
     go: '← Aller',
+    importPlayers: '📥 Importer les joueurs',
     phaseNames: {
       prep: 'Préparation', signups: 'Inscriptions', draw: 'Tableau & pistes',
       day: 'Jour de compétition', results: 'Résultats & classement', close: 'Clôture & publication',
@@ -87,6 +90,7 @@ const I18N = {
     reset: '↺ Torneio demo',
     build: 'Gerar quadro',
     go: '← Ir',
+    importPlayers: '📥 Importar jogadores',
     phaseNames: {
       prep: 'Preparação', signups: 'Inscrições', draw: 'Quadro & pistas',
       day: 'Dia de competição', results: 'Resultados & ranking', close: 'Encerramento & publicação',
@@ -141,6 +145,7 @@ export default function TournamentControl({ lang = 'es' }) {
             <span style={{ fontSize: 12, color: 'var(--padel-muted)', fontWeight: 700 }}>
               {T.tour}: <b style={{ color: 'var(--padel-lime)' }}>{tournamentName()}</b> · {T.season} {currentSeason()}
             </span>
+            <button onClick={() => nav('/importar')} style={{ ...ghostBtn, color: 'var(--padel-lime)', borderColor: 'rgba(163,230,53,0.3)' }}>{T.importPlayers}</button>
             <button onClick={() => { loadDemoTournament(); refresh(); }} style={ghostBtn}>{T.reset}</button>
           </div>
         </div>
