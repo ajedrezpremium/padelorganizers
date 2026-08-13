@@ -22,6 +22,11 @@ create table if not exists public.reservation_waitlist (
 
 alter table public.reservation_waitlist enable row level security;
 
+drop policy if exists "waitlist_select" on public.reservation_waitlist;
+drop policy if exists "waitlist_insert" on public.reservation_waitlist;
+drop policy if exists "waitlist_update" on public.reservation_waitlist;
+drop policy if exists "waitlist_delete" on public.reservation_waitlist;
+
 create policy "waitlist_select" on public.reservation_waitlist for select using (true);
 create policy "waitlist_insert" on public.reservation_waitlist for insert with check (true);
 create policy "waitlist_update" on public.reservation_waitlist for update using (true);
