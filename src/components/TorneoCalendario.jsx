@@ -126,7 +126,7 @@ const TORNEOS = [
   { id: 'gijon', name: 'Gijón Premier Padel', cat: 'P2', city: 'Gijón', country: 'España', flag: '🇪🇸', start: '2026-03-01', end: '2026-03-08', url: 'https://www.padelfip.com/es/eventos/gijon-p2-2026/', stars: 3, reasons: ['Primer torneo en España de 2026', 'Público y tradición del pádel asturiano', 'Cuadro con cabeza de serie del tour'] },
   { id: 'cancun', name: 'Cancún Premier Padel', cat: 'P2', city: 'Cancún', country: 'México', flag: '🇲🇽', start: '2026-03-15', end: '2026-03-22', url: 'https://www.padelfip.com/es/eventos/cancun-p2-2026/', stars: 4, reasons: ['Vuelta del tour a México', 'Sede turística con gran proyección internacional', 'Marca destino y cobertura mediática amplia'] },
   { id: 'miami', name: 'Miami Premier Padel', cat: 'P1', city: 'Miami', country: 'Estados Unidos', flag: '🇺🇸', start: '2026-03-22', end: '2026-03-29', url: 'https://www.padelfip.com/es/eventos/miami-p1-2026/', stars: 4, reasons: ['Segunda edición en EE. UU.: mercado clave del pádel', 'P1 con cuadro completo del ranking', 'Cobertura internacional de medios'] },
-  { id: 'qatar', name: 'Qatar Major Premier Padel', cat: 'Major', city: 'Doha', country: 'Qatar', flag: '🇶🇦', start: '2026-04-06', end: '2026-04-11', url: 'https://www.padelfip.com/es/eventos/qatar-major-2026/', stars: 5, reasons: ['Major: máximo nivel del circuito', 'Instalaciones de clase mundial', 'Mayores puntos y premios de la temporada'] },
+  { id: 'qatar', name: 'Qatar Major Premier Padel', cat: 'Major', city: 'Doha', country: 'Qatar', flag: '🇶🇦', start: '2026-04-06', end: '2026-04-11', url: 'https://www.padelfip.com/es/eventos/qatar-major-2026/', stars: 5, postponed: true, reasons: ['Major: máximo nivel del circuito', 'Instalaciones de clase mundial', 'Mayores puntos y premios de la temporada'] },
   { id: 'newgiza', name: 'Newgiza Premier Padel', cat: 'P2', city: 'El Giza', country: 'Egipto', flag: '🇪🇬', start: '2026-04-11', end: '2026-04-18', url: 'https://www.padelfip.com/es/eventos/newgiza-p2-2026/', stars: 3, reasons: ['Primera parada en África del año', 'Nueva plaza del tour', 'Difusión del pádel en el norte de África'] },
   { id: 'brussels', name: 'Brussels Premier Padel', cat: 'P2', city: 'Bruselas', country: 'Bélgica', flag: '🇧🇪', start: '2026-04-19', end: '2026-04-26', url: 'https://www.padelfip.com/es/eventos/brussels-p2-2026/', stars: 3, reasons: ['Página europea consolidada del tour', 'Buena asistencia de público', 'Sede central de la UE con proyección'] },
   { id: 'asuncion', name: 'Asunción Premier Padel', cat: 'P2', city: 'Asunción', country: 'Paraguay', flag: '🇵🇾', start: '2026-05-03', end: '2026-05-10', url: 'https://www.padelfip.com/es/eventos/asuncion-p2-2026/', stars: 3, reasons: ['Paraguay, cuna de grandes jugadores del pádel', 'Afición apasionada', 'Torneo consolidado en Sudamérica'] },
@@ -148,6 +148,103 @@ const TORNEOS = [
   { id: 'mexico', name: 'Mexico Major Premier Padel', cat: 'Major', city: 'Acapulco', country: 'México', flag: '🇲🇽', start: '2026-11-23', end: '2026-11-29', url: 'https://www.padelfip.com/es/eventos/mexico-major-2026/', stars: 5, reasons: ['Major de cierre de la temporada regular', 'Sede histórica del deporte', 'Máximo nivel del circuito'] },
   { id: 'finals', name: 'Premier Padel Finals', cat: 'Finals', city: 'Barcelona', country: 'España', flag: '🇪🇸', start: '2026-12-10', end: '2026-12-13', url: 'https://www.padelfip.com/es/eventos/premier-padel-finals-2026/', stars: 5, reasons: ['Final de temporada: lo mejor contra lo mejor', 'Ocho mejores parejas del año', 'Definición del maestro del circuito'] },
 ];
+
+// Cupra FIP Tour 2026 (2º circuito profesional de la FIP): torneos oficiales
+// por mes (categorías Platinum / Gold / Silver / Bronze). URL → calendario
+// oficial del circuito en padelfip.com (los resultados se agregan por mes).
+const TORNEOS_FIP = [
+  // ---- Agosto (parón del Premier Padel: el Circuit FIP cubre todas las semanas) ----
+  { id: 'fip-portimao', name: 'FIP Bronze Portimão', cat: 'Bronze', city: 'Portimão', country: 'Portugal', flag: '🇵🇹', start: '2026-08-05', end: '2026-08-09', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 1.5 },
+  { id: 'fip-bali', name: 'FIP Silver Bali Island Sports', cat: 'Silver', city: 'Bali', country: 'Indonesia', flag: '🇮🇩', start: '2026-08-11', end: '2026-08-16', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 2 },
+  { id: 'fip-barcelona-el-prat', name: 'FIP Bronze Padel Barcelona El Prat', cat: 'Bronze', city: 'Barcelona', country: 'España', flag: '🇪🇸', start: '2026-08-12', end: '2026-08-16', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 1.5 },
+  { id: 'fip-mol', name: 'FIP Bronze R3 Bullpadel Cup Mol', cat: 'Bronze', city: 'Mol', country: 'Bélgica', flag: '🇧🇪', start: '2026-08-12', end: '2026-08-16', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 1.5 },
+  { id: 'fip-san-luis', name: 'FIP Gold San Luis', cat: 'Gold', city: 'San Luis', country: 'México', flag: '🇲🇽', start: '2026-08-17', end: '2026-08-22', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 2.5 },
+  { id: 'fip-esc-padel-ii', name: 'FIP Silver ESC Padel II', cat: 'Silver', city: 'Espoo', country: 'Finlandia', flag: '🇫🇮', start: '2026-08-19', end: '2026-08-22', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 2 },
+  { id: 'fip-porto-stelpidio', name: 'FIP Silver 3F Porto Sant\'Elpidio', cat: 'Silver', city: 'Porto Sant\'Elpidio', country: 'Italia', flag: '🇮🇹', start: '2026-08-20', end: '2026-08-23', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 2 },
+  { id: 'fip-castro', name: 'FIP Bronze Castro', cat: 'Bronze', city: 'Castro', country: 'Chile', flag: '🇨🇱', start: '2026-08-21', end: '2026-08-23', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 1.5 },
+  { id: 'fip-westerbork-silver', name: 'FIP Silver Westerbork', cat: 'Silver', city: 'Westerbork', country: 'Países Bajos', flag: '🇳🇱', start: '2026-08-24', end: '2026-08-30', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 2 },
+  { id: 'fip-westerbork-bronze', name: 'FIP Bronze Westerbork', cat: 'Bronze', city: 'Westerbork', country: 'Países Bajos', flag: '🇳🇱', start: '2026-08-24', end: '2026-08-30', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 1.5 },
+  { id: 'fip-belgrade', name: 'FIP Gold Belgrade', cat: 'Gold', city: 'Belgrado', country: 'Serbia', flag: '🇷🇸', start: '2026-08-24', end: '2026-08-30', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 2.5 },
+  { id: 'fip-mc-allen', name: 'FIP Silver McAllen Texas', cat: 'Silver', city: 'McAllen', country: 'Estados Unidos', flag: '🇺🇸', start: '2026-08-24', end: '2026-08-30', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 2 },
+  { id: 'fip-madrid-bamvolea', name: 'FIP Bronze Bamvolea Ciudad Raqueta', cat: 'Bronze', city: 'Madrid', country: 'España', flag: '🇪🇸', start: '2026-08-24', end: '2026-08-29', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 2 },
+  { id: 'fip-sassuolo', name: 'FIP Bronze Sassuolo', cat: 'Bronze', city: 'Sassuolo', country: 'Italia', flag: '🇮🇹', start: '2026-08-31', end: '2026-09-06', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 1.5 },
+  { id: 'fip-cordoba', name: 'FIP Silver Córdoba', cat: 'Silver', city: 'Córdoba', country: 'España', flag: '🇪🇸', start: '2026-08-31', end: '2026-09-06', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 2 },
+  { id: 'fip-phoenix', name: 'FIP Bronze Phoenix Open', cat: 'Bronze', city: 'Phoenix', country: 'Estados Unidos', flag: '🇺🇸', start: '2026-08-31', end: '2026-09-06', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 1.5 },
+  { id: 'fip-paraguay-iii', name: 'Bronze Paraguay III', cat: 'Bronze', city: 'Asunción', country: 'Paraguay', flag: '🇵🇾', start: '2026-08-31', end: '2026-09-06', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 1.5 },
+  { id: 'fip-marnes', name: 'FIP Bronze Marnes II', cat: 'Bronze', city: 'Marnes', country: 'Francia', flag: '🇫🇷', start: '2026-08-31', end: '2026-09-05', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 1.5 },
+  // ---- Septiembre ----
+  { id: 'fip-lisboa', name: 'FIP Silver Lisboa', cat: 'Silver', city: 'Lisboa', country: 'Portugal', flag: '🇵🇹', start: '2026-09-07', end: '2026-09-13', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 2 },
+  { id: 'fip-phuket', name: 'FIP Bronze Phuket', cat: 'Bronze', city: 'Phuket', country: 'Tailandia', flag: '🇹🇭', start: '2026-09-07', end: '2026-09-13', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 1.5 },
+  { id: 'fip-bucharest', name: 'FIP Gold Bucharest', cat: 'Gold', city: 'Bucarest', country: 'Rumanía', flag: '🇷🇴', start: '2026-09-07', end: '2026-09-13', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 2.5 },
+  { id: 'fip-san-luis-silver', name: 'FIP Silver San Luis', cat: 'Silver', city: 'San Luis', country: 'México', flag: '🇲🇽', start: '2026-09-07', end: '2026-09-13', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 2 },
+  { id: 'fip-utrecht', name: 'FIP Silver Copa Utrecht 2026', cat: 'Silver', city: 'Utrecht', country: 'Países Bajos', flag: '🇳🇱', start: '2026-09-07', end: '2026-09-13', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 2 },
+  { id: 'fip-ceuta', name: 'FIP Silver Ceuta', cat: 'Silver', city: 'Ceuta', country: 'España', flag: '🇪🇸', start: '2026-09-07', end: '2026-09-13', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 2 },
+  { id: 'fip-casablanca', name: 'FIP Bronze Casablanca', cat: 'Bronze', city: 'Casablanca', country: 'Marruecos', flag: '🇲🇦', start: '2026-09-07', end: '2026-09-13', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 1.5 },
+  { id: 'fip-izmir', name: 'FIP Bronze Izmir', cat: 'Bronze', city: 'İzmir', country: 'Turquía', flag: '🇹🇷', start: '2026-09-14', end: '2026-09-20', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 1.5 },
+  { id: 'fip-bangkok', name: 'FIP Silver High Velocity Bangkok', cat: 'Silver', city: 'Bangkok', country: 'Tailandia', flag: '🇹🇭', start: '2026-09-14', end: '2026-09-20', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 2 },
+  { id: 'fip-guimaraes', name: 'FIP Silver Guimarães', cat: 'Silver', city: 'Guimarães', country: 'Portugal', flag: '🇵🇹', start: '2026-09-14', end: '2026-09-20', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 2 },
+  { id: 'fip-sao-paulo', name: 'FIP Gold São Paulo', cat: 'Gold', city: 'São Paulo', country: 'Brasil', flag: '🇧🇷', start: '2026-09-14', end: '2026-09-20', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 2.5 },
+  { id: 'fip-nairobi', name: 'FIP Silver Nairobi', cat: 'Silver', city: 'Nairobi', country: 'Kenia', flag: '🇰🇪', start: '2026-09-14', end: '2026-09-20', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 2 },
+  { id: 'fip-alicante', name: 'FIP Bronze Sportclub Alicante', cat: 'Bronze', city: 'Alicante', country: 'España', flag: '🇪🇸', start: '2026-09-14', end: '2026-09-20', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 1.5 },
+  { id: 'fip-budapest', name: 'FIP Silver Budapest', cat: 'Silver', city: 'Budapest', country: 'Hungría', flag: '🇭🇺', start: '2026-09-16', end: '2026-09-20', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 2 },
+  { id: 'fip-viña', name: 'FIP Bronze Chile VII', cat: 'Bronze', city: 'Viña del Mar', country: 'Chile', flag: '🇨🇱', start: '2026-09-21', end: '2026-09-27', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 1.5 },
+  { id: 'fip-amsterdam', name: 'FIP Silver Amsterdam', cat: 'Silver', city: 'Ámsterdam', country: 'Países Bajos', flag: '🇳🇱', start: '2026-09-21', end: '2026-09-27', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 2 },
+  { id: 'fip-tunisia', name: 'FIP Bronze Tunisia I', cat: 'Bronze', city: 'Túnez', country: 'Túnez', flag: '🇹🇳', start: '2026-09-21', end: '2026-09-27', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 1.5 },
+  { id: 'fip-dubai-silver', name: 'FIP Silver Dubai', cat: 'Silver', city: 'Dubái', country: 'EAU', flag: '🇦🇪', start: '2026-09-21', end: '2026-09-27', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 2 },
+  { id: 'fip-madeira', name: 'FIP Silver São João da Madeira', cat: 'Silver', city: 'São João da Madeira', country: 'Portugal', flag: '🇵🇹', start: '2026-09-21', end: '2026-09-27', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 2 },
+  { id: 'fip-lyon', name: 'FIP Platinum Lyon', cat: 'Platinum', city: 'Lyon', country: 'Francia', flag: '🇫🇷', start: '2026-09-21', end: '2026-09-27', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 3 },
+  { id: 'fip-karachi', name: 'FIP Bronze Pakistan I', cat: 'Bronze', city: 'Karachi', country: 'Pakistán', flag: '🇵🇰', start: '2026-09-28', end: '2026-10-04', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 1.5 },
+  { id: 'fip-perugia', name: 'FIP Gold Mediolanum Perugia', cat: 'Gold', city: 'Perugia', country: 'Italia', flag: '🇮🇹', start: '2026-09-28', end: '2026-10-04', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 2.5 },
+  { id: 'fip-sweden-ii', name: 'FIP Bronze Sweden II', cat: 'Bronze', city: 'Jönköping', country: 'Suecia', flag: '🇸🇪', start: '2026-09-28', end: '2026-10-04', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 1.5 },
+  { id: 'fip-yerevan', name: 'FIP Bronze Yerevan Cup', cat: 'Bronze', city: 'Ereván', country: 'Armenia', flag: '🇦🇲', start: '2026-09-28', end: '2026-10-04', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 1.5 },
+  { id: 'fip-almeirim', name: 'FIP Bronze Almeirim', cat: 'Bronze', city: 'Almeirim', country: 'Portugal', flag: '🇵🇹', start: '2026-09-28', end: '2026-10-04', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 1.5 },
+  // ---- Octubre ----
+  { id: 'fip-copenhagen', name: 'FIP Bronze Copenhague', cat: 'Bronze', city: 'Copenhague', country: 'Dinamarca', flag: '🇩🇰', start: '2026-10-05', end: '2026-10-11', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 1.5 },
+  { id: 'fip-stratford', name: 'FIP Silver R3 Bullpadel Stratford', cat: 'Silver', city: 'Londres', country: 'Reino Unido', flag: '🇬🇧', start: '2026-10-05', end: '2026-10-11', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 2 },
+  { id: 'fip-porec', name: 'FIP Silver Poreč Parenzo', cat: 'Silver', city: 'Poreč', country: 'Croacia', flag: '🇭🇷', start: '2026-10-05', end: '2026-10-11', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 2 },
+  { id: 'fip-veracruz', name: 'FIP Silver Veracruz', cat: 'Silver', city: 'Veracruz', country: 'México', flag: '🇲🇽', start: '2026-10-05', end: '2026-10-11', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 2 },
+  { id: 'fip-rovigo', name: 'FIP Bronze Rovigo', cat: 'Bronze', city: 'Rovigo', country: 'Italia', flag: '🇮🇹', start: '2026-10-05', end: '2026-10-11', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 1.5 },
+  { id: 'fip-sevilla', name: 'FIP Gold Ciudad de Sevilla', cat: 'Gold', city: 'Sevilla', country: 'España', flag: '🇪🇸', start: '2026-10-12', end: '2026-10-18', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 2.5 },
+  { id: 'fip-oslo', name: 'FIP Bronze Oslo', cat: 'Bronze', city: 'Oslo', country: 'Noruega', flag: '🇳🇴', start: '2026-10-12', end: '2026-10-18', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 1.5 },
+  { id: 'fip-hong-kong-iii', name: 'FIP Bronze Hong Kong III', cat: 'Bronze', city: 'Hong Kong', country: 'Hong Kong', flag: '🇭🇰', start: '2026-10-12', end: '2026-10-18', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 1.5 },
+  { id: 'fip-oeiras', name: 'FIP Bronze Oeiras', cat: 'Bronze', city: 'Oeiras', country: 'Portugal', flag: '🇵🇹', start: '2026-10-12', end: '2026-10-18', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 1.5 },
+  { id: 'fip-miami-ii', name: 'FIP Bronze Miami II', cat: 'Bronze', city: 'Miami', country: 'Estados Unidos', flag: '🇺🇸', start: '2026-10-12', end: '2026-10-18', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 1.5 },
+  { id: 'fip-cotonu', name: 'FIP Bronze Cotonú', cat: 'Bronze', city: 'Cotonú', country: 'Benín', flag: '🇧🇯', start: '2026-10-12', end: '2026-10-18', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 1.5 },
+  { id: 'fip-alkmaar', name: 'FIP Bronze Alkmaar', cat: 'Bronze', city: 'Alkmaar', country: 'Países Bajos', flag: '🇳🇱', start: '2026-10-12', end: '2026-10-18', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 1.5 },
+  { id: 'fip-antalia', name: 'FIP Bronze Antalya', cat: 'Bronze', city: 'Antalya', country: 'Turquía', flag: '🇹🇷', start: '2026-10-19', end: '2026-10-25', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 1.5 },
+  { id: 'fip-rocket', name: 'FIP Silver Rocket Padel', cat: 'Silver', city: 'Londres', country: 'Reino Unido', flag: '🇬🇧', start: '2026-10-19', end: '2026-10-25', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 2 },
+  { id: 'fip-metepec', name: 'FIP Silver Metepec', cat: 'Silver', city: 'Metepec', country: 'México', flag: '🇲🇽', start: '2026-10-19', end: '2026-10-25', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 2 },
+  { id: 'fip-melilla', name: 'FIP Gold Melilla', cat: 'Gold', city: 'Melilla', country: 'España', flag: '🇪🇸', start: '2026-10-19', end: '2026-10-25', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 2.5 },
+  { id: 'fip-samui', name: 'FIP Bronze High Velocity Samui', cat: 'Bronze', city: 'Samui', country: 'Tailandia', flag: '🇹🇭', start: '2026-10-19', end: '2026-10-25', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 1.5 },
+  { id: 'fip-villena', name: 'FIP Bronze JC Ferrero Academy', cat: 'Bronze', city: 'Villena', country: 'España', flag: '🇪🇸', start: '2026-10-26', end: '2026-11-01', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 1.5 },
+  { id: 'fip-torino', name: 'FIP Gold Mediolanum Torino', cat: 'Gold', city: 'Turín', country: 'Italia', flag: '🇮🇹', start: '2026-10-26', end: '2026-11-01', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 2.5 },
+  { id: 'fip-dubai-oct', name: 'FIP Silver Dubai', cat: 'Silver', city: 'Dubái', country: 'EAU', flag: '🇦🇪', start: '2026-10-26', end: '2026-11-01', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 2 },
+  { id: 'fip-phangan', name: 'FIP Bronze High Velocity Phangan', cat: 'Bronze', city: 'Phangan', country: 'Tailandia', flag: '🇹🇭', start: '2026-10-26', end: '2026-11-01', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 1.5 },
+  { id: 'fip-tashkent', name: 'FIP Bronze de Uzbekistán', cat: 'Bronze', city: 'Taskent', country: 'Uzbekistán', flag: '🇺🇿', start: '2026-10-26', end: '2026-11-01', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 1.5 },
+  // ---- Noviembre ----
+  { id: 'fip-aguascalientes', name: 'FIP Bronze Aguascalientes II', cat: 'Bronze', city: 'Aguascalientes', country: 'México', flag: '🇲🇽', start: '2026-11-02', end: '2026-11-08', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 1.5 },
+  { id: 'fip-new-delhi', name: 'FIP Bronze New Delhi', cat: 'Bronze', city: 'Nueva Delhi', country: 'India', flag: '🇮🇳', start: '2026-11-02', end: '2026-11-08', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 1.5 },
+  { id: 'fip-como', name: 'FIP Silver Mediolanum Como', cat: 'Silver', city: 'Como', country: 'Italia', flag: '🇮🇹', start: '2026-11-09', end: '2026-11-15', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 2 },
+  { id: 'fip-nola', name: 'FIP Bronze Pala Padel Nola', cat: 'Bronze', city: 'Nola', country: 'Italia', flag: '🇮🇹', start: '2026-11-09', end: '2026-11-15', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 1.5 },
+  { id: 'fip-oporto', name: 'FIP Silver Oporto II', cat: 'Silver', city: 'Oporto', country: 'Portugal', flag: '🇵🇹', start: '2026-11-09', end: '2026-11-15', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 2 },
+  { id: 'fip-mumbai-iv', name: 'FIP Bronze Mumbai IV', cat: 'Bronze', city: 'Mumbai', country: 'India', flag: '🇮🇳', start: '2026-11-09', end: '2026-11-15', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 1.5 },
+  { id: 'fip-doha-ii', name: 'FIP Bronze Doha II', cat: 'Bronze', city: 'Doha', country: 'Qatar', flag: '🇶🇦', start: '2026-11-09', end: '2026-11-15', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 1.5 },
+  { id: 'fip-acra', name: 'FIP Bronze Acra', cat: 'Bronze', city: 'Acra', country: 'Ghana', flag: '🇬🇭', start: '2026-11-16', end: '2026-11-22', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 1.5 },
+  { id: 'fip-rochefort', name: 'FIP Bronze Rochefort', cat: 'Bronze', city: 'Rochefort', country: 'Bélgica', flag: '🇧🇪', start: '2026-11-16', end: '2026-11-22', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 1.5 },
+  { id: 'fip-hong-kong-silver', name: 'FIP Silver Go Park Hong Kong', cat: 'Silver', city: 'Hong Kong', country: 'Hong Kong', flag: '🇭🇰', start: '2026-11-16', end: '2026-11-22', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 2 },
+  { id: 'fip-mexico-platinum', name: 'FIP Platinum México', cat: 'Platinum', city: 'TBC', country: 'México', flag: '🇲🇽', start: '2026-11-16', end: '2026-11-22', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 3 },
+  { id: 'fip-napoli', name: 'FIP Silver Napoli', cat: 'Silver', city: 'Nápoles', country: 'Italia', flag: '🇮🇹', start: '2026-11-16', end: '2026-11-22', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 2 },
+  { id: 'fip-iurreta', name: 'FIP Bronze Iurreta Padelko', cat: 'Bronze', city: 'Iurreta', country: 'España', flag: '🇪🇸', start: '2026-11-16', end: '2026-11-22', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 1.5 },
+  { id: 'fip-skurup', name: 'FIP Silver Sweden II', cat: 'Silver', city: 'Skurup', country: 'Suecia', flag: '🇸🇪', start: '2026-11-16', end: '2026-11-22', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 2 },
+  { id: 'fip-roeselare-silver', name: 'FIP Silver Roeselare', cat: 'Silver', city: 'Roeselare', country: 'Bélgica', flag: '🇧🇪', start: '2026-11-23', end: '2026-11-29', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 2 },
+  { id: 'fip-roeselare-bronze', name: 'FIP Bronze Roeselare', cat: 'Bronze', city: 'Roeselare', country: 'Bélgica', flag: '🇧🇪', start: '2026-11-23', end: '2026-11-29', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 1.5 },
+  { id: 'fip-esbjerg', name: 'FIP Bronze Esbjerg', cat: 'Bronze', city: 'Esbjerg', country: 'Dinamarca', flag: '🇩🇰', start: '2026-11-23', end: '2026-11-29', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 1.5 },
+  { id: 'fip-phuket-ii', name: 'FIP Bronze Phuket II', cat: 'Bronze', city: 'Phuket', country: 'Tailandia', flag: '🇹🇭', start: '2026-11-23', end: '2026-11-29', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 1.5 },
+  { id: 'fip-egypt-v', name: 'FIP Bronze Egypt V', cat: 'Bronze', city: 'TBC', country: 'Egipto', flag: '🇪🇬', start: '2026-11-23', end: '2026-11-29', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 1.5 },
+  { id: 'fip-chile-ix', name: 'FIP Bronze Chile IX', cat: 'Bronze', city: 'TBC', country: 'Chile', flag: '🇨🇱', start: '2026-11-23', end: '2026-11-29', url: 'https://www.padelfip.com/es/calendario-cupra-fip-tour/?events-year=2026', stars: 1.5 },
+];
+
+const ALL_TORNEOS = [...TORNEOS, ...TORNEOS_FIP];
 
 const Stars = ({ n }) => {
   const full = Math.floor(n);
@@ -176,16 +273,17 @@ export default function TorneoCalendario({ lang = 'es' }) {
   const [showCriteria, setShowCriteria] = useState(false);
   const today = new Date();
 
-  const { live, upcoming, finished } = useMemo(() => {
-    const l = [], u = [], f = [];
-    TORNEOS.forEach((t) => {
+  const { live, upcoming, finished, postponed } = useMemo(() => {
+    const l = [], u = [], f = [], p = [];
+    ALL_TORNEOS.forEach((t) => {
+      if (t.postponed) { p.push(t); return; }
       const st = statusOf(t, today);
       if (st === 'live') l.push(t);
       else if (st === 'upcoming') u.push(t);
       else f.push(t);
     });
     const byMonth = (list) => list.slice().sort((a, b) => new Date(b.start) - new Date(a.start));
-    return { live: byMonth(l), upcoming: byMonth(u), finished: byMonth(f) };
+    return { live: byMonth(l), upcoming: byMonth(u), finished: byMonth(f), postponed: byMonth(p) };
   }, [today]);
 
   const monthLabel = (isoDate) => {
@@ -201,6 +299,10 @@ export default function TorneoCalendario({ lang = 'es' }) {
     if (cat === 'Major') return { bg: 'rgba(251,191,36,0.15)', fg: '#fbbf24', border: 'rgba(251,191,36,0.4)' };
     if (cat === 'Finals') return { bg: 'rgba(244,114,182,0.15)', fg: '#f472b6', border: 'rgba(244,114,182,0.4)' };
     if (cat === 'P1') return { bg: 'rgba(52,211,153,0.15)', fg: '#34d399', border: 'rgba(52,211,153,0.4)' };
+    if (cat === 'Platinum') return { bg: 'rgba(167,139,250,0.15)', fg: '#a78bfa', border: 'rgba(167,139,250,0.4)' };
+    if (cat === 'Gold') return { bg: 'rgba(251,191,36,0.10)', fg: '#fcd34d', border: 'rgba(251,191,36,0.3)' };
+    if (cat === 'Silver') return { bg: 'rgba(148,163,184,0.18)', fg: '#94a3b8', border: 'rgba(148,163,184,0.4)' };
+    if (cat === 'Bronze') return { bg: 'rgba(217,119,6,0.15)', fg: '#d97706', border: 'rgba(217,119,6,0.4)' };
     return { bg: 'rgba(56,189,248,0.15)', fg: '#38bdf8', border: 'rgba(56,189,248,0.4)' };
   };
 
@@ -293,6 +395,19 @@ export default function TorneoCalendario({ lang = 'es' }) {
           ))}
         </div>
 
+        {postponed.length > 0 && (
+          <div style={{ background: 'rgba(250,204,21,0.06)', border: '1px solid rgba(250,204,21,0.3)', borderRadius: 12, padding: '10px 14px', marginBottom: 18, display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+            <span style={{ fontSize: 13, color: '#fde047', fontWeight: 700 }}>
+              {(lang === 'es' ? '⏸ Aplazados 2026:' : lang === 'en' ? '⏸ Postponed 2026:' : lang === 'fr' ? '⏸ Reportés 2026 :' : '⏸ Adiados 2026:')}
+            </span>
+            {postponed.map((t) => (
+              <a key={t.id} href={t.url} target="_blank" rel="noopener noreferrer" style={{ fontSize: 12.5, color: '#e2e8f0', textDecoration: 'underline', textUnderlineOffset: 3 }}>
+                {t.name}
+              </a>
+            ))}
+          </div>
+        )}
+
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', marginBottom: 16 }}>
           <button
             onClick={() => setShowCriteria(!showCriteria)}
@@ -318,7 +433,7 @@ export default function TorneoCalendario({ lang = 'es' }) {
               <strong style={{ color: '#fbbf24' }}>
                 {lang === 'es' ? '⭐ 5★' : lang === 'en' ? '⭐ 5★' : '⭐ 5★'}
               </strong>{' '}
-              {lang === 'es' ? 'El número de estrellas que muestra cada torneo resume su nivel global: el grueso del top mundial, los Majors y las Finals alcanzan las máximas; los P1 son torneos premium; los P2, paradas dinámicas del circuito.' : lang === 'en' ? 'The star count shown on each tournament sums up its overall level: the bulk of the world top, Majors and Finals reach the maximum; P1 tournaments are premium; P2 are dynamic circuit stops.' : lang === 'fr' ? 'Le nombre d’étoiles affiché sur chaque tournoi résume son niveau global : le gros du top mondial, les Majors et les Finals atteignent le maximum ; les P1 sont premium ; les P2 sont des étapes dynamiques du circuit.' : 'O número de estrelas exibido em cada torneio resume o seu nível global: o grosso do topo mundial, os Majors e as Finals atingem o máximo; os P1 são premium; os P2 são paragens dinâmicas do circuito.'}
+              {lang === 'es' ? 'El número de estrellas que muestra cada torneo resume su nivel global: Majors y Finals alcanzan las máximas; los P1 son premium; P2, Platinum, Gold, Silver y Bronze cubren el resto del circuito Premier y el Cupra FIP Tour.' : lang === 'en' ? 'The star count shown on each tournament sums up its overall level: Majors and Finals reach the maximum; P1 tournaments are premium; P2, Platinum, Gold, Silver and Bronze cover the rest of the Premier circuit and the Cupra FIP Tour.' : lang === 'fr' ? 'Le nombre d’étoiles affiché sur chaque tournoi résume son niveau global : les Majors et les Finals atteignent le maximum ; les P1 sont premium ; P2, Platinum, Gold, Silver et Bronze couvrent le reste du circuit Premier et du Cupra FIP Tour.' : 'O número de estrelas exibido em cada torneio resume o seu nível global: Majors e Finals atingem o máximo; P1 são premium; P2, Platinum, Gold, Silver e Bronze cobrem o resto do circuito Premier e do Cupra FIP Tour.'}
             </div>
           </div>
         )}
