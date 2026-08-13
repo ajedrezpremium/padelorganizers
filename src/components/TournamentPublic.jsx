@@ -306,13 +306,13 @@ export default function TournamentPublic({ lang = 'es' }) {
           <h3 style={{ fontSize: '16px', fontWeight: 800, color: '#fff', margin: '0 0 12px' }}>{T.players}</h3>
           {sortedPlayers.map((p, i) => (
             <div key={p.id} style={{ ...rowCls, ...(i === 0 ? { background: 'rgba(132,204,22,0.08)' } : {}) }}>
-              <span style={{ fontWeight: 700, color: i === 0 ? '#84cc16' : '#f0fdf4', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{ fontSize: '11px', color: '#64748b', width: 18 }}>{i + 1}</span>
-                {p.name}
-              </span>
-              <span style={{ fontSize: '12px', fontWeight: 800, color: '#cbd5e1' }}>
-                <span style={{ color: '#10b981' }}>{'⭐'.repeat(Math.max(1, Math.round(p.level)))}</span> {p.level.toFixed(1)}
-              </span>
+<span style={{ fontWeight: 700, color: i === 0 ? '#84cc16' : '#f0fdf4', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span style={{ fontSize: '11px', color: '#64748b', width: 18 }}>{i + 1}</span>
+                  <button onClick={() => navigate(`/player/${encodeURIComponent(p.name)}?t=${encodeURIComponent(id)}`)} style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer', font: 'inherit', color: 'inherit', textAlign: 'left', textDecoration: 'underline', textDecorationColor: 'rgba(16,185,129,0.4)', textUnderlineOffset: '3px' }}>{p.name}</button>
+                </span>
+                <span style={{ fontSize: '12px', fontWeight: 800, color: '#cbd5e1' }}>
+                  <span style={{ color: '#10b981' }}>{'⭐'.repeat(Math.max(1, Math.round(p.level)))}</span> {p.level.toFixed(1)}
+                </span>
             </div>
           ))}
         </div>
