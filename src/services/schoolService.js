@@ -50,7 +50,7 @@ export { LEVELS, CATEGORIES };
 
 // ---------- mappers ----------
 function mapRow(table, row) {
-  if (table === 'coaches') return { id: row.id, name: row.name, email: row.email, phone: row.phone, specialty: row.specialty, bio: row.bio, avatarUrl: row.avatar_url, active: row.active, createdAt: row.created_at };
+  if (table === 'coaches') return { id: row.id, name: row.name, email: row.email, phone: row.phone, specialty: row.specialty, bio: row.bio, avatarUrl: row.avatar_url, level: row.level || 'BEGINNER', hourlyRate: Number(row.hourly_rate) || 0, active: row.active, createdAt: row.created_at };
   if (table === 'students') return { id: row.id, name: row.name, email: row.email, phone: row.phone, birthdate: row.birthdate, level: row.level || 'BEGINNER', ageGroup: row.age_group || 'adults', guardianName: row.guardian_name, guardianEmail: row.guardian_email, guardianPhone: row.guardian_phone, guardianAuthorized: row.guardian_authorized, notes: row.notes, createdAt: row.created_at };
   if (table === 'groups') return { id: row.id, name: row.name, category: row.category || 'adults', level: row.level || 'BEGINNER', capacity: row.capacity || 8, coachId: row.coach_id, schedule: row.schedule, active: row.active, createdAt: row.created_at };
   if (table === 'members') return { id: row.id, groupId: row.group_id, studentId: row.student_id, joinedOn: row.joined_on };
@@ -97,6 +97,8 @@ export async function saveCoach(coach, { cloud = isSupabaseConfigured } = {}) {
     specialty: coach.specialty || '',
     bio: coach.bio || '',
     avatarUrl: coach.avatarUrl || '',
+    level: coach.level || 'BEGINNER',
+    hourlyRate: Number(coach.hourlyRate) || 0,
     active: coach.active !== false,
     createdAt: existing ? existing.createdAt : new Date().toISOString(),
   };
@@ -105,7 +107,8 @@ export async function saveCoach(coach, { cloud = isSupabaseConfigured } = {}) {
   if (cloud) {
     await supabase.from('coaches').upsert({
       id: rec.id, name: rec.name, email: rec.email, phone: rec.phone,
-      specialty: rec.specialty, bio: rec.bio, avatar_url: rec.avatarUrl, active: rec.active,
+      specialty: rec.specialty, bio: rec.bio, avatar_url: rec.avatarUrl,
+      level: rec.level, hourly_rate: rec.hourlyRate, active: rec.active,
     }, { onConflict: 'id' });
   }
   return rec;

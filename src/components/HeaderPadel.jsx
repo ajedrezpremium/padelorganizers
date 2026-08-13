@@ -161,9 +161,10 @@ const HeaderPadel = ({ lang = 'es', onLanguageChange }) => {
         ]} />
 
         {/* 3 · Escuela (gestión + alumno) */}
-        <NavDrop tooltip={t.school} to="/escuela" icon="coach" color="#34d399" active={location.pathname.startsWith('/escuela')} children={[
+        <NavDrop tooltip={t.school} to="/escuela" icon="coach" color="#34d399" active={location.pathname.startsWith('/escuela') || location.pathname.startsWith('/alumno') || location.pathname.startsWith('/coaches')} children={[
           ['🏫 Gestión de la escuela', '/escuela'],
           ['🎓 Mi progreso como alumno', '/alumno'],
+          ['👨‍🏫 ' + (t.coachDiscovery || 'Entrenadores & lecciones'), '/coaches'],
         ]} />
 
         {/* 4 · CRM */}

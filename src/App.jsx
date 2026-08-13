@@ -27,6 +27,7 @@ import AnalyticsBoard from './components/AnalyticsBoard';
 import TournamentControl from './components/TournamentControl';
 import RankedLeague from './components/RankedLeague';
 import GlobalRanking from './components/GlobalRanking';
+import CoachDiscovery from './components/CoachDiscovery';
 import TorneoOrganizer from './components/TorneoOrganizer';
 import TorneoCalendario from './components/TorneoCalendario';
 import TournamentPublic from './components/TournamentPublic';
@@ -80,6 +81,7 @@ export default function App() {
         <Route path="/analytics" element={<AnalyticsBoard lang={lang} state={store} />} />
         <Route path="/league" element={<RankedLeague lang={lang} />} />
         <Route path="/ranking" element={<GlobalRanking lang={lang} />} />
+        <Route path="/coaches" element={<CoachDiscovery lang={lang} />} />
         <Route path="/clubes" element={<ClubesDirectory lang={lang} />} />
         <Route path="/clubes/alta" element={<AltaClub lang={lang} />} />
         <Route path="/tienda" element={<Tienda lang={lang} />} />
