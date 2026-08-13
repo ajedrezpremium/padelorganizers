@@ -23,6 +23,7 @@ import TournamentControl from './components/TournamentControl';
 import RankedLeague from './components/RankedLeague';
 import TorneoOrganizer from './components/TorneoOrganizer';
 import TorneoCalendario from './components/TorneoCalendario';
+import TournamentPublic from './components/TournamentPublic';
 import ClubesDirectory from './components/ClubesDirectory';
 import VerificarFicha from './components/VerificarFicha';
 import AltaClub from './components/AltaClub';
@@ -57,6 +58,7 @@ export default function App() {
         <Route path="/escuela" element={<SchoolApp lang={lang} />} />
         <Route path="/torneo" element={<TorneoOrganizer lang={lang} />} />
         <Route path="/calendario" element={<TorneoCalendario lang={lang} />} />
+        <Route path="/tournament/:id" element={<TournamentPublic lang={lang} />} />
         <Route path="/control" element={<TournamentControl lang={lang} />} />
         <Route path="/analytics" element={<AnalyticsBoard lang={lang} state={store} />} />
         <Route path="/league" element={<RankedLeague lang={lang} />} />

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useStore } from '../services/store';
 import { COURT_STATUS } from '../services/padelEngine';
 
@@ -68,6 +69,7 @@ const badge = { background: 'rgba(16,185,129,0.15)', border: '1px solid rgba(16,
 export default function LiveView({ lang = 'es' }) {
   const T = I18N[lang] || I18N.es;
   const state = useStore();
+  const navigate = useNavigate();
   const [copied, setCopied] = useState(false);
 
   const copy = () => {
@@ -108,6 +110,10 @@ export default function LiveView({ lang = 'es' }) {
         <button onClick={copy}
           style={{ background: 'rgba(255,255,255,0.08)', color: '#fff', border: '1px solid rgba(255,255,255,0.2)', padding: '10px 16px', borderRadius: '10px', fontWeight: 700, fontSize: '13px', cursor: 'pointer' }}>
           {copied ? T.copied : T.copyLink}
+        </button>
+        <button onClick={() => { const id = state.tournament?.id; if (id) navigate(`/tournament/${id}`); }}
+          style={{ background: 'rgba(16,185,129,0.18)', color: '#a3e635', border: '1px solid rgba(16,185,129,0.4)', padding: '10px 16px', borderRadius: '10px', fontWeight: 800, fontSize: '13px', cursor: 'pointer' }}>
+          🌐 Web pública
         </button>
       </div>
 

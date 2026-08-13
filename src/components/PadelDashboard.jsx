@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import CourtManager from './CourtManager';
 import PairingGenerator from './PairingGenerator';
 import TournamentChat from './TournamentChat';
@@ -30,6 +31,8 @@ const I18N = {
     level: 'Nivel',
     expCSV: 'CSV',
     expPDF: 'PDF',
+    publicWeb: '🌐 Web pública',
+    publicCopied: '✅ Enlace copiado',
   },
   en: {
     title: 'Control Panel — Tournament Dashboard',
@@ -52,6 +55,8 @@ const I18N = {
     pairEngine: 'AI Re-pairing Engine',
     reset: 'Reset match',
     level: 'Level',
+    publicWeb: '🌐 Public page',
+    publicCopied: '✅ Link copied',
   },
   fr: {
     title: 'Panneau de contrôle — Tableau de bord du tournoi',
@@ -74,6 +79,8 @@ const I18N = {
     pair: 'Moteur d\'appariement IA',
     reset: 'Réinitialiser',
     level: 'Niveau',
+    publicWeb: '🌐 Page publique',
+    publicCopied: '✅ Lien copié',
   },
   pt: {
     title: 'Painel de controlo — Torneio Dashboard',
@@ -96,6 +103,8 @@ const I18N = {
     pair: 'Motor de Re-Pareamento IA',
     reset: 'Reiniciar',
     level: 'Nível',
+    publicWeb: '🌐 Página pública',
+    publicCopied: '✅ Link copiado',
   },
 };
 
@@ -108,6 +117,18 @@ const exportBtnStyle = { background: 'rgba(132,204,22,0.1)', color: '#84cc16', b
 export default function PadelDashboard({ lang = 'es' }) {
   const T = I18N[lang] || I18N.es;
   const data = useStore();
+  const navigate = useNavigate();
+  const [copied, setCopied] = useState(false);
+
+  const sharePublic = async () => {
+    const id = data.tournament?.id;
+    if (!id) return;
+    const url = `${window.location.origin}/tournament/${id}`;
+    try { await navigator.clipboard?.writeText(url); } catch (e) { /* ignore */ }
+    navigate(`/tournament/${id}`);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1800);
+  };
 
   const courts = data.courts;
   const matches = data.matches;
@@ -162,8 +183,11 @@ export default function PadelDashboard({ lang = 'es' }) {
             <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#10b981', boxShadow: '0 0 8px #10b981' }} />
             {T.active} · {T.formatAmericano}
           </div>
-          <button onClick={resetState} style={{ background: 'rgba(255,255,255,0.08)', color: '#fff', border: '1px solid rgba(255,255,255,0.2)', padding: '8px 14px', borderRadius: '12px', fontWeight: 700, fontSize: '13px', cursor: 'pointer' }}>
+          <button onClick={() => resetState()} style={{ background: 'rgba(255,255,255,0.08)', color: '#fff', border: '1px solid rgba(255,255,255,0.2)', padding: '8px 14px', borderRadius: '12px', fontWeight: 700, fontSize: '13px', cursor: 'pointer' }}>
             {T.reset}
+          </button>
+          <button onClick={sharePublic} style={{ background: 'rgba(16,185,129,0.18)', color: '#a3e635', border: '1px solid rgba(16,185,129,0.4)', padding: '8px 14px', borderRadius: '12px', fontWeight: 800, fontSize: '13px', cursor: 'pointer' }}>
+            {copied ? T.publicCopied : T.publicWeb}
           </button>
           <div style={{ display: 'flex', gap: 8 }}>
             <button onClick={() => exportRankingCSV(data)} style={exportBtnStyle}>{T.expCSV} ⬇</button>
