@@ -30,6 +30,16 @@ const I18N = {
     hour: 'Hora',
     noPlan: 'Genera el plan para ver el calendario.',
     allRoundsNote: 'Programa TODAS las rondas de golpe.',
+    availTitle: '⏰ Disponibilidad de los jugadores (Smart)',
+    availSub: 'La IA respeta la ventana horaria de cada jugador. Los más limitados se programan primero.',
+    availFrom: 'Desde',
+    availTo: 'Hasta',
+    allDay: 'Todo el día',
+    demoAvail: '🎲 Aplicar restricciones demo',
+    clearAvail: 'Restablecer',
+    notScheduled: 'No programados',
+    availConflict: 'No caben en su disponibilidad',
+    dropNote: 'Los partidos que no quepan en la disponibilidad de sus jugadores no se añaden.',
   },
   en: {
     title: '🗓️ AI Tournament Scheduler',
@@ -56,6 +66,16 @@ const I18N = {
     hour: 'Time',
     noPlan: 'Generate the plan to see the calendar.',
     allRoundsNote: 'Schedules ALL rounds at once.',
+    availTitle: '⏰ Player availability (Smart)',
+    availSub: 'The AI respects each player\'s time window. The most limited are scheduled first.',
+    availFrom: 'From',
+    availTo: 'To',
+    allDay: 'All day',
+    demoAvail: '🎲 Apply demo constraints',
+    clearAvail: 'Reset',
+    notScheduled: 'Not scheduled',
+    availConflict: 'Do not fit their availability',
+    dropNote: 'Matches that do not fit their players\' availability are not added.',
   },
   fr: {
     title: '🗓️ Planification IA du tournoi',
@@ -82,6 +102,16 @@ const I18N = {
     hour: 'Heure',
     noPlan: 'Générez le plan pour voir le calendrier.',
     allRoundsNote: 'Planifie TOUTES les rondes en une fois.',
+    availTitle: '⏰ Disponibilité des joueurs (Smart)',
+    availSub: "L'IA respecte la fenêtre horaire de chaque joueur. Les plus limités sont planifiés en premier.",
+    availFrom: 'De',
+    availTo: 'À',
+    allDay: 'Toute la journée',
+    demoAvail: '🎲 Appliquer des contraintes démo',
+    clearAvail: 'Réinitialiser',
+    notScheduled: 'Non planifiés',
+    availConflict: 'Ne rentrent pas dans leur disponibilité',
+    dropNote: 'Les matchs qui ne rentrent pas dans la disponibilité des joueurs ne sont pas ajoutés.',
   },
   pt: {
     title: '🗓️ Programação IA do Torneio',
@@ -108,6 +138,16 @@ const I18N = {
     hour: 'Hora',
     noPlan: 'Gere o plano para ver o calendário.',
     allRoundsNote: 'Programa TODAS as rodadas de uma vez.',
+    availTitle: '⏰ Disponibilidade dos jogadores (Smart)',
+    availSub: 'A IA respeita a janela de horário de cada jogador. Os mais limitados são programados primeiro.',
+    availFrom: 'De',
+    availTo: 'Até',
+    allDay: 'Dia inteiro',
+    demoAvail: '🎲 Aplicar restrições demo',
+    clearAvail: 'Redefinir',
+    notScheduled: 'Não programadas',
+    availConflict: 'Não cabem na disponibilidade',
+    dropNote: 'As partidas que não cabem na disponibilidade dos jogadores não são adicionadas.',
   },
 };
 
@@ -128,10 +168,35 @@ export default function ScheduleBuilder({ state, onAddRound, lang: langProp }) {
   const [gapMin, setGapMin] = useState(DEFAULT_OPTIONS.gapMinutes);
   const [plan, setPlan] = useState(null);
   const [added, setAdded] = useState(false);
+  const [avail, setAvail] = useState({}); // playerId -> { from: 'HH:MM', to: 'HH:MM' }
 
   const courts = state.courts;
   const players = state.players;
   const playerIds = players.map(p => p.id);
+
+  const hours = Array.from({ length: 24 }, (_, h) => String(h).padStart(2, '0') + ':00');
+  const availForPlayer = (id) => avail[id] || null;
+  const setPlayerAvail = (id, field, value) => {
+    setAvail(prev => {
+      const cur = prev[id] || {};
+      const next = { ...cur, [field]: value };
+      return { ...prev, [id]: next };
+    });
+  };
+
+  const demoAvail = () => {
+    // Restricciones demo realistas: el jugador 0 solo puede por la mañana, el
+    // jugador 1 solo por la tarde, y el resto todo el día. El motor respeta la
+    // ventana de cada uno y descarta solo los partidos que no caben.
+    const next = {};
+    players.forEach((p, i) => {
+      if (i === 0) next[p.id] = { from: '09:00', to: '13:00' };
+      else if (i === 1) next[p.id] = { from: '16:00', to: '22:00' };
+      else next[p.id] = { from: '09:00', to: '22:00' };
+    });
+    setAvail(next);
+    setPlan(null);
+  };
 
   const rounds = useMemo(() => {
     if (format === 'americano') {
@@ -150,14 +215,20 @@ export default function ScheduleBuilder({ state, onAddRound, lang: langProp }) {
 
   const hasPlan = plan && plan.length > 0;
   const scheduledCount = hasPlan ? plan.filter(m => m.scheduled).length : 0;
+  const unscheduledCount = hasPlan ? plan.filter(m => !m.scheduled).length : 0;
   const totalEndMin = hasPlan ? Math.max(...plan.filter(m => m.scheduled).map(m => m.endMin)) : null;
   const totalStartMin = hasPlan ? Math.min(...plan.filter(m => m.scheduled).map(m => m.startMin)) : null;
 
   const handleSchedule = () => {
     const allMatches = rounds.flat();
     if (!allMatches.length || courts.length === 0) return;
+    const playersWithAvail = players.map(p => {
+      const w = availForPlayer(p.id);
+      return w ? { ...p, availability: w } : p;
+    });
     const assigned = assignSchedule(allMatches, courts, {
       startHour, endHour, matchMinutes: Number(matchMin), gapMinutes: Number(gapMin),
+      players: playersWithAvail,
     });
     setPlan(assigned);
     setAdded(false);
@@ -216,6 +287,45 @@ export default function ScheduleBuilder({ state, onAddRound, lang: langProp }) {
         </div>
       </div>
 
+      {/* Disponibilidad de jugadores (Smart Scheduling) */}
+      <div style={{ background: 'rgba(168,85,247,0.06)', border: '1px solid rgba(168,85,247,0.25)', borderRadius: '12px', padding: '14px', marginBottom: '14px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px', marginBottom: '10px' }}>
+          <div>
+            <div style={{ fontSize: '13px', fontWeight: 800, color: '#d8b4fe' }}>{T.availTitle}</div>
+            <div style={{ fontSize: '11px', color: '#94a3b8', marginTop: '2px' }}>{T.availSub}</div>
+          </div>
+          <div style={{ display: 'flex', gap: '6px' }}>
+            <button onClick={demoAvail} style={{ background: 'rgba(168,85,247,0.15)', color: '#d8b4fe', border: '1px solid rgba(168,85,247,0.4)', padding: '6px 12px', borderRadius: '8px', fontWeight: 700, fontSize: '12px', cursor: 'pointer' }}>
+              {T.demoAvail}
+            </button>
+            <button onClick={() => { setAvail({}); setPlan(null); }} style={{ background: 'rgba(255,255,255,0.06)', color: '#94a3b8', border: '1px solid rgba(255,255,255,0.15)', padding: '6px 12px', borderRadius: '8px', fontWeight: 700, fontSize: '12px', cursor: 'pointer' }}>
+              {T.clearAvail}
+            </button>
+          </div>
+        </div>
+        <div style={{ maxHeight: '220px', overflowY: 'auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(230px, 1fr))', gap: '8px' }}>
+          {players.slice(0, 12).map(p => {
+            const w = availForPlayer(p.id);
+            return (
+              <div key={p.id} style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'rgba(0,0,0,0.2)', borderRadius: '8px', padding: '6px 8px' }}>
+                <span style={{ fontSize: '12px', fontWeight: 700, color: '#e9d5ff', flex: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{p.name}</span>
+                <select value={w?.from || ''} onChange={e => setPlayerAvail(p.id, 'from', e.target.value)}
+                  style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', color: '#fff', borderRadius: '6px', padding: '3px 4px', fontSize: '11px' }}>
+                  <option value="">{T.allDay}</option>
+                  {hours.map(h => <option key={h} value={h}>{h}</option>)}
+                </select>
+                <span style={{ fontSize: '10px', color: '#64748b' }}>{T.availTo}</span>
+                <select value={w?.to || ''} onChange={e => setPlayerAvail(p.id, 'to', e.target.value)}
+                  style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', color: '#fff', borderRadius: '6px', padding: '3px 4px', fontSize: '11px' }}>
+                  <option value="">{T.allDay}</option>
+                  {hours.map(h => <option key={h} value={h}>{h}</option>)}
+                </select>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
       <button onClick={handleSchedule} disabled={courts.length === 0 || playerIds.length < 4}
         style={{
           width: '100%', padding: '12px', borderRadius: '10px', border: 'none', fontWeight: 800, fontSize: '14px', cursor: 'pointer',
@@ -243,6 +353,13 @@ export default function ScheduleBuilder({ state, onAddRound, lang: langProp }) {
               <div style={{ fontSize: '12px', color: '#d1fae5', marginTop: '4px' }}>✓</div>
             </div>
           </div>
+
+          {unscheduledCount > 0 && (
+            <div style={{ background: 'rgba(248,113,113,0.08)', border: '1px solid rgba(248,113,113,0.3)', borderRadius: '10px', padding: '10px 14px', marginBottom: '12px' }}>
+              <div style={{ fontSize: '12px', color: '#fca5a5', fontWeight: 700 }}>⚠️ {T.notScheduled}: {unscheduledCount} · {T.availConflict}</div>
+              <div style={{ fontSize: '11px', color: '#94a3b8', marginTop: '4px' }}>{T.dropNote}</div>
+            </div>
+          )}
 
           {/* Calendario grid pista × hora */}
           <div style={{ overflowX: 'auto' }}>
