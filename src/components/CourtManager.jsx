@@ -21,6 +21,7 @@ const CourtManager = ({ courts, matches, onFinishMatch, onAssignCourt }) => {
   };
 
   const scheduledMatches = matches.filter(m => m.status === 'scheduled');
+  const fmtSlot = (label) => label || '';
 
   return (
     <div style={{ padding: '24px' }}>
@@ -37,6 +38,7 @@ const CourtManager = ({ courts, matches, onFinishMatch, onAssignCourt }) => {
         {courts.map((court) => {
           const activeMatch = matches.find(m => m.id === court.matchId);
           const isFree = court.status === COURT_STATUS.FREE;
+          const plannedOnCourt = scheduledMatches.find(m => m.courtId === court.id);
 
           return (
             <div key={court.id} style={{
@@ -77,7 +79,18 @@ const CourtManager = ({ courts, matches, onFinishMatch, onAssignCourt }) => {
                 </div>
               ) : (
                 <div style={{ background: 'rgba(0,0,0,0.2)', borderRadius: '12px', padding: '24px', textAlign: 'center', color: '#94a3b8', fontSize: '13px', marginBottom: '14px' }}>
-                  Pista libre lista para asignar
+                  {plannedOnCourt ? (
+                    <div>
+                      <div style={{ fontSize: '11px', color: '#7dd3fc', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '8px' }}>
+                        🗓️ Programado · {fmtSlot(plannedOnCourt.startLabel)}–{fmtSlot(plannedOnCourt.endLabel)}
+                      </div>
+                      <div style={{ fontSize: '14px', fontWeight: 700, color: '#e0f2fe', margin: '4px 0' }}>
+                        {plannedOnCourt.pair1Names} <span style={{ color: '#7dd3fc', fontSize: '12px' }}>vs</span> {plannedOnCourt.pair2Names}
+                      </div>
+                    </div>
+                  ) : (
+                    <span>Pista libre lista para asignar</span>
+                  )}
                 </div>
               )}
 
@@ -102,7 +115,7 @@ const CourtManager = ({ courts, matches, onFinishMatch, onAssignCourt }) => {
                 ) : (
                   scheduledMatches.length > 0 && (
                     <button
-                      onClick={() => onAssignCourt(court.id, scheduledMatches[0].id)}
+                      onClick={() => onAssignCourt(court.id, (plannedOnCourt || scheduledMatches[0]).id)}
                       style={{
                         width: '100%',
                         background: 'rgba(255,255,255,0.1)',
@@ -115,7 +128,7 @@ const CourtManager = ({ courts, matches, onFinishMatch, onAssignCourt }) => {
                         cursor: 'pointer'
                       }}
                     >
-                      ▶️ Asignar: {scheduledMatches[0].pair1Names} vs {scheduledMatches[0].pair2Names}
+                      ▶️ {plannedOnCourt ? 'Comenzar partido programado' : `Asignar: ${scheduledMatches[0].pair1Names} vs ${scheduledMatches[0].pair2Names}`}
                     </button>
                   )
                 )}
