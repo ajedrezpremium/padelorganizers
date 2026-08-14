@@ -60,6 +60,7 @@ function msgPara(club, ciudad) {
   return [
     `Hola, equipo de ${nombre} 👋`,
     `Somos Padel Organizers: organizamos tu torneo de pádel en 1 clic. Cuadro automático (americano, liga, mexicano, eliminatoria), control de pistas en vivo y cobro de reservas integrado.`,
+    `Cubrimos 20 de 20 funciones clave del mercado del pádel — más que Playtomic (11), MATCHi (11), Padel Mates (10) y Padel Manager (6) — incluido un Coach IA que ninguno tiene.`,
     `Puedes probarlo gratis sin dar ningún dato — hay un torneo de ejemplo con 32 jugadores ya montado: ${demo}`,
     `En ${dir} seguro que el torneo de este fin de semana os ha costado horas. Con esto lo tenéis en minutos y los jugadores ven los partidos en directo. 😊`,
     `¿Te enseño una demo de 3 minutos cuando te venga bien?`

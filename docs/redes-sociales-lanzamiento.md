@@ -4,6 +4,10 @@ Objetivo: 4 plataformas (LinkedIn, Instagram, X/Twitter, TikTok) × 3 fases
 (anuncio → demo → prueba social). Cada post con CTA único hacia /lanzamiento
 o /demo.
 
+**Gancho principal (agosto 2026):** PadelOrganizers cubre **20 de 20 funciones**
+del mercado del pádel — más que Playtomic (11), MATCHi (11), Padel Mates (10)
+y Padel Manager (6). Diferenciales únicos: **Coach IA con voz** y **Crónicas IA**.
+
 Tonos: juvenil y aspiracional en IG/TikTok, profesional en LinkedIn, conciso en X.
 
 ---
@@ -16,10 +20,10 @@ Tonos: juvenil y aspiracional en IG/TikTok, profesional en LinkedIn, conciso en 
 **Texto:**
 > Su club sigue moviendo el marcador con una hoja de cálculo? Hasta hoy.
 >
-> 🎾 **PADELORGANIZERS.COM** es la plataforma SaaS con IA para organizar torneos
-> de pádel como un profesional: control de pistas, marcador con Punto de Oro,
-> motor Americano/Mexicano/Suizo, retransmisión en vivo, pagos integrados (Stripe)
-> y Ranked League.
+> 🎾 **PADELORGANIZERS.COM** cubre **20 de 20** funciones clave del mercado:
+> control de pistas, marcador con Punto de Oro, motor Americano/Mexicano/Suizo,
+> retransmisión en vivo, pagos integrados (Stripe), escuela y **Coach IA**.
+> Para comparar: Playtomic 11, MATCHi 11, Padel Mates 10, Padel Manager 6.
 >
 > Para los primeros clubes: **3 meses gratis del plan Pro.** Empieza gratis y
 > dile adiós al caos.
@@ -28,21 +32,22 @@ Tonos: juvenil y aspiracional en IG/TikTok, profesional en LinkedIn, conciso en 
 
 ### Instagram (hook visual de jarra)
 **Texto:**
-> 🎾 Tu torneo, organizado en 5 minutos.
-> Deja las hojas de cálculo y pasa a la app que retransmite en vivo y cobra las
-> reservas por ti.
+> 🎾 20 de 20. Ni una menos.
+> La app que organiza tu torneo en 5 minutos, retransmite en vivo, cobra las
+> reservas y hasta tiene un Coach IA. Las otras 4 grandes: 11, 11, 10 y 6.
 > Link en bio para la demo gratis 🔥
 > #Padel #TorneoPadel #DéjaloASuSitio
 
 ### X / Twitter (conciso, honesto)
 > Hemos simplificado la mayor parte de la pesca del pádel en una web:
-> empareja, marcador Punto de Oro, Cash integrado + retransmisión en vivo.
+> 20/20 funciones vs Playtomic (11), MATCHi (11), Padel Mates (10), Padel Manager (6).
 > Gratis para empezar. 🚀 → [ENLACE]
 
 ### TikTok (15-20 s, texto sobre pantalla de la app)
 > — "Ni te imaginas lo que se viene para el padel 😳"
 > — Sipa → crea tu torneo en 5 min, cobra en un clic, cada jugador se va con su
-> tarjeta social. Comenta "DEMO" y te pasamos el enlace.
+> tarjeta social. Y ojo: **20 de 20 funciones** frente a las apps líderes.
+> Comenta "DEMO" y te pasamos el enlace.
 
 ---
 

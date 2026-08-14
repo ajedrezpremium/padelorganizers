@@ -3,6 +3,10 @@
 Objetivo: convertir clubes, escuelas y federaciones en usuarios del free tier,
 y captar influencers/campeones para el vector viral (tarjeta social + LiveScore).
 
+**Gancho principal (agosto 2026):** PadelOrganizers cubre **20 de 20 funciones**
+del mercado del pádel — más que Playtomic (11), MATCHi (11), Padel Mates (10)
+y Padel Manager (6). Diferenciales únicos: **Coach IA con voz** y **Crónicas IA**.
+
 ## Principios de tono
 - Corto, sin jerga técnica, orientado al beneficio ("menos staff", "cobras solo").
 - CTA único y claro por email (demo → plan club).
@@ -18,13 +22,15 @@ Hola [Nombre],
 
 En [Club] sabéis lo que cuesta que un torneo se vea profesional sin un ejército
 de voluntarios moviendo el marcador. Por eso hacemos **PADELORGANIZERS.COM**, una
-plataforma con la que:
+plataforma que cubre **20 de 20 funciones** del mercado del pádel (Playtomic se
+queda en 11, MATCHi en 11, Padel Mates en 10 y Padel Manager en 6):
 
 - **Controlas las pistas en tiempo real** (quién juega, cuánto lleva, cuál se libra).
 - **Cobras las reservas integradas** con pasarela de pago (adiós al efectivo y a
   las cuentas a mano).
 - **Retransmites tus partidos en vivo** y cada jugador se va con su **tarjeta
   social** lista para compartir en redes.
+- **Coach IA con voz** en 4 idiomas: ninguna otra plataforma lo tiene.
 
 Y para los primeros clubes (esto es una oferta de lanzamiento): **3 meses gratis
 del plan Club Pro.**
