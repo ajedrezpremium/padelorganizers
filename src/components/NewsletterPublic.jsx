@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { addSubscriber } from '../services/subscribersService';
 
 const I18N = {
   es: {
@@ -10,6 +11,10 @@ const I18N = {
     ctaAlliance: '🤝 Alianza con federaciones',
     ctaTournament: '🎾 Ver torneo demo',
     ctaStudio: '🎛️ Generar con datos reales',
+    ctaSubs: '📧 Gestionar suscriptores',
+    subEmail: 'Tu correo', subBtn: 'Suscribirme', subTitle: 'Recibe la próxima edición en tu correo',
+    subOk: '✓ Suscrito. Próxima edición en camino.', subErr: 'Correo no válido.',
+    subHint: 'Sin spam. Date de baja cuando quieras.',
     local: 'LOCAL', national: 'NACIONAL', international: 'INTERNACIONAL',
     footer: 'THE DIGITAL INFRASTRUCTURE FOR GLOBAL PADEL EVENTS',
     unsubscribe: 'Recibes este boletín porque eres parte de la comunidad PADELORGANIZERS. CREATE · CONNECT · WIN.',
@@ -22,6 +27,10 @@ const I18N = {
     ctaAlliance: '🤝 Alliance with federations',
     ctaTournament: '🎾 View demo tournament',
     ctaStudio: '🎛️ Generate with real data',
+    ctaSubs: '📧 Manage subscribers',
+    subEmail: 'Your email', subBtn: 'Subscribe', subTitle: 'Get the next edition in your inbox',
+    subOk: '✓ Subscribed. Next edition on its way.', subErr: 'Invalid email.',
+    subHint: 'No spam. Unsubscribe anytime.',
     local: 'LOCAL', national: 'NATIONAL', international: 'INTERNATIONAL',
     footer: 'THE DIGITAL INFRASTRUCTURE FOR GLOBAL PADEL EVENTS',
     unsubscribe: 'You receive this newsletter as part of the PADELORGANIZERS community. CREATE · CONNECT · WIN.',
@@ -34,6 +43,10 @@ const I18N = {
     ctaAlliance: '🤝 Alliance avec les fédérations',
     ctaTournament: '🎾 Voir le tournoi démo',
     ctaStudio: '🎛️ Générer avec des données réelles',
+    ctaSubs: '📧 Gérer les abonnés',
+    subEmail: 'Votre e-mail', subBtn: 'S\'abonner', subTitle: 'Recevez la prochaine édition par e-mail',
+    subOk: '✓ Abonné. Prochaine édition en route.', subErr: 'E-mail invalide.',
+    subHint: 'Pas de spam. Désabonnement à tout moment.',
     local: 'LOCAL', national: 'NATIONAL', international: 'INTERNATIONAL',
     footer: 'THE DIGITAL INFRASTRUCTURE FOR GLOBAL PADEL EVENTS',
     unsubscribe: 'Vous recevez cette newsletter car vous faites partie de la communauté PADELORGANIZERS. CREATE · CONNECT · WIN.',
@@ -46,6 +59,10 @@ const I18N = {
     ctaAlliance: '🤝 Aliança com federações',
     ctaTournament: '🎾 Ver torneio demo',
     ctaStudio: '🎛️ Gerar com dados reais',
+    ctaSubs: '📧 Gerir subscritores',
+    subEmail: 'O seu e-mail', subBtn: 'Subscrever', subTitle: 'Receba a próxima edição no seu correio',
+    subOk: '✓ Subscrito. Próxima edição a caminho.', subErr: 'E-mail inválido.',
+    subHint: 'Sem spam. Cancele a qualquer momento.',
     local: 'LOCAL', national: 'NACIONAL', international: 'INTERNACIONAL',
     footer: 'THE DIGITAL INFRASTRUCTURE FOR GLOBAL PADEL EVENTS',
     unsubscribe: 'Recebe esta newsletter por fazer parte da comunidade PADELORGANIZERS. CREATE · CONNECT · WIN.',
@@ -110,6 +127,16 @@ export default function NewsletterPublic({ lang = 'es' }) {
   const T = I18N[lang] || I18N.es;
   const navigate = useNavigate();
   const items = NEWS[lang] || NEWS.es;
+  const [email, setEmail] = useState('');
+  const [subMsg, setSubMsg] = useState('');
+
+  const subscribe = async (e) => {
+    e.preventDefault();
+    const res = await addSubscriber({ email, lang });
+    setSubMsg(res.ok ? T.subOk : T.subErr);
+    if (res.ok) setEmail('');
+    setTimeout(() => setSubMsg(''), 3200);
+  };
 
   return (
     <div style={{ padding: '28px 0 64px', minHeight: '80vh' }}>
@@ -147,10 +174,20 @@ export default function NewsletterPublic({ lang = 'es' }) {
           <div style={{ display: 'flex', justifyContent: 'center', gap: 10, flexWrap: 'wrap' }}>
             <button onClick={() => navigate('/marketing')} style={{ background: 'linear-gradient(135deg,#10b981,#059669)', color: '#fff', border: 'none', padding: '12px 20px', borderRadius: 12, fontWeight: 800, fontSize: 13, cursor: 'pointer' }}>{T.ctaMarketing}</button>
             <button onClick={() => navigate('/newsletters/studio')} style={{ background: 'rgba(132,204,22,0.12)', color: '#a3e635', border: '1px solid rgba(132,204,22,0.4)', padding: '12px 20px', borderRadius: 12, fontWeight: 800, fontSize: 13, cursor: 'pointer' }}>{T.ctaStudio}</button>
+            <button onClick={() => navigate('/newsletters/suscripciones')} style={{ background: 'rgba(56,189,248,0.12)', color: '#38bdf8', border: '1px solid rgba(56,189,248,0.4)', padding: '12px 20px', borderRadius: 12, fontWeight: 800, fontSize: 13, cursor: 'pointer' }}>{T.ctaSubs}</button>
             <button onClick={() => navigate('/alianza')} style={{ background: 'rgba(255,255,255,0.08)', color: '#fff', border: '1px solid rgba(255,255,255,0.2)', padding: '12px 20px', borderRadius: 12, fontWeight: 800, fontSize: 13, cursor: 'pointer' }}>{T.ctaAlliance}</button>
-            <button onClick={() => navigate('/tournament/open-padel-vigo-2026')} style={{ background: 'rgba(255,255,255,0.08)', color: '#fff', border: '1px solid rgba(255,255,255,0.2)', padding: '12px 20px', borderRadius: 12, fontWeight: 800, fontSize: 13, cursor: 'pointer' }}>{T.ctaTournament}</button>
           </div>
-          <p style={{ fontSize: 10.5, color: '#475569', margin: '18px 0 0', letterSpacing: 0.5 }}>{T.unsubscribe}</p>
+
+          {/* Suscripción */}
+          <form onSubmit={subscribe} style={{ display: 'flex', gap: 8, justifyContent: 'center', marginTop: 18, flexWrap: 'wrap' }}>
+            <input value={email} onChange={e => setEmail(e.target.value)} placeholder={T.subEmail} style={{ padding: '11px 14px', borderRadius: 11, border: '1px solid var(--padel-border)', background: '#0f211d', color: 'var(--padel-text)', fontSize: 13, width: 240 }} />
+            <button type="submit" style={{ background: 'linear-gradient(135deg,#eab308,#a16207)', color: '#04140f', border: 'none', padding: '11px 22px', borderRadius: 11, fontWeight: 800, fontSize: 13, cursor: 'pointer' }}>{T.subBtn}</button>
+          </form>
+          <div style={{ fontSize: 11.5, color: 'var(--padel-muted)', marginTop: 8 }}>{T.subTitle}</div>
+          {subMsg && <div style={{ fontSize: 12.5, fontWeight: 800, color: '#10b981', marginTop: 8 }}>{subMsg}</div>}
+          <p style={{ fontSize: 10.5, color: '#475569', margin: '14px 0 0', letterSpacing: 0.5 }}>{T.subHint}</p>
+
+          <p style={{ fontSize: 10.5, color: '#475569', margin: '10px 0 0', letterSpacing: 0.5 }}>{T.unsubscribe}</p>
         </div>
       </div>
     </div>
