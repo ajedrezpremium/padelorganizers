@@ -42,7 +42,7 @@ cobros, bajas, cambios). Y a diferencia del tenis, el pádel requiere **4 person
 | 4 | Motor torneos | ✅ HECHO | Americano/Mexicano/Suizo/Eliminatorio, cuadros, Punto de Oro |
 | 5 | Live scoring | ✅ HECHO | LiveScore Pro, marcador set a set, resultados en vivo |
 | 6 | Yield management | 🟢 HECHO | Precios dinámicos por pista×hora (valle ×0.85 / prime ×1 / noche ×1.3) en el grid de reservas (`CourtReservationGrid`) + simulación fijo vs yield en el panel del dueño |
-| 7 | IoT/QR luces | ❌ NO existe | Solo QR del link de Stripe |
+| 7 | IoT/QR luces | 🟢 HECHO | QR por pista en `/iot` (genera QR `api.qrserver.com` a `/luces?court=X`) enciende la luz con temporizador + panel de energía (kWh, ahorro €) en `iotService.js` |
 | 8 | ERP escuela | ✅ HECHO (v1.1) | Módulo 4C + cobro recurrente fin de mes: suscripciones por alumno, generación de facturas mensuales y marcar pagada (`SchoolApp` / `schoolService`) |
 | 9 | Carnet + ranking | 🟢 parcial→HECHO | Player Public ID (`/player/:name`) con historial, rivalidades y curva ELO + analíticas de jugador (#6) |
 | 10 | Dashboard negocio | 🟢 HECHO (v1) | Panel del dueño RevPAC en `/panel`: ocupación, facturación por pista, comparativa precio fijo vs yield y top horas (`ownerDashboard` en `clubCrmService`) + `/crm` con feed y KPIs |
