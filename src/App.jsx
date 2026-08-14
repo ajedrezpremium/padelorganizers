@@ -37,6 +37,7 @@ import NewsletterPublic from './components/NewsletterPublic';
 import NewsletterStudio from './components/NewsletterStudio';
 import SubscribersPanel from './components/SubscribersPanel';
 import ClubesDirectory from './components/ClubesDirectory';
+import MarketplaceApp from './components/MarketplaceApp';
 import VerificarFicha from './components/VerificarFicha';
 import AltaClub from './components/AltaClub';
 import Tienda from './components/Tienda';
@@ -88,6 +89,7 @@ export default function App() {
         <Route path="/coaches" element={<CoachDiscovery lang={lang} />} />
         <Route path="/clubes" element={<ClubesDirectory lang={lang} />} />
         <Route path="/clubes/alta" element={<AltaClub lang={lang} />} />
+        <Route path="/market" element={<MarketplaceApp lang={lang} />} />
         <Route path="/tienda" element={<Tienda lang={lang} />} />
         <Route path="/verificar" element={<VerificarFicha lang={lang} />} />
         <Route path="/legal" element={<LegalNotice lang={lang} />} />
