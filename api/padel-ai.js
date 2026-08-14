@@ -52,6 +52,16 @@ const DEFAULT_MODEL = 'openai/gpt-oss-20b:free'; // último recurso si el catál
 const MAX_HISTORY = 12; // nº de mensajes (6 turnos) que se envían
 const MAX_ATTEMPTS = 3; // nº de modelos que se prueban antes de rendirse
 
+// Idioma configurado por el usuario en la interfaz (selector ES/EN/FR/PT).
+// Se inyecta al inicio del system prompt para que el agente responda por
+// defecto en ese idioma (aunque respete el idioma en que le escriban).
+const LANG_INSTRUCTION = {
+  es: 'El usuario configuró su interfaz en ESPAÑOL. Responde por defecto en español, salvo que te escriba en otro idioma.',
+  en: 'The user set their interface to ENGLISH. Reply in English by default, unless they write in another language.',
+  fr: "L'utilisateur a configuré son interface en FRANÇAIS. Répondez par défaut en français, sauf s'il vous écrit dans une autre langue.",
+  pt: 'O utilizador configurou a interface em PORTUGUÊS. Responda por defeito em português, salvo se escrever noutro idioma.',
+};
+
 // Caché del catálogo de modelos gratuitos de OpenRouter (evita martillar /models en cada request).
 let cachedModels = null;
 let cachedAt = 0;
@@ -114,8 +124,10 @@ export default async function handler(req, res) {
     ? process.env.OPENROUTER_MODEL.trim()
     : null;
 
+  const langHint = LANG_INSTRUCTION[lang] || LANG_INSTRUCTION.es;
+
   const messages = [
-    { role: 'system', content: SYSTEM_PROMPT },
+    { role: 'system', content: `${langHint}\n\n${SYSTEM_PROMPT}` },
     ...(Array.isArray(history) ? history.slice(-MAX_HISTORY) : []),
     { role: 'user', content: message },
   ];
