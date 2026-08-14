@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useStore } from '../services/store';
 import { COURT_STATUS } from '../services/padelEngine';
+import { playerFicha } from '../services/playerProfileService';
 
 const I18N = {
   es: {
@@ -9,6 +10,7 @@ const I18N = {
     copyLink: '🔗 Copiar enlace público',
     copied: '✅ Enlace copiado',
     rankings: '🏆 Ranking Jugadores (nivel Elo)',
+    players: '🏆 Ranking Jugadores (nivel Elo)',
     standings: '📊 Clasificación Parejas',
     courts: '🏟️ Estado de Pistas',
     matches: '⚔️ Partidos',
@@ -18,6 +20,8 @@ const I18N = {
     scheduled: 'Programado',
     completed: 'Finalizado',
     viewersTip: 'Este es el enlace que compartes con los jugadores: siguen el torneo sin instalar nada.',
+    profile: 'Ver perfil', style: 'Estilo', age: 'Edad', height: 'Altura', hand: 'Empuñadura',
+    ageVal: (a) => `${a} años`, heightVal: (h) => `${h} cm`,
   },
   en: {
     badge: '🌾 Public View · Live',
@@ -33,6 +37,8 @@ const I18N = {
     scheduled: 'Scheduled',
     completed: 'Finished',
     playerTip: 'This is the public link players follow — no install needed.',
+    profile: 'View profile', style: 'Style', age: 'Age', height: 'Height', hand: 'Handedness',
+    ageVal: (a) => `${a} years`, heightVal: (h) => `${h} cm`,
   },
   fr: {
     badge: '🌾 Vue publique · En direct',
@@ -123,17 +129,33 @@ export default function LiveView({ lang = 'es' }) {
         {/* Ranking jugadores por Elo */}
         <div style={card}>
           <h3 style={{ fontSize: '16px', fontWeight: 800, color: '#fff', margin: '0 0 12px' }}>🏆 {T.players}</h3>
-          {sortedPlayers.map((p, i) => (
-            <div key={p.id} style={{ ...rowCls, ...(i === 0 ? { background: 'rgba(132,204,22,0.08)' } : {}) }}>
-              <span style={{ fontWeight: 700, color: i === 0 ? '#84cc16' : '#f0fdf4', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{ fontSize: '11px', color: '#64748b', width: 16 }}>{p.wins + p.losses > 0 ? i + 1 : '—'}</span>
-                {p.name}
-              </span>
-              <span style={{ fontSize: '12px', fontWeight: 800, color: '#cbd5e1' }}>
-                <span style={{ color: '#10b981' }}>{'⭐'.repeat(Math.max(1, Math.round(p.level)))}</span> {p.level.toFixed(1)}
-              </span>
-            </div>
-          ))}
+          {sortedPlayers.map((p, i) => {
+            const f = playerFicha(p);
+            const hasData = !!(f.flag || f.insta || f.style || f.age || f.height || f.hand);
+            return (
+              <div key={p.id} style={{ ...rowCls, ...(i === 0 ? { background: 'rgba(132,204,22,0.08)', borderRadius: 10 } : {}), gap: 10, alignItems: 'center' }}>
+                <span style={{ fontSize: '11px', color: '#64748b', width: 16, fontWeight: 800 }}>{p.wins + p.losses > 0 ? i + 1 : '—'}</span>
+                <Link to={`/player/${encodeURIComponent(f.name)}`} style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', minWidth: 0, flex: 1 }}>
+                  <span style={{ position: 'relative', flexShrink: 0 }}>
+                    <img src={f.photo} alt={f.name} style={{ width: 38, height: 38, borderRadius: '50%', objectFit: 'cover', border: '2px solid rgba(16,185,129,0.5)', background: '#0f766e' }} />
+                    {f.flag && <span style={{ position: 'absolute', bottom: -2, right: -2, fontSize: 14, lineHeight: 1 }}>{f.flag}</span>}
+                  </span>
+                  <span style={{ overflow: 'hidden' }}>
+                    <span style={{ fontWeight: 700, color: i === 0 ? '#84cc16' : '#f0fdf4', fontSize: 13, display: 'block', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                      {f.name}
+                    </span>
+                    <span style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, color: '#94a3b8' }}>
+                      <span style={{ color: '#10b981' }}>{'⭐'.repeat(Math.max(1, Math.round(f.level)))}</span> {f.level.toFixed(1)}
+                      {f.insta && <span style={{ color: '#38bdf8' }}>{f.insta}</span>}
+                    </span>
+                  </span>
+                </Link>
+                <span style={{ fontSize: 12, fontWeight: 800, color: '#cbd5e1', flexShrink: 0 }}>
+                  <span style={{ color: '#10b981' }}>{f.elo}</span>
+                </span>
+              </div>
+            );
+          })}
         </div>
 
         {/* Clasificación parejas */}

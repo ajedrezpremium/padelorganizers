@@ -3,6 +3,7 @@ import { useParams, useSearchParams } from 'react-router-dom';
 import { useStore } from '../services/store';
 import { pullState } from '../services/cloudService';
 import { eloSeries, formTrend, streakStats, eloPercentile, playerProjection, qualityOfWins, eloDistribution } from '../services/analyticsService';
+import { playerFicha } from '../services/playerProfileService';
 
 const I18N = {
   es: {
@@ -22,6 +23,8 @@ const I18N = {
     percentile: 'Percentil ELO', projection: 'Proyección final', podium: 'Podio',
     qualityTitle: 'Calidad de victorias', qualityTough: 'vs rivales superiores', qualityEasy: 'vs rivales inferiores',
     distribution: 'Nivel del torneo', yourBand: 'Tu franja',
+    ficha: '📋 Ficha técnica', style: 'Estilo', age: 'Edad', height: 'Altura', hand: 'Empuñadura', country: 'País',
+    ageVal: (a) => `${a} años`, heightVal: (h) => `${h} cm`, insta: 'Instagram',
   },
   en: {
     playerId: 'PADELORGANIZERS ID',
@@ -40,6 +43,8 @@ const I18N = {
     percentile: 'ELO percentile', projection: 'Final projection', podium: 'Podium',
     qualityTitle: 'Quality of wins', qualityTough: 'vs higher-ranked', qualityEasy: 'vs lower-ranked',
     distribution: 'Tournament level', yourBand: 'Your band',
+    ficha: '📋 Player profile', style: 'Style', age: 'Age', height: 'Height', hand: 'Handedness', country: 'Country',
+    ageVal: (a) => `${a} years`, heightVal: (h) => `${h} cm`, insta: 'Instagram',
   },
   fr: {
     playerId: 'PADELORGANIZERS ID',
@@ -58,6 +63,8 @@ const I18N = {
     percentile: 'Percentile ELO', projection: 'Projection finale', podium: 'Podium',
     qualityTitle: 'Qualité des victoires', qualityTough: 'vs adversaires supérieurs', qualityEasy: 'vs adversaires inférieurs',
     distribution: 'Niveau du tournoi', yourBand: 'Votre tranche',
+    ficha: '📋 Fiche joueur', style: 'Style', age: 'Âge', height: 'Taille', hand: 'Prise de raquette', country: 'Pays',
+    ageVal: (a) => `${a} ans`, heightVal: (h) => `${h} cm`, insta: 'Instagram',
   },
   pt: {
     playerId: 'PADELORGANIZERS ID',
@@ -76,6 +83,8 @@ const I18N = {
     percentile: 'Percentil ELO', projection: 'Projeção final', podium: 'Pódio',
     qualityTitle: 'Qualidade das vitórias', qualityTough: 'vs adversários superiores', qualityEasy: 'vs adversários inferiores',
     distribution: 'Nível do torneio', yourBand: 'Sua faixa',
+    ficha: '📋 Ficha do jogador', style: 'Estilo', age: 'Idade', height: 'Altura', hand: 'Empunhadura', country: 'País',
+    ageVal: (a) => `${a} anos`, heightVal: (h) => `${h} cm`, insta: 'Instagram',
   },
 };
 
@@ -169,8 +178,15 @@ export default function PlayerPublic({ lang = 'es' }) {
         {/* Identidad */}
         <div style={{ ...card, padding: 22, background: 'linear-gradient(135deg,#0c1f1a,#0e241f)', borderColor: 'rgba(132,204,22,0.35)' }}>
           <div style={{ display: 'flex', gap: 16, alignItems: 'center', flexWrap: 'wrap' }}>
-            <div style={{ width: 74, height: 74, borderRadius: 22, background: 'linear-gradient(135deg,#84cc16,#10b981)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 32, fontWeight: 900, color: '#062c24' }}>
-              {(self.name || 'P')[0].toUpperCase()}
+            <div style={{ position: 'relative' }}>
+              <img
+                src={playerFicha(self).photo}
+                alt={self.name}
+                style={{ width: 78, height: 78, borderRadius: 22, objectFit: 'cover', border: '2px solid rgba(132,204,22,0.5)', background: '#0f766e' }}
+              />
+              {playerFicha(self).flag && (
+                <span style={{ position: 'absolute', bottom: -4, right: -4, fontSize: 22, lineHeight: 1 }}>{playerFicha(self).flag}</span>
+              )}
             </div>
             <div style={{ flex: 1, minWidth: 220 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
@@ -191,6 +207,33 @@ export default function PlayerPublic({ lang = 'es' }) {
             </div>
           </div>
         </div>
+
+        {/* Ficha técnica */}
+        {(() => {
+          const f = playerFicha(self);
+          const items = [
+            f.style && [T.style, f.style],
+            f.age && [T.age, T.ageVal(f.age)],
+            f.height && [T.height, T.heightVal(f.height)],
+            f.hand && [T.hand, f.hand],
+            f.country && [T.country, f.flag ? `${f.flag} ${f.country.toUpperCase()}` : f.country.toUpperCase()],
+            f.insta && [T.insta, f.insta],
+          ].filter(Boolean);
+          if (!items.length) return null;
+          return (
+            <div style={{ ...card, marginTop: 16, borderColor: 'rgba(251,191,36,0.3)' }}>
+              <h2 style={{ fontSize: 15, fontWeight: 800, color: 'var(--padel-text)', margin: '0 0 12px' }}>{T.ficha}</h2>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(150px,1fr))', gap: 10 }}>
+                {items.map(([l, v]) => (
+                  <div key={l} style={{ background: 'rgba(0,0,0,0.22)', borderRadius: 10, padding: '10px 12px' }}>
+                    <div style={{ fontSize: 10.5, fontWeight: 800, color: 'var(--padel-muted)', letterSpacing: 0.5 }}>{l.toUpperCase()}</div>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--padel-text)', marginTop: 3 }}>{v}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        })()}
 
         {/* Stats torneo */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(130px,1fr))', gap: 12, marginTop: 16 }}>
