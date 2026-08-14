@@ -174,9 +174,10 @@ const HeaderPadel = ({ lang = 'es', onLanguageChange }) => {
         ]} />
 
         {/* 5 · Marketing */}
-        <NavDrop tooltip={t.marketing} to="/marketing" icon="marketing" color="#fb7185" active={location.pathname.startsWith('/marketing') || location.pathname.startsWith('/sponsors')} children={[
+        <NavDrop tooltip={t.marketing} to="/marketing" icon="marketing" color="#fb7185" active={location.pathname.startsWith('/marketing') || location.pathname.startsWith('/sponsors') || location.pathname.startsWith('/posts')} children={[
           ['📣 ' + (t.marketing || 'Marketing'), '/marketing'],
           ['💰 Monetización · Sponsors', '/sponsors'],
+          ['📰 CMS · Crónicas IA', '/posts'],
         ]} />
 
         {/* 6 · Comunidad */}
