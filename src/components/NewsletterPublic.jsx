@@ -9,6 +9,7 @@ const I18N = {
     ctaMarketing: '🎯 Marketing & Negocio',
     ctaAlliance: '🤝 Alianza con federaciones',
     ctaTournament: '🎾 Ver torneo demo',
+    ctaStudio: '🎛️ Generar con datos reales',
     local: 'LOCAL', national: 'NACIONAL', international: 'INTERNACIONAL',
     footer: 'THE DIGITAL INFRASTRUCTURE FOR GLOBAL PADEL EVENTS',
     unsubscribe: 'Recibes este boletín porque eres parte de la comunidad PADELORGANIZERS. CREATE · CONNECT · WIN.',
@@ -20,6 +21,7 @@ const I18N = {
     ctaMarketing: '🎯 Marketing & Business',
     ctaAlliance: '🤝 Alliance with federations',
     ctaTournament: '🎾 View demo tournament',
+    ctaStudio: '🎛️ Generate with real data',
     local: 'LOCAL', national: 'NATIONAL', international: 'INTERNATIONAL',
     footer: 'THE DIGITAL INFRASTRUCTURE FOR GLOBAL PADEL EVENTS',
     unsubscribe: 'You receive this newsletter as part of the PADELORGANIZERS community. CREATE · CONNECT · WIN.',
@@ -31,6 +33,7 @@ const I18N = {
     ctaMarketing: '🎯 Marketing & Business',
     ctaAlliance: '🤝 Alliance avec les fédérations',
     ctaTournament: '🎾 Voir le tournoi démo',
+    ctaStudio: '🎛️ Générer avec des données réelles',
     local: 'LOCAL', national: 'NATIONAL', international: 'INTERNATIONAL',
     footer: 'THE DIGITAL INFRASTRUCTURE FOR GLOBAL PADEL EVENTS',
     unsubscribe: 'Vous recevez cette newsletter car vous faites partie de la communauté PADELORGANIZERS. CREATE · CONNECT · WIN.',
@@ -42,6 +45,7 @@ const I18N = {
     ctaMarketing: '🎯 Marketing & Negócio',
     ctaAlliance: '🤝 Aliança com federações',
     ctaTournament: '🎾 Ver torneio demo',
+    ctaStudio: '🎛️ Gerar com dados reais',
     local: 'LOCAL', national: 'NACIONAL', international: 'INTERNACIONAL',
     footer: 'THE DIGITAL INFRASTRUCTURE FOR GLOBAL PADEL EVENTS',
     unsubscribe: 'Recebe esta newsletter por fazer parte da comunidade PADELORGANIZERS. CREATE · CONNECT · WIN.',
@@ -142,6 +146,7 @@ export default function NewsletterPublic({ lang = 'es' }) {
           <p style={{ fontSize: 12.5, color: 'var(--padel-muted)', margin: '0 0 16px' }}>{T.footer}</p>
           <div style={{ display: 'flex', justifyContent: 'center', gap: 10, flexWrap: 'wrap' }}>
             <button onClick={() => navigate('/marketing')} style={{ background: 'linear-gradient(135deg,#10b981,#059669)', color: '#fff', border: 'none', padding: '12px 20px', borderRadius: 12, fontWeight: 800, fontSize: 13, cursor: 'pointer' }}>{T.ctaMarketing}</button>
+            <button onClick={() => navigate('/newsletters/studio')} style={{ background: 'rgba(132,204,22,0.12)', color: '#a3e635', border: '1px solid rgba(132,204,22,0.4)', padding: '12px 20px', borderRadius: 12, fontWeight: 800, fontSize: 13, cursor: 'pointer' }}>{T.ctaStudio}</button>
             <button onClick={() => navigate('/alianza')} style={{ background: 'rgba(255,255,255,0.08)', color: '#fff', border: '1px solid rgba(255,255,255,0.2)', padding: '12px 20px', borderRadius: 12, fontWeight: 800, fontSize: 13, cursor: 'pointer' }}>{T.ctaAlliance}</button>
             <button onClick={() => navigate('/tournament/open-padel-vigo-2026')} style={{ background: 'rgba(255,255,255,0.08)', color: '#fff', border: '1px solid rgba(255,255,255,0.2)', padding: '12px 20px', borderRadius: 12, fontWeight: 800, fontSize: 13, cursor: 'pointer' }}>{T.ctaTournament}</button>
           </div>
