@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import MatchCard from './MatchCard';
 import { loadMoments, addMoment, toggleVote } from '../services/momentsService';
 import { updateLiveScore } from '../services/store';
+import { pairToFichas } from '../services/playerProfileService';
 
 const I18N = {
   es: {
@@ -142,17 +143,37 @@ export default function LiveScorePro({ lang = 'es', state }) {
         <div style={{ background: 'linear-gradient(135deg,#0a1a17,#0e1e1b)', border: '2px solid rgba(244,63,94,0.25)', borderRadius: 20, padding: 22 }}>
           <h3 style={{ fontSize: 13, fontWeight: 800, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '1px', margin: '0 0 14px' }}>🏟️ {T.featured}</h3>
           {[
-            [0, activeMatch.pair1Names, '#38bdf8'],
-            [1, activeMatch.pair2Names, '#f43f5e'],
-          ].map(([idx, name, color]) => (
-            <div key={idx} style={{ display: 'flex', alignItems: 'center', padding: '12px 0', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-              <span style={{ width: 16, height: 16, borderRadius: '50%', background: color, marginRight: 10 }} />
-              <span style={{ flex: 1, fontSize: 16, fontWeight: 800, color }}>{name}</span>
-              <span style={{ fontSize: 12, color: '#64748b', fontWeight: 700, marginRight: 14 }}>{T.set} {live.sets[idx]}</span>
-              <span style={{ fontSize: 13, color: '#cbd5e1', fontWeight: 800, marginRight: 14, width: 30, textAlign: 'center' }}>{live.games[idx]}</span>
-              <span style={{ fontSize: 30, fontWeight: 900, color: '#84cc16', width: 52, textAlign: 'center' }}>{displayLabel(idx)}</span>
-            </div>
-          ))}
+            [0, activeMatch, '#38bdf8'],
+            [1, activeMatch, '#f43f5e'],
+          ].map(([idx, match, color]) => {
+            const fichas = pairToFichas({ pairId: idx === 0 ? match.pair1Id : match.pair2Id, pair1Names: idx === 0 ? match.pair1Names : match.pair2Names }, state);
+            const label = idx === 0 ? match.pair1Names : match.pair2Names;
+            return (
+              <div key={idx} style={{ display: 'flex', alignItems: 'center', padding: '12px 0', borderBottom: '1px solid rgba(255,255,255,0.06)', gap: 10 }}>
+                <div style={{ display: 'flex', flexShrink: 0 }}>
+                  {fichas.map((f, fi) => (
+                    <span key={fi} style={{ position: 'relative', marginRight: fi === 0 ? -8 : 0 }}>
+                      <img
+                        src={f.photo}
+                        alt={f.name}
+                        style={{ width: 34, height: 34, borderRadius: '50%', objectFit: 'cover', border: `2px solid ${color}`, background: '#0f766e' }}
+                      />
+                      {f.flag && <span style={{ position: 'absolute', bottom: -3, right: -3, fontSize: 13, lineHeight: 1 }}>{f.flag}</span>}
+                    </span>
+                  ))}
+                </div>
+                <span style={{ flex: 1, fontSize: 15, fontWeight: 800, color, minWidth: 0 }}>
+                  <span style={{ display: 'block', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{label}</span>
+                  <span style={{ display: 'block', fontSize: 10.5, color: '#64748b', fontWeight: 600, marginTop: 2 }}>
+                    {fichas.map((f) => f.name).join(' · ')}
+                  </span>
+                </span>
+                <span style={{ fontSize: 12, color: '#64748b', fontWeight: 700, marginRight: 14 }}>{T.set} {live.sets[idx]}</span>
+                <span style={{ fontSize: 13, color: '#cbd5e1', fontWeight: 800, marginRight: 14, width: 30, textAlign: 'center' }}>{live.games[idx]}</span>
+                <span style={{ fontSize: 30, fontWeight: 900, color: '#84cc16', width: 52, textAlign: 'center' }}>{displayLabel(idx)}</span>
+              </div>
+            );
+          })}
 
           {goldPoint && (
             <div className="pulse-glow" style={{ marginTop: 12, background: 'rgba(132,204,22,0.12)', border: '1px solid rgba(132,204,22,0.55)', color: '#a3e635', textAlign: 'center', padding: 10, borderRadius: 12, fontWeight: 800, fontSize: 14 }}>
@@ -203,7 +224,7 @@ export default function LiveScorePro({ lang = 'es', state }) {
         <div style={{ marginTop: 28 }}>
           <h3 style={{ fontSize: 18, fontWeight: 800, color: '#fff', margin: '0 0 16', textAlign: 'center' }}>📸 {T.share}</h3>
           <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <MatchCard lang={lang} pair1={activeMatch.pair1Names} pair2={activeMatch.pair2Names} score1={live.sets[0]} score2={live.sets[1]} sets1={live.sets[0]} sets2={live.sets[1]} winner={winner} />
+            <MatchCard lang={lang} pair1={activeMatch.pair1Names} pair2={activeMatch.pair2Names} score1={live.sets[0]} score2={live.sets[1]} sets1={live.sets[0]} sets2={live.sets[1]} winner={winner} players1={pairToFichas({ pairId: activeMatch.pair1Id, pair1Names: activeMatch.pair1Names }, state)} players2={pairToFichas({ pairId: activeMatch.pair2Id, pair1Names: activeMatch.pair2Names }, state)} />
           </div>
         </div>
       )}
