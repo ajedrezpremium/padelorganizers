@@ -41,6 +41,7 @@ import MarketplaceApp from './components/MarketplaceApp';
 import VerificarFicha from './components/VerificarFicha';
 import AltaClub from './components/AltaClub';
 import Tienda from './components/Tienda';
+import PostsApp from './components/PostsApp';
 import LegalNotice from './components/LegalNotice';
 import CookieBanner from './components/CookieBanner';
 import { useStore } from './services/store';
@@ -90,6 +91,7 @@ export default function App() {
         <Route path="/clubes" element={<ClubesDirectory lang={lang} />} />
         <Route path="/clubes/alta" element={<AltaClub lang={lang} />} />
         <Route path="/market" element={<MarketplaceApp lang={lang} />} />
+        <Route path="/posts" element={<PostsApp lang={lang} />} />
         <Route path="/tienda" element={<Tienda lang={lang} />} />
         <Route path="/verificar" element={<VerificarFicha lang={lang} />} />
         <Route path="/legal" element={<LegalNotice lang={lang} />} />
