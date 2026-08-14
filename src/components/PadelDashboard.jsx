@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CourtManager from './CourtManager';
 import PairingGenerator from './PairingGenerator';
+import ScheduleBuilder from './ScheduleBuilder';
 import TournamentChat from './TournamentChat';
 import { useStore, setState, resetState } from '../services/store';
 import { COURT_STATUS, finishMatch, applyResultToPlayers } from '../services/padelEngine';
@@ -229,6 +230,11 @@ export default function PadelDashboard({ lang = 'es' }) {
       {/* Pairing Engine */}
       <div style={{ marginBottom: '24px' }}>
         <PairingGenerator state={data} onAddRound={handleAddRound} />
+      </div>
+
+      {/* Scheduler IA */}
+      <div style={{ marginBottom: '24px' }}>
+        <ScheduleBuilder state={data} onAddRound={handleAddRound} lang={lang} />
       </div>
  
       {/* PadelLegends — Fotos reales de Wikimedia */}
