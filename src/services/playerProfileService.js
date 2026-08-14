@@ -80,3 +80,27 @@ export function playerFicha(player) {
     level: p.level,
   };
 }
+
+// Resuelve una pareja (por pairId o nombres) a sus 2 jugadores enriquecidos.
+// Devuelve array de fichas; si no encuentra, crea fichas mínimas por nombre.
+export function pairToFichas(pair, state = {}) {
+  const pairs = state.pairs || [];
+  const players = state.players || [];
+  const pairData = pair?.pairId
+    ? pairs.find((p) => String(p.id) === String(pair.pairId))
+    : pairs.find((p) => [p.player1, p.player2].join(' / ').toLowerCase().includes((pair?.pair1Names || '').split(' / ')[0]?.toLowerCase()));
+
+  if (pairData) {
+    const names = [pairData.player1, pairData.player2];
+    const found = names.map((n) => playerFicha(players.find((pl) => pl.name === n) || { name: n }));
+    if (found.length === 2) return found;
+  }
+
+  // Fallback: partir los nombres de la pareja (formato "Galán / Lebrón" o "Ale Galán · Juan Lebrón")
+  const joined = pair?.pair1Names || pair?.pair2Names || pair?.name || 'Jugador';
+  const names = joined
+    .split(/\s*[\/·]\s*/)
+    .filter(Boolean)
+    .map((n) => n.trim());
+  return names.length ? names.map((n) => playerFicha(players.find((pl) => pl.name === n) || { name: n })) : [playerFicha({ name: joined })];
+}
