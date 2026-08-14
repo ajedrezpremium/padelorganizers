@@ -29,6 +29,7 @@ const I18N = {
     metaSponsors: 'sponsors',
     metaCoaches: 'coaches',
     dataFrom: 'Datos reales: ',
+    subsLink: '📧 Lista de suscriptores',
   },
   en: {
     badge: '🎛️ Newsletter Studio',
@@ -51,6 +52,7 @@ const I18N = {
     metaSponsors: 'sponsors',
     metaCoaches: 'coaches',
     dataFrom: 'Real data: ',
+    subsLink: '📧 Subscriber list',
   },
   fr: {
     badge: '🎛️ Newsletter Studio',
@@ -73,6 +75,7 @@ const I18N = {
     metaSponsors: 'sponsors',
     metaCoaches: 'coachs',
     dataFrom: 'Données réelles : ',
+    subsLink: '📧 Liste d\'abonnés',
   },
   pt: {
     badge: '🎛️ Newsletter Studio',
@@ -95,6 +98,7 @@ const I18N = {
     metaSponsors: 'patrocinadores',
     metaCoaches: 'treinadores',
     dataFrom: 'Dados reais: ',
+    subsLink: '📧 Lista de subscritores',
   },
 };
 
@@ -191,6 +195,7 @@ export default function NewsletterStudio({ lang = 'es' }) {
               <p style={{ fontSize: 13, color: 'var(--padel-muted)', maxWidth: 640, lineHeight: 1.6, margin: 0 }}>{T.sub}</p>
               <div style={{ fontSize: 11.5, color: '#10b981', marginTop: 10, fontWeight: 700 }}>{T.dataFrom}{meta}</div>
             </div>
+            <button onClick={() => navigate('/newsletters/suscripciones')} style={{ ...btn, background: 'rgba(132,204,22,0.12)', color: '#a3e635', border: '1px solid rgba(132,204,22,0.4)' }}>{T.subsLink}</button>
             <button onClick={() => navigate('/newsletters')} style={{ ...btn, background: 'rgba(255,255,255,0.06)', color: 'var(--padel-text)', border: '1px solid var(--padel-border)' }}>{T.back}</button>
           </div>
         </div>

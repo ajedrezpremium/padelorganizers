@@ -35,6 +35,7 @@ import PlayerPublic from './components/PlayerPublic';
 import FederationsAlliance from './components/FederationsAlliance';
 import NewsletterPublic from './components/NewsletterPublic';
 import NewsletterStudio from './components/NewsletterStudio';
+import SubscribersPanel from './components/SubscribersPanel';
 import ClubesDirectory from './components/ClubesDirectory';
 import VerificarFicha from './components/VerificarFicha';
 import AltaClub from './components/AltaClub';
@@ -79,6 +80,7 @@ export default function App() {
         <Route path="/alianza" element={<FederationsAlliance lang={lang} />} />
         <Route path="/newsletters" element={<NewsletterPublic lang={lang} />} />
         <Route path="/newsletters/studio" element={<NewsletterStudio lang={lang} />} />
+        <Route path="/newsletters/suscripciones" element={<SubscribersPanel lang={lang} />} />
         <Route path="/control" element={<TournamentControl lang={lang} />} />
         <Route path="/analytics" element={<AnalyticsBoard lang={lang} state={store} />} />
         <Route path="/league" element={<RankedLeague lang={lang} />} />
