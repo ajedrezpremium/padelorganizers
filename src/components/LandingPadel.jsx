@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import LogoPadel from './LogoPadel';
 import PadelAIAgent from './PadelAIAgent';
+import DemoLeadModal from './DemoLeadModal';
 
 const FeatureIcon = ({ name, size = 28, color = 'var(--padel-lime)' }) => {
   const icons = {
@@ -472,6 +473,8 @@ export default function LandingPadel({ lang = 'es' }) {
   const T = I18N[lang] || I18N.es;
   const navigate = useNavigate();
   const [roi, setRoi] = useState({ courts: 6, events: 4, price: 15 });
+  const [leadOpen, setLeadOpen] = useState(false);
+  const goDemo = (path = '/torneo') => navigate(path);
   // 4h/torneo en Excel × coste/hora de gestión (20 €) + no-shows estimados (2% reservas × precio medio)
   const roiTotal = Math.round(
     (roi.events * 4 * 20) +                     // tiempo de gestión recuperado
@@ -495,7 +498,7 @@ export default function LandingPadel({ lang = 'es' }) {
           </h1>
           <p style={{ fontSize: '18px', color: 'var(--padel-muted)', maxWidth: '700px', lineHeight: 1.7, marginBottom: '22px' }}>{T.subtitle}</p>
           <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap', justifyContent: 'center', marginTop: '14px' }}>
-            <button onClick={() => navigate('/torneo')} className="pulse-glow" style={{ background: 'linear-gradient(135deg, var(--padel-emerald) 0%, var(--padel-emerald-dark) 100%)', color: '#fff', border: 'none', padding: '14px 30px', borderRadius: '12px', fontWeight: 800, fontSize: '15px', cursor: 'pointer' }}>
+            <button onClick={() => setLeadOpen(true)} className="pulse-glow" style={{ background: 'linear-gradient(135deg, var(--padel-emerald) 0%, var(--padel-emerald-dark) 100%)', color: '#fff', border: 'none', padding: '14px 30px', borderRadius: '12px', fontWeight: 800, fontSize: '15px', cursor: 'pointer' }}>
               {T.ctaDemoStrong}
             </button>
           </div>
@@ -609,7 +612,7 @@ export default function LandingPadel({ lang = 'es' }) {
               <div style={{ fontSize: '13px', color: 'var(--padel-muted)', fontWeight: 600, marginBottom: '8px' }}>{T.roiOutput}</div>
               <div style={{ fontSize: '52px', fontWeight: 900, color: 'var(--padel-lime)', lineHeight: 1.1 }}>{roiTotal} €<span style={{ fontSize: '18px' }}>/mes</span></div>
               <div style={{ fontSize: '13px', color: 'var(--padel-text)', marginTop: '10px' }}>{T.roiOutputSub}</div>
-              <button onClick={() => navigate('/demo')} style={{ background: 'linear-gradient(135deg, var(--padel-emerald), var(--padel-emerald-dark))', color: '#fff', border: 'none', padding: '12px 22px', borderRadius: '10px', fontWeight: 800, fontSize: '14px', cursor: 'pointer', marginTop: '18px' }}>
+              <button onClick={() => setLeadOpen(true)} style={{ background: 'linear-gradient(135deg, var(--padel-emerald), var(--padel-emerald-dark))', color: '#fff', border: 'none', padding: '12px 22px', borderRadius: '10px', fontWeight: 800, fontSize: '14px', cursor: 'pointer', marginTop: '18px' }}>
                 {T.ctaDemoStrong}
               </button>
             </div>
@@ -729,7 +732,7 @@ export default function LandingPadel({ lang = 'es' }) {
           </div>
           <h2 style={{ fontSize: '36px', fontWeight: 900, color: 'var(--padel-text)', marginBottom: '12px' }}>{T.ctaSectionTitle}</h2>
           <p style={{ fontSize: '16px', color: 'var(--padel-muted)', maxWidth: '560px', margin: '0 auto 28px' }}>{T.ctaSectionDesc}</p>
-          <button onClick={() => navigate('/demo')} className="pulse-glow" style={{ background: 'linear-gradient(135deg, #eab308 0%, #a16207 100%)', color: '#fff', border: 'none', padding: '16px 34px', borderRadius: '12px', fontWeight: 800, fontSize: '16px', cursor: 'pointer', boxShadow: '0 8px 24px rgba(234,179,8,0.35)' }}>
+          <button onClick={() => setLeadOpen(true)} className="pulse-glow" style={{ background: 'linear-gradient(135deg, #eab308 0%, #a16207 100%)', color: '#fff', border: 'none', padding: '16px 34px', borderRadius: '12px', fontWeight: 800, fontSize: '16px', cursor: 'pointer', boxShadow: '0 8px 24px rgba(234,179,8,0.35)' }}>
             {T.ctaDemoStrong}
           </button>
           <p style={{ fontSize: '13px', color: 'var(--padel-muted)', marginTop: '14px', fontWeight: 600 }}>{T.ctaDemoSub}</p>
@@ -744,6 +747,15 @@ export default function LandingPadel({ lang = 'es' }) {
 
       {/* Agente IA experto en pádel — permanente abajo a la derecha */}
       <PadelAIAgent lang={lang} />
+
+      {/* Captura de lead al pulsar "Probar Demo" */}
+      {leadOpen && (
+        <DemoLeadModal
+          lang={lang}
+          onClose={() => setLeadOpen(false)}
+          onSkip={() => { setLeadOpen(false); goDemo(); }}
+        />
+      )}
     </div>
   );
 }
