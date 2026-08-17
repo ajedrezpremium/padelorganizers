@@ -9,8 +9,12 @@ con el perfil optimizado y el primer post (anuncio "20 de 20") listo para public
 
 **Datos reales ya creados (15/08/2026):**
 - **Instagram:** `@padelorganizers` → https://www.instagram.com/padelorganizers/
+- **LinkedIn:** `padel-organizers` → https://www.linkedin.com/in/padel-organizers-37a88a42a
+  (perfil personal del titular)
 - **Email de marca:** `padelorganizers@outlook.com`
-- **LinkedIn:** pendiente de crear (guía abajo)
+
+Pendiente: convertir/crear la **página de empresa** de LinkedIn para la marca
+(guía en el paso 1).
 
 Prepara una **contraseña nueva** para cada red (o usa la del email de marca si la
 red la permite). Reutiliza `padelorganizers@outlook.com` para abrir LinkedIn y
@@ -28,12 +32,20 @@ mantener la identidad unificada.
 ## 1. LinkedIn (5 min)
 
 ### Paso 1 — Crear la cuenta
-1. Entra en https://www.linkedin.com/signup
-2. Email → contraseña → nombre real (el del titular) → **Sí, soy profesional**.
-3. LinkedIn te pedirá "¿dónde trabajas?" → pon el nombre de la marca o "Por definir".
-4. Verifica el email (pin que llega por correo).
+✅ **HECHO (15/08/2026):** perfil personal creado en
+https://www.linkedin.com/in/padel-organizers-37a88a42a
 
-### Paso 2 — Crear la PÁGINA de empresa (no usar el perfil personal como marca)
+### Paso 1b — Optimizar el perfil personal
+1. **Foto:** logo de la marca (PNG en `public/images`).
+2. **Titular (headline):**
+   `Software SaaS con IA para organizar torneos de pádel | 20 de 20 funciones del mercado`
+3. **About:**
+   > Creo Padel Organizers, la plataforma SaaS con IA para clubes de pádel.
+   > Cubrimos 20 de 20 funciones clave del mercado: reservas, split payments, motor de
+   > torneos (Americano/Mexicano/Suizo/Eliminatorio), live scoring, escuela, IoT y un
+   > Coach IA con voz en 4 idiomas. Prueba la demo: https://padelorganizers.vercel.app
+
+### Paso 2 — Crear la PÁGINA de empresa (para la marca, además del perfil)
 1. Menú **"Trabajo" → "Crear una página de empresa"** (o https://www.linkedin.com/company/signup).
 2. Tipo: **"Página de empresa"** → nombre: **Padel Organizers**.
 3. URL personalizada (vanity): pide `padelorganizers`.
@@ -119,6 +131,8 @@ Texto (copiar y pegar):
 - [ ] Instagram: cuenta profesional + categoría "Sitio web de deportes"
 - [ ] Instagram: bio con el gancho y enlace a la web
 - [ ] Instagram: primer post "20 de 20" publicado con imagen
+- [x] LinkedIn: perfil personal creado (`padel-organizers-37a88a42a`)
+- [ ] LinkedIn: perfil optimizado (titular "20 de 20" + About + foto de marca)
 - [ ] LinkedIn: página de empresa creada (no solo perfil personal)
 - [ ] LinkedIn: vanity `linkedin.com/company/padelorganizers` reservada
 - [ ] LinkedIn: About con el "20 de 20" y enlace a la web
@@ -146,5 +160,6 @@ Todos los textos ampliados están en `docs/redes-sociales-lanzamiento.md` (4 pla
   Usa siempre `padelorganizers.vercel.app` (o el dominio propio cuando exista).
 - Si un correo ya tiene cuenta en esa red (por ejemplo el Gmail de campaña), usa
   "¿Olvidaste tu contraseña?" en lugar de crear una segunda cuenta.
-- El nombre de usuario `padelorganizers` **ya está cogido por nosotros** en IG:
-  usar el mismo `@padelorganizers` en LinkedIn si está libre.
+- El nombre de usuario `padelorganizers` **ya está cogido por nosotros** en IG
+  y el perfil de LinkedIn (`padel-organizers`). Para la página de empresa de
+  LinkedIn pedir `linkedin.com/company/padelorganizers`.
