@@ -3,9 +3,15 @@
 Fecha objetivo: lunes (próximo día laborable).
 Estado: pre-lanzamiento. Flags ⬜ pendiente · ✅ listo · 🔴 bloqueante.
 
-**Última actualización:** 14/08/2026 — las 10 funciones core del MVP están implementadas
-(`docs/mvp-10-funciones.md`), incluyendo IoT/QR luces (#7). Pendiente de promoción:
-dominio propio, webhook Stripe y pruebas de pago real.
+**Última actualización:** 15/08/2026 — promoción activa:
+
+- ✅ Las 10 funciones core del MVP implementadas (`docs/mvp-10-funciones.md`).
+- ✅ Comparativa "20 de 20" en la landing + docs (`docs/comparativa-mercado.md`).
+- ✅ Captura de leads en la demo (`DemoLeadModal`, guarda email).
+- ✅ Campaña email completada: **35 clubes** enviados (0 pendientes).
+- ✅ WhatsApp: 30 clubes listos con el gancho 20/20.
+- ✅ Redes creadas: IG `@padelorganizers`, LinkedIn `padel-organizers`, iconos en la landing.
+- ⏳ Pendiente bloqueante para v1.1: dominio propio, webhook Stripe y pago de prueba real.
 
 ---
 
@@ -28,8 +34,12 @@ dominio propio, webhook Stripe y pruebas de pago real.
 | 2 | Header: botón `+ Torneo` (icono + tooltip), eliminado "Demo Gratuita" | ✅ |
 | 3 | Hero subido ~36px → botón CTA visible sin scroll | ✅ |
 | 4 | Cohete duplicado eliminado en CTA (4 idiomas) | ✅ |
-| 5 | Landing: comparativa con 4 competidores reales × 10 items | ✅ |
+| 5 | Landing: comparativa **20 funciones** vs 4 competidores reales (Playtomic, MATCHi, Padel Mates, Padel Manager) con badge "20 de 20" | ✅ desplegado |
 | 6 | `payment_url` guardado por split PayPal → panel reorganizado con botón copiar por jugador | ✅ compile OK |
+| 7 | Captura de leads: modal al pulsar "Probar Demo" (email + perfil, 4 idiomas) guarda el lead y da acceso a la demo | ✅ desplegado |
+| 8 | Iconos de Instagram y LinkedIn en el footer de la landing | ✅ desplegado |
+| 9 | Ficha de jugador: foto, bandera, instagram, estilo, edad, altura en ranking público y perfil | ✅ desplegado |
+| 10 | LiveScore Pro + tarjeta social con los 4 jugadores (foto + bandera) | ✅ desplegado |
 
 ## 3. QA funcional (probar en prod antes del lanzamiento)
 
@@ -67,10 +77,12 @@ Calidad:
 
 ## 6. Lanzamiento mismo día
 
-- [ ] Demo gratis: capturar email de los organizadores que la prueban (lista de espera #CRM)
-- [ ] Invitar a los 3-4 clubes de la ciudad + beta testers (desde la sección "clubes")
+- [x] Demo gratis: capturar email de los organizadores que la prueban (**modal de lead desplegado**)
+- [x] Invitar a los 3-4 clubes de la ciudad (**campaña email completada: 35 clubes + WhatsApp 30 clubes**)
+- [x] Anuncio: material listo para redes (IG/LinkedIn creadas, posts del "20 de 20" en `docs/redes-crear-cuentas.md`)
 - [ ] Monitor: `vercel logs` y revisar errores de captura PayPal / webhook Stripe tras 1h
-- [ ] Anuncio: redes del club + grupos WhatsApp locales con el link único `padelorganizers.com`
+- [ ] Publicar el primer post "20 de 20" en IG y LinkedIn (textos listos)
+- [ ] Anuncio en grupos WhatsApp locales con el link único `padelorganizers.com`
 
 ---
 
@@ -89,3 +101,8 @@ Calidad:
   demo/localStorage como fallback (modo sin cloud), pero en producción hay que aplicar el SQL.
 - Google OAuth #3: el Client Secret filitrado debe regenerarse en Google Cloud Console y
   sustituirse en Supabase; el Client ID `29623631984-...` sigue válido.
+- **15/08/2026:** aplicadas y verificadas las migraciones `20260816090000_coach_discovery.sql`
+  (columnas `level`/`hourly_rate` en coaches) y `20260816120000_newsletter_subscribers.sql`
+  (tabla de suscriptores). Backend core (profiles, clubes, matches, players, reservation_splits,
+  league_entries, school_invoices, school_drills) respondiendo en Supabase.
+- **Campaña email:** límite diario de Gmail reseteado el 15/08; 35 envíos completados (0 pendientes).
