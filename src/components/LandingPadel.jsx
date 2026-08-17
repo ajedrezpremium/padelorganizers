@@ -741,6 +741,18 @@ export default function LandingPadel({ lang = 'es' }) {
 
       {/* FOOTER */}
       <footer style={{ padding: '24px', textAlign: 'center', fontSize: '13px', color: 'var(--padel-muted)', borderTop: '1px solid var(--padel-border)' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '14px', marginBottom: '14px' }}>
+          <a href="https://www.instagram.com/padelorganizers/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" title="Instagram" style={socialIcon('#E1306C')}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="2" y="2" width="20" height="20" rx="5" /><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" /><line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+            </svg>
+          </a>
+          <a href="https://www.linkedin.com/in/padel-organizers-37a88a42a" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" title="LinkedIn" style={socialIcon('#0A66C2')}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+              <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4V8h4v2.5A6 6 0 0 1 16 8z" /><rect x="2" y="9" width="4" height="12" /><circle cx="4" cy="4" r="2" />
+            </svg>
+          </a>
+        </div>
         © 2026 {T.footer} ·{' '}
         <a href="/legal" style={{ color: '#38bdf8', textDecoration: 'none', fontWeight: 600 }}>Aviso legal / Cookies</a>
       </footer>
@@ -759,3 +771,18 @@ export default function LandingPadel({ lang = 'es' }) {
     </div>
   );
 }
+
+const socialIcon = (hover) => ({
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  width: 38,
+  height: 38,
+  borderRadius: '50%',
+  background: 'rgba(255,255,255,0.06)',
+  border: '1px solid var(--padel-border)',
+  color: '#94a3b8',
+  textDecoration: 'none',
+  transition: 'all .2s',
+  ':hover': { color: '#fff', background: hover, borderColor: 'transparent' },
+});
