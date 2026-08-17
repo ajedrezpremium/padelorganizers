@@ -7,12 +7,17 @@ con el perfil optimizado y el primer post (anuncio "20 de 20") listo para public
 
 ## 0. Antes de empezar (2 min)
 
-Prepara el **email de la marca** (o usa el de la cuenta Gmail que ya gestiona la
-campaña: `chessagencyai@gmail.com`) y una **contraseña nueva para cada red**.
+**Datos reales ya creados (15/08/2026):**
+- **Instagram:** `@padelorganizers` → https://www.instagram.com/padelorganizers/
+- **Email de marca:** `padelorganizers@outlook.com`
+- **LinkedIn:** pendiente de crear (guía abajo)
+
+Prepara una **contraseña nueva** para cada red (o usa la del email de marca si la
+red la permite). Reutiliza `padelorganizers@outlook.com` para abrir LinkedIn y
+mantener la identidad unificada.
 
 **Abre con antelación** en una pestaña:
 - https://www.linkedin.com/signup
-- https://www.instagram.com/accounts/signup/
 
 **Imágenes que usarás** (desde tu PC):
 - Logo: `public/images/Padel Organizers 2026.png` (o el logo que ya uses en la web)
@@ -70,10 +75,8 @@ Texto listo (copiar y pegar):
 ## 2. Instagram (5 min)
 
 ### Paso 1 — Crear la cuenta
-1. Entra en https://www.instagram.com/accounts/signup/
-2. Email o teléfono → **"Personal"** → fecha de nacimiento del titular.
-3. Nombre de usuario: coge **`padelorganizers`** (si está ocupado, `padelorganizers.app`).
-4. Verificación: llegará un código al email/teléfono.
+✅ **HECHO (15/08/2026):** cuenta creada en https://www.instagram.com/padelorganizers/
+con el email `padelorganizers@outlook.com`. Falta solo completar el perfil (pasos 2-3).
 
 ### Paso 2 — Cuenta profesional (gratis, sin coste)
 1. Ajustes → **"Cuenta" → "Cambiar a cuenta profesional"**.
@@ -112,12 +115,14 @@ Texto (copiar y pegar):
 
 ## 3. Checklist final de la cuenta
 
+- [x] Instagram: cuenta creada (`@padelorganizers` + email de marca)
+- [ ] Instagram: cuenta profesional + categoría "Sitio web de deportes"
+- [ ] Instagram: bio con el gancho y enlace a la web
+- [ ] Instagram: primer post "20 de 20" publicado con imagen
 - [ ] LinkedIn: página de empresa creada (no solo perfil personal)
 - [ ] LinkedIn: vanity `linkedin.com/company/padelorganizers` reservada
 - [ ] LinkedIn: About con el "20 de 20" y enlace a la web
-- [ ] Instagram: cuenta profesional + categoría "Sitio web de deportes"
-- [ ] Instagram: bio con el gancho y enlace a la web
-- [ ] Ambos: primer post "20 de 20" publicado con imagen
+- [ ] LinkedIn: primer post "20 de 20" publicado con imagen
 - [ ] Añadir los enlaces de las redes a la landing y a la campaña (cuando existan)
 
 ---
@@ -141,5 +146,5 @@ Todos los textos ampliados están en `docs/redes-sociales-lanzamiento.md` (4 pla
   Usa siempre `padelorganizers.vercel.app` (o el dominio propio cuando exista).
 - Si un correo ya tiene cuenta en esa red (por ejemplo el Gmail de campaña), usa
   "¿Olvidaste tu contraseña?" en lugar de crear una segunda cuenta.
-- El nombre de usuario `padelorganizers` puede estar cogido en IG: elige
-  `padelorganizers.app` o `padelorganizers.oficial` y anótalo aquí.
+- El nombre de usuario `padelorganizers` **ya está cogido por nosotros** en IG:
+  usar el mismo `@padelorganizers` en LinkedIn si está libre.
