@@ -57,7 +57,13 @@ for (const a of process.argv.slice(2)) {
 // CSV de la tanda actual (por defecto Vigo). El log se separa por ciudad
 // (campana_log_<ciudad>.csv) para que cada CSV tenga su propio índice y
 // las tandas no se pisen. --max limita los envíos de esta ejecución (tandas planificadas).
+// La plantilla se elige según el CSV (--plantilla=nombre fuerza otra).
 const CSV_FILE = args.csv ? args.csv : args.ciudad ? `leads_${args.ciudad}.csv` : 'leads_vigo.csv'
+const PLANTILLA = args.plantilla
+  ? `plantilla-${args.plantilla}.html`
+  : CSV_FILE.startsWith('leads_escuelas') ? 'plantilla-escuela.html'
+  : CSV_FILE.startsWith('leads_federaciones') ? 'plantilla-federacion.html'
+  : 'plantilla-primer-contacto.html'
 const MAX_ENVIOS = args.max !== undefined ? Number(args.max) : 999999
 const LOG_FILE = join(__dirname, `campana_log_${CSV_FILE.replace(/\.csv$/i, '')}.csv`)
 
@@ -165,7 +171,11 @@ const transporter = nodemailer.createTransport({
     : undefined,
 });
 
-const template = readFileSync(join(__dirname, 'plantilla-primer-contacto.html'), 'utf8')
+const template = readFileSync(join(__dirname, PLANTILLA), 'utf8')
+
+// Remitente: cuenta Gmail de la empresa matriz (Chess Agency) que gestiona
+// la campaña; la marca aparece en el cuerpo/firma de cada plantilla.
+const FROM_NAME = 'Padel Organizers (Chess Agency)'
 
 let targetIdx = null
 if (args.solo !== undefined) targetIdx = Number(args.solo)
@@ -205,7 +215,7 @@ async function main() {
     }
     const html = personalizar(template, club, i)
     const mail = {
-      from: `Padel Organizers <${GMAIL_USER}>`,
+      from: `${FROM_NAME} <${GMAIL_USER}>`,
       to: correo,
       subject: `${club['Nombre']} — tu gestión de torneos de pádel en 1 clic`,
       html,
