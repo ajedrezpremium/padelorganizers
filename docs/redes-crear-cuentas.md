@@ -9,7 +9,7 @@ con el perfil optimizado y el primer post (anuncio "20 de 20") listo para public
 
 **Datos reales ya creados (15/08/2026):**
 - **Instagram:** `@padelorganizers` → https://www.instagram.com/padelorganizers/
-- **LinkedIn:** `padel-organizers` → https://www.linkedin.com/in/padel-organizers-37a88a42a
+- **LinkedIn:** `padel-organizers-pro` → https://www.linkedin.com/in/padel-organizers-pro-77bb0442a/
   (perfil personal del titular)
 - **Email de marca:** `padelorganizers@outlook.com`
 
@@ -33,7 +33,7 @@ mantener la identidad unificada.
 
 ### Paso 1 — Crear la cuenta
 ✅ **HECHO (15/08/2026):** perfil personal creado en
-https://www.linkedin.com/in/padel-organizers-37a88a42a
+https://www.linkedin.com/in/padel-organizers-pro-77bb0442a/
 
 ### Paso 1b — Optimizar el perfil personal
 1. **Foto:** logo de la marca (PNG en `public/images`).
@@ -131,7 +131,7 @@ Texto (copiar y pegar):
 - [ ] Instagram: cuenta profesional + categoría "Sitio web de deportes"
 - [ ] Instagram: bio con el gancho y enlace a la web
 - [ ] Instagram: primer post "20 de 20" publicado con imagen
-- [x] LinkedIn: perfil personal creado (`padel-organizers-37a88a42a`)
+- [x] LinkedIn: perfil personal creado (`padel-organizers-pro-77bb0442a`)
 - [ ] LinkedIn: perfil optimizado (titular "20 de 20" + About + foto de marca)
 - [ ] LinkedIn: página de empresa creada (no solo perfil personal)
 - [ ] LinkedIn: vanity `linkedin.com/company/padelorganizers` reservada
