@@ -61,6 +61,7 @@ for (const a of process.argv.slice(2)) {
 const CSV_FILE = args.csv ? args.csv : args.ciudad ? `leads_${args.ciudad}.csv` : 'leads_vigo.csv'
 const PLANTILLA = args.plantilla
   ? `plantilla-${args.plantilla}.html`
+  : CSV_FILE.startsWith('leads_federaciones_int') ? 'plantilla-federacion-int.html'
   : CSV_FILE.startsWith('leads_escuelas') ? 'plantilla-escuela.html'
   : CSV_FILE.startsWith('leads_federaciones') ? 'plantilla-federacion.html'
   : 'plantilla-primer-contacto.html'
@@ -214,10 +215,13 @@ async function main() {
       continue
     }
     const html = personalizar(template, club, i)
+    const subject = PLANTILLA === 'plantilla-federacion-int.html'
+      ? `${club['Nombre']} — tournament management for padel in 1 click`
+      : `${club['Nombre']} — tu gestión de torneos de pádel en 1 clic`
     const mail = {
       from: `${FROM_NAME} <${GMAIL_USER}>`,
       to: correo,
-      subject: `${club['Nombre']} — tu gestión de torneos de pádel en 1 clic`,
+      subject,
       html,
     }
     try {

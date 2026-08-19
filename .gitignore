@@ -32,3 +32,8 @@ clientes/tokens_verificacion.json
 clientes/preview-verificacion.html
 clientes/preview-email.html
 clientes/tokens_verificacion.sql
+
+# Logs de campana (base del CRM, no versionar)
+clientes/campana_log_*.csv
+clientes/rebotes.csv
+clientes/informes/revision_*.md
