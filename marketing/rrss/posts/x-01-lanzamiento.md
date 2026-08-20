@@ -22,7 +22,7 @@ Demo gratuita, sin tarjeta → padelorganizers.vercel.app/demo
 
 Nuevo: el Directorio de Clubes crece 🇪🇸
 
-+65 clubes reales · 19 ciudades · fichas con pistas, indoor/outdoor, escuela y reserva.
++700 clubes reales · 49 ciudades · fichas con pistas, indoor/outdoor, escuela y reserva.
 
 Vigo · Madrid · Barcelona · Valencia · Sevilla · Zaragoza 🗺️
 

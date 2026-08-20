@@ -8,7 +8,7 @@
 "Primer mes de PADEL ORGANIZERS"
 
 **📸 Imagen 2**
-+65 clubes en el Directorio · 19 ciudades · Vigo, Madrid, Barcelona, Valencia, Sevilla y Zaragoza ya están en el mapa.
++700 clubes en el Directorio · 49 ciudades · Vigo, Madrid, Barcelona, Valencia, Sevilla y Zaragoza ya están en el mapa.
 
 **📸 Imagen 3**
 4 formatos de torneo en vivo · CourtManager · Punto de Oro digital.
@@ -24,7 +24,7 @@ Demo gratuita · Sin tarjeta → link en bio.
 **Caption**
 Mes 1 ✅
 
-- 🗺️ 65 clubes reales en el directorio
+- 🗺️ 700 clubes reales en el directorio
 - 🏆 4 formatos de torneo automáticos
 - 🧮 Punto de Oro digital en el marcador
 - 🛒 Tienda del Circuito en marcha

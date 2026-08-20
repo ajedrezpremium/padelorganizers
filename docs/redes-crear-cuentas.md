@@ -54,11 +54,12 @@ https://www.linkedin.com/in/padel-organizers-pro-77bb0442a/
 ### Paso 3 — Datos del perfil de la página
 - **Eslogan:** `Software SaaS con IA para organizar torneos de pádel: 20 de 20 funciones del mercado.`
 - **Acerca de (About):**
-  > Padel Organizers es la plataforma SaaS con IA para clubes de pádel y organizadores.
-  > Cubrimos **20 de 20 funciones** clave del mercado: reservas, split payments, motor de
-  > torneos (Americano/Mexicano/Suizo/Eliminatorio), live scoring, escuela, IoT y un **Coach IA
-  > con voz en 4 idiomas**. Playtomic (11), MATCHi (11), Padel Mates (10) y Padel Manager (6)
-  > se quedan a medias. Prueba la demo gratis: https://padelorganizers.vercel.app
+> Padel Organizers es la plataforma SaaS con IA para clubes de pádel y organizadores.
+   > Cubrimos **20 de 20 funciones** clave del mercado: reservas, split payments, motor de
+   > torneos (Americano/Mexicano/Suizo/Eliminatorio), live scoring, escuela, IoT y un **Coach IA
+   > con voz en 4 idiomas**. Playtomic (11), MATCHi (11), Padel Mates (10) y Padel Manager (6)
+   > se quedan a medias. Directorio nacional con +700 clubes reales de 49 ciudades.
+   > Prueba la demo gratis: https://padelorganizers.vercel.app
 - **Sector:** Deporte → **Servicios de software para deportes**
 - **Tamaño:** 2-10 empleados
 - **País/Ciudad:** España, Vigo
@@ -128,6 +129,7 @@ Texto (copiar y pegar):
 ## 3. Checklist final de la cuenta
 
 - [x] Instagram: cuenta creada (`@padelorganizers` + email de marca)
+- [x] Material de RRSS actualizado con datos reales (directorio +700 clubes · 49 ciudades) — `marketing/rrss/`
 - [ ] Instagram: cuenta profesional + categoría "Sitio web de deportes"
 - [ ] Instagram: bio con el gancho y enlace a la web
 - [ ] Instagram: primer post "20 de 20" publicado con imagen

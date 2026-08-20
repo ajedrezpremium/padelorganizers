@@ -14,7 +14,7 @@ En PADEL ORGANIZERS lo llevamos al software.
 - Punto de Oro digital: adiós a las discusiones a 4-4.
 - CourtManager: control de pistas en tiempo real.
 - Escuela, reservas y cobro integrado.
-- Y ahora, un Directorio nacional con +65 clubes reales.
+- Y ahora, un Directorio nacional con +700 clubes reales.
 
 Si gestionas un club, prueba la demo gratuita. Sin tarjeta, sin compromiso.
 

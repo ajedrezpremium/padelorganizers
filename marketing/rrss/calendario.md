@@ -20,14 +20,14 @@ Los posts marcados con (*) tienen el texto ya redactado en `posts/`.
 | Lun 24/08 | LinkedIn | Post | CourtManager: control de pistas en tiempo real |
 | Mar 25/08 | Instagram | Reel | Punto de Oro digital, adiós a las discusiones a 4-4 |
 | Mié 26/08 | LinkedIn | Post | Motor Americano/Mexicano/Suizo en minutos |
-| Jue 27/08 | Facebook | Post | Directorio: "+65 clubes en un mapa" |
+| Jue 27/08 | Facebook | Post | Directorio: "+700 clubes en un mapa" |
 | Vie 28/08 | Instagram | Carrusel (*) | Torneos Americano y Mexicano explicados |
 | Vie 28/08 | X | Hilo | "¿Cómo se genera un Americano sin hoja de cálculo?" |
 
 ## Semana 3 — PRUEBA SOCIAL + DIRECTORIO
 | Día | Red | Formato | Tema |
 | --- | --- | --- | --- |
-| Lun 31/08 | LinkedIn | Post (*) | Directorio nacional: 65 clubes reales de 19 ciudades |
+| Lun 31/08 | LinkedIn | Post (*) | Directorio nacional: 700 clubes reales de 49 ciudades |
 | Mar 01/09 | Instagram | Reel | Tour por el mapa de clubes del directorio |
 | Mié 02/09 | LinkedIn | Post | Tienda del Circuito: cupón PADELPRO10 |
 | Jue 03/09 | Facebook | Post | Testimonios (Carlos · Marta · Diego) |
