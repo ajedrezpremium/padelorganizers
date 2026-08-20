@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { addSubscriber } from '../services/subscribersService';
+import { addSubscriber, syncSubscribersToCloud } from '../services/subscribersService';
 
 const I18N = {
   es: {
@@ -73,7 +73,7 @@ export default function DemoLeadModal({ lang = 'es', onClose, onSkip }) {
     if (email.trim()) {
       addSubscriber({ email, name, lang, city: '' });
       // Intento no bloqueante de sync a la nube (si hay conexión)
-      import('../services/subscribersService').then((m) => m.syncSubscribersToCloud?.().catch(() => {}));
+      try { syncSubscribersToCloud?.().catch(() => {}); } catch { /* noop */ }
     }
     setStatus('ok');
     setTimeout(() => navigate('/torneo'), 400);

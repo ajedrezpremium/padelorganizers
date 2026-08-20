@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import {
   listStudents, listGroups, listMembers, listClasses, listAttendanceByClass,
-  listEvaluations, listDrills, listBonuses, LEVEL_LABELS, CATEGORY_LABELS,
+  listEvaluations, listDrills, listBonuses, listCoaches, LEVEL_LABELS, CATEGORY_LABELS,
 } from '../services/schoolService';
 
 const I18N = {
@@ -113,10 +113,9 @@ export default function StudentPortal({ lang = 'es' }) {
     let on = true;
     (async () => {
       try {
-        const svc = await import('../services/schoolService');
         const [students, groupsList, membersList, classesList, attendanceList, evalsList, drillsList, coachesList, bonusesList] = await Promise.all([
           listStudents(), listGroups(), listMembers(), listClasses(), listAttendanceByClass('__all__'),
-          listEvaluations(), listDrills(), svc.listCoaches(), listBonuses(),
+          listEvaluations(), listDrills(), listCoaches(), listBonuses(),
         ]);
         if (!on) return;
         const email = (user.email || '').toLowerCase();
