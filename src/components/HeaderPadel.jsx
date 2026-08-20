@@ -78,12 +78,14 @@ const HeaderPadel = ({ lang = 'es', onLanguageChange }) => {
   const [role, setRole] = useState(null);
 
   const TOOLTIPS = {
-    es: { tournaments: 'Torneos & eventos', calendar: 'Calendario del circuito', club: 'Club & reservas', school: 'Escuela & entrenadores', crm: 'CRM · Gestión de negocio', marketing: 'Marketing · Planes, campañas y newsletter', community: 'Comunidad · Tablón, chat y grupos', shop: 'Tienda', directory: 'Directorio de clubes y escuelas', league: 'Ranked League', launch: 'Lanzamiento y ofertas' },
-    en: { tournaments: 'Tournaments & events', calendar: 'Circuit calendar', club: 'Club & bookings', school: 'School & coaches', crm: 'CRM · Business management', marketing: 'Marketing · Plans, campaigns & newsletter', community: 'Community · Board, chat & groups', shop: 'Shop', directory: 'Clubs & schools directory', league: 'Ranked League', launch: 'Launch & offers' },
-    fr: { tournaments: 'Tournois & événements', calendar: 'Calendrier du circuit', club: 'Club & réservations', school: 'École & entraîneurs', crm: 'CRM · Gestion d\'affaires', marketing: 'Marketing · Plans, campagnes & newsletter', community: 'Communauté · Tableau, chat & groupes', shop: 'Boutique', directory: 'Annuaire des clubs et écoles', league: 'Ligue classée', launch: 'Lancement et offres' },
-    pt: { tournaments: 'Torneios & eventos', calendar: 'Calendário do circuito', club: 'Clube & reservas', school: 'Escola & treinadores', crm: 'CRM · Gestão de negócio', marketing: 'Marketing · Planos, campanhas & newsletter', community: 'Comunidade · Quadro, chat & grupos', shop: 'Loja', directory: 'Diretório de clubes e escolas', league: 'Liga ranqueada', launch: 'Lançamento e ofertas' },
+    es: { tournaments: 'Torneos & eventos', calendar: 'Calendario del circuito', club: 'Club & reservas', school: 'Escuela & entrenadores', crm: 'CRM · Gestión de negocio', marketing: 'Marketing · Planes, campañas y newsletter', community: 'Comunidad · Tablón, chat y grupos', shop: 'Tienda', directory: 'Directorio de clubes y escuelas', league: 'Ranked League', launch: 'Lanzamiento y ofertas', dashboard: 'Dashboard pistas', livepro: 'LiveScore Pro', live: 'Vista en vivo', control: 'Central de control', analytics: 'Analíticas', match: 'Busco cuarto', members: 'Socios & membresías', membercard: 'Mi carné de socio', iot: 'Luz QR · IoT', schoolAdmin: 'Gestión de la escuela', studentProgress: 'Mi progreso como alumno', coachDiscovery: 'Entrenadores & lecciones', ownerPanel: 'Panel del dueño · RevPAC', monetization: 'Monetización · Sponsors', posts: 'CMS · Crónicas IA', marketplace: 'Marketplace', globalRanking: 'Global Ranking' },
+    en: { tournaments: 'Tournaments & events', calendar: 'Circuit calendar', club: 'Club & bookings', school: 'School & coaches', crm: 'CRM · Business management', marketing: 'Marketing · Plans, campaigns & newsletter', community: 'Community · Board, chat & groups', shop: 'Shop', directory: 'Clubs & schools directory', league: 'Ranked League', launch: 'Launch & offers', dashboard: 'Courts dashboard', livepro: 'LiveScore Pro', live: 'Live view', control: 'Tournament control', analytics: 'Analytics', match: 'Looking for a fourth', members: 'Members & memberships', membercard: 'My member card', iot: 'QR Light · IoT', schoolAdmin: 'School management', studentProgress: 'My student progress', coachDiscovery: 'Coaches & lessons', ownerPanel: 'Owner dashboard · RevPAC', monetization: 'Monetization · Sponsors', posts: 'CMS · AI reports', marketplace: 'Marketplace', globalRanking: 'Global Ranking' },
+    fr: { tournaments: 'Tournois & événements', calendar: 'Calendrier du circuit', club: 'Club & réservations', school: 'École & entraîneurs', crm: 'CRM · Gestion d\'affaires', marketing: 'Marketing · Plans, campagnes & newsletter', community: 'Communauté · Tableau, chat & groupes', shop: 'Boutique', directory: 'Annuaire des clubs et écoles', league: 'Ligue classée', launch: 'Lancement et offres', dashboard: 'Tableau des pistes', livepro: 'LiveScore Pro', live: 'Vue en direct', control: 'Contrôle du tournoi', analytics: 'Analytiques', match: 'Cherche un quatrième', members: 'Membres & abonnements', membercard: 'Ma carte de membre', iot: 'Lumière QR · IoT', schoolAdmin: 'Gestion de l\'école', studentProgress: 'Ma progression d\'élève', coachDiscovery: 'Entraîneurs & leçons', ownerPanel: 'Tableau du propriétaire · RevPAC', monetization: 'Monétisation · Sponsors', posts: 'CMS · Reportages IA', marketplace: 'Marketplace', globalRanking: 'Classement mondial' },
+    pt: { tournaments: 'Torneios & eventos', calendar: 'Calendário do circuito', club: 'Clube & reservas', school: 'Escola & treinadores', crm: 'CRM · Gestão de negócio', marketing: 'Marketing · Planos, campanhas & newsletter', community: 'Comunidade · Quadro, chat & grupos', shop: 'Loja', directory: 'Diretório de clubes e escolas', league: 'Liga ranqueada', launch: 'Lançamento e ofertas', dashboard: 'Painel de pistas', livepro: 'LiveScore Pro', live: 'Vista em direto', control: 'Central de controlo', analytics: 'Analíticas', match: 'Procuro quarto', members: 'Associados & adesões', membercard: 'Meu cartão de sócio', iot: 'Luz QR · IoT', schoolAdmin: 'Gestão da escola', studentProgress: 'Meu progresso de aluno', coachDiscovery: 'Treinadores & lições', ownerPanel: 'Painel do dono · RevPAC', monetization: 'Monetização · Sponsors', posts: 'CMS · Crónicas IA', marketplace: 'Marketplace', globalRanking: 'Ranking global' },
   };
   const t = TOOLTIPS[lang] || TOOLTIPS.es;
+  const MEMBER_TOOLTIPS = { es: { member: 'Mi carné de socio', student: 'Mi progreso como alumno', space: 'Mi espacio' }, en: { member: 'My member card', student: 'My student progress', space: 'My space' }, fr: { member: 'Ma carte de membre', student: 'Ma progression d\'élève', space: 'Mon espace' }, pt: { member: 'Meu cartão de sócio', student: 'Meu progresso de aluno', space: 'Meu espaço' } };
+  const mt = MEMBER_TOOLTIPS[lang] || MEMBER_TOOLTIPS.es;
 
   // Header a medida por perfil: detecta rol del usuario logueado por email
   useEffect(() => {
@@ -126,8 +128,8 @@ const HeaderPadel = ({ lang = 'es', onLanguageChange }) => {
         {/* Mi espacio: header a medida según el perfil logueado (sólo socio/alumno; el jugador usa la medalla 🏅) */}
         {role && role !== 'player' && (
           <Link to={role === 'member' || role === 'both' ? '/socio' : '/alumno'}
-            data-tooltip={role === 'member' || role === 'both' ? 'Mi carné de socio' : 'Mi progreso como alumno'}
-            aria-label="Mi espacio"
+            data-tooltip={role === 'member' || role === 'both' ? mt.member : mt.student}
+            aria-label={mt.space}
             className="nav-ico"
             style={{
               display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '9px 13px',
@@ -149,41 +151,41 @@ const HeaderPadel = ({ lang = 'es', onLanguageChange }) => {
           children={[
             ['🏟️ ' + t.tournaments, '/torneo'],
             ['🗓️ ' + t.calendar, '/calendario'],
-            ['📊 Dashboard pistas', '/dashboard'],
-            ['🎬 LiveScore Pro', '/livepro'],
-            ['📺 Vista en vivo', '/live'],
-            ['🎛️ Central de control', '/control'],
-            ['📈 Analíticas', '/analytics'],
-            ['🤝 Busco cuarto', '/match'],
+            ['📊 ' + t.dashboard, '/dashboard'],
+            ['🎬 ' + t.livepro, '/livepro'],
+            ['📺 ' + t.live, '/live'],
+            ['🎛️ ' + t.control, '/control'],
+            ['📈 ' + t.analytics, '/analytics'],
+            ['🤝 ' + t.match, '/match'],
           ]}
         />
 
         {/* 2 · Club (reservas, socios, mi carné) */}
         <NavDrop tooltip={t.club} to="/club" icon="club" color="#10b981" active={location.pathname.startsWith('/club') || location.pathname.startsWith('/iot')} children={[
           ['🏠 ' + t.club, '/club'],
-          ['🪪 Socios & membresías', '/socios'],
-          ['💳 Mi carné de socio', '/socio'],
-          ['💡 Luz QR · IoT', '/iot'],
+          ['🪪 ' + t.members, '/socios'],
+          ['💳 ' + t.membercard, '/socio'],
+          ['💡 ' + t.iot, '/iot'],
         ]} />
 
         {/* 3 · Escuela (gestión + alumno) */}
         <NavDrop tooltip={t.school} to="/escuela" icon="coach" color="#34d399" active={location.pathname.startsWith('/escuela') || location.pathname.startsWith('/alumno') || location.pathname.startsWith('/coaches')} children={[
-          ['🏫 Gestión de la escuela', '/escuela'],
-          ['🎓 Mi progreso como alumno', '/alumno'],
-          ['👨‍🏫 ' + (t.coachDiscovery || 'Entrenadores & lecciones'), '/coaches'],
+          ['🏫 ' + t.schoolAdmin, '/escuela'],
+          ['🎓 ' + t.studentProgress, '/alumno'],
+          ['👨‍🏫 ' + t.coachDiscovery, '/coaches'],
         ]} />
 
         {/* 4 · CRM */}
         <NavDrop tooltip={t.crm} to="/crm" icon="crm" color="#2dd4bf" active={location.pathname.startsWith('/crm') || location.pathname.startsWith('/panel')} children={[
-          ['👔 ' + (t.crm || 'CRM'), '/crm'],
-          ['📈 Panel del dueño · RevPAC', '/panel'],
+          ['👔 ' + t.crm, '/crm'],
+          ['📈 ' + t.ownerPanel, '/panel'],
         ]} />
 
         {/* 5 · Marketing */}
         <NavDrop tooltip={t.marketing} to="/marketing" icon="marketing" color="#fb7185" active={location.pathname.startsWith('/marketing') || location.pathname.startsWith('/sponsors') || location.pathname.startsWith('/posts')} children={[
-          ['📣 ' + (t.marketing || 'Marketing'), '/marketing'],
-          ['💰 Monetización · Sponsors', '/sponsors'],
-          ['📰 CMS · Crónicas IA', '/posts'],
+          ['📣 ' + t.marketing, '/marketing'],
+          ['💰 ' + t.monetization, '/sponsors'],
+          ['📰 ' + t.posts, '/posts'],
         ]} />
 
         {/* 6 · Comunidad */}
@@ -194,14 +196,14 @@ const HeaderPadel = ({ lang = 'es', onLanguageChange }) => {
 
         {/* 8 · Directorio */}
         <NavDrop tooltip={t.directory} to="/clubes" icon="map" color="#2dd4bf" active={location.pathname.startsWith('/clubes') || location.pathname.startsWith('/market')} children={[
-          ['🗺️ ' + (t.directory || 'Directorio'), '/clubes'],
-          ['🛒 Marketplace', '/market'],
+          ['🗺️ ' + t.directory, '/clubes'],
+          ['🛒 ' + t.marketplace, '/market'],
         ]} />
 
         {/* 9 · Ranked League */}
         <NavDrop tooltip={t.league} to="/league" icon="trophy" color="#a3e635" active={location.pathname.startsWith('/league') || location.pathname.startsWith('/ranking')} children={[
-          ['🏆 ' + (t.league || 'Ranked League'), '/league'],
-          ['🌍 ' + (t.globalRanking || 'Global Ranking'), '/ranking'],
+          ['🏆 ' + t.league, '/league'],
+          ['🌍 ' + t.globalRanking, '/ranking'],
         ]} />
 
         {/* 10 · Lanzamiento */}
