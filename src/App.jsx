@@ -1,8 +1,38 @@
 import React, { useState, useEffect, useCallback, lazy, Suspense } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import HeaderPadel from './components/HeaderPadel';
 import LandingPadel from './components/LandingPadel';
+import ErrorBoundary from './components/ErrorBoundary';
 import { useStore } from './services/store';
+
+const TITLES = {
+  es: { default: 'PADELORGANIZERS.COM — La Plataforma Pro de Torneos de Pádel', demo: 'Demo — Marcador en vivo', clubes: 'Directorio de Clubes de Pádel', torneo: 'Organiza un torneo', club: 'Reservas de pista', escuela: 'Escuela de pádel', ranking: 'Ranking ELO', tienda: 'Tienda del circuito', lanzamiento: 'Ofertas de lanzamiento', legal: 'Aviso legal', crm: 'CRM del club', panel: 'Panel del dueño', marketing: 'Marketing y planes', comunidad: 'Comunidad', socios: 'Socios y membresías', perfil: 'Mi perfil', match: 'Busco cuarto', calendario: 'Calendario del circuito', league: 'Ranked League', coaches: 'Entrenadores', posts: 'Crónicas IA', control: 'Central de control', analytics: 'Analíticas', alianza: 'Alianza con federaciones', newsletters: 'Newsletters', market: 'Marketplace', iot: 'Luz QR · IoT', importar: 'Importar jugadores', dashboard: 'Dashboard pistas', live: 'Vista en vivo', livepro: 'LiveScore Pro', socio: 'Mi carné', alumno: 'Mi progreso', sponsors: 'Patrocinadores' },
+  en: { default: 'PADELORGANIZERS — The Pro Padel Tournament Platform', demo: 'Demo — Live scoreboard', clubes: 'Padel Club Directory', torneo: 'Organize a tournament', club: 'Court bookings', escuela: 'Padel school', ranking: 'ELO ranking', tienda: 'Circuit shop', lanzamiento: 'Launch offers', legal: 'Legal notice', crm: 'Club CRM', panel: 'Owner dashboard', marketing: 'Marketing & plans', comunidad: 'Community', socios: 'Memberships', perfil: 'My profile', match: 'Looking for a fourth', calendario: 'Circuit calendar', league: 'Ranked League', coaches: 'Coaches', posts: 'AI reports', control: 'Tournament control', analytics: 'Analytics', alianza: 'Federation alliance', newsletters: 'Newsletters', market: 'Marketplace', iot: 'QR Light · IoT', importar: 'Import players', dashboard: 'Courts dashboard', live: 'Live view', livepro: 'LiveScore Pro', socio: 'My card', alumno: 'My progress', sponsors: 'Sponsors' },
+  fr: { default: 'PADELORGANIZERS — La plateforme pro des tournois de padel', demo: 'Démo — Tableau de bord en direct', clubes: 'Annuaire des clubs de padel', torneo: 'Organiser un tournoi', club: 'Réservations de pistes', escuela: 'École de padel', ranking: 'Classement ELO', tienda: 'Boutique du circuit', lanzamiento: 'Offres de lancement', legal: 'Mentions légales', crm: 'CRM du club', panel: 'Tableau de bord propriétaire', marketing: 'Marketing & forfaits', comunidad: 'Communauté', socios: 'Membres', perfil: 'Mon profil', match: 'Cherche un quatrième', calendario: 'Calendrier du circuit', league: 'Ranked League', coaches: 'Entraîneurs', posts: 'Reportages IA', control: 'Contrôle du tournoi', analytics: 'Analytiques', alianza: 'Alliance des fédérations', newsletters: 'Newsletters', market: 'Marketplace', iot: 'Lumière QR · IoT', importar: 'Importer des joueurs', dashboard: 'Tableau des pistes', live: 'Vue en direct', livepro: 'LiveScore Pro', socio: 'Ma carte', alumno: 'Ma progression', sponsors: 'Sponsors' },
+  pt: { default: 'PADELORGANIZERS — A plataforma pro de torneios de padel', demo: 'Demo — Quadro em direto', clubes: 'Diretório de Clubes de Padel', torneo: 'Organize um torneio', club: 'Reservas de pistas', escuela: 'Escola de padel', ranking: 'Ranking ELO', tienda: 'Loja do circuito', lanzamiento: 'Ofertas de lançamento', legal: 'Aviso legal', crm: 'CRM do clube', panel: 'Painel do dono', marketing: 'Marketing e planos', comunidad: 'Comunidade', socios: 'Associados', perfil: 'Meu perfil', match: 'Procuro quarto', calendario: 'Calendário do circuito', league: 'Ranked League', coaches: 'Treinadores', posts: 'Crónicas IA', control: 'Central de controlo', analytics: 'Analíticas', alianza: 'Aliança com federações', newsletters: 'Newsletters', market: 'Marketplace', iot: 'Luz QR · IoT', importar: 'Importar jogadores', dashboard: 'Painel de pistas', live: 'Vista em direto', livepro: 'LiveScore Pro', socio: 'Meu cartão', alumno: 'Meu progresso', sponsors: 'Patrocinadores' },
+};
+
+const ROUTE_KEY = {
+  '/demo': 'demo', '/clubes': 'clubes', '/torneo': 'torneo', '/calendario': 'calendario',
+  '/club': 'club', '/escuela': 'escuela', '/ranking': 'ranking', '/tienda': 'tienda',
+  '/lanzamiento': 'lanzamiento', '/legal': 'legal', '/crm': 'crm', '/panel': 'panel',
+  '/marketing': 'marketing', '/comunidad': 'comunidad', '/socios': 'socios',
+  '/perfil': 'perfil', '/match': 'match', '/league': 'league', '/coaches': 'coaches',
+  '/posts': 'posts', '/control': 'control', '/analytics': 'analytics',
+  '/alianza': 'alianza', '/newsletters': 'newsletters', '/market': 'market',
+  '/iot': 'iot', '/importar': 'importar', '/dashboard': 'dashboard',
+  '/live': 'live', '/livepro': 'livepro', '/socio': 'socio', '/alumno': 'alumno',
+  '/sponsors': 'sponsors',
+};
+
+function usePageTitle(lang) {
+  const location = useLocation();
+  useEffect(() => {
+    const map = TITLES[lang] || TITLES.es;
+    const key = ROUTE_KEY[location.pathname] || 'default';
+    document.title = map[key] || map.default;
+  }, [location.pathname, lang]);
+}
 
 // Widgets no críticos: se descargan cuando el resto ya está pintado.
 const PadelAIAgent = lazy(() => import('./components/PadelAIAgent'));
@@ -81,6 +111,8 @@ export default function App() {
     document.documentElement.lang = lang;
   }, [lang]);
 
+  usePageTitle(lang);
+
   const handleLanguageChange = useCallback((next) => {
     if (['es', 'en', 'fr', 'pt'].includes(next)) setLang(next);
   }, []);
@@ -88,8 +120,9 @@ export default function App() {
   return (
     <div style={{ minHeight: '100vh', background: 'var(--padel-bg)' }}>
       <HeaderPadel lang={lang} onLanguageChange={handleLanguageChange} />
-      <Suspense fallback={<PageFallback />}>
-        <Routes>
+      <ErrorBoundary lang={lang}>
+        <Suspense fallback={<PageFallback />}>
+          <Routes>
           <Route path="/" element={<LandingPadel lang={lang} />} />
           <Route path="/lanzamiento" element={<LaunchPage lang={lang} />} />
           <Route path="/demo" element={<PadelScoreBoard lang={lang} />} />
@@ -132,11 +165,14 @@ export default function App() {
           <Route path="/verificar" element={<VerificarFicha lang={lang} />} />
           <Route path="/legal" element={<LegalNotice lang={lang} />} />
           <Route path="*" element={<LandingPadel lang={lang} />} />
-        </Routes>
-      </Suspense>
+          </Routes>
+        </Suspense>
+      </ErrorBoundary>
       <Suspense fallback={null}>
-        <CookieBanner lang={lang} />
-        <PadelAIAgent lang={lang} />
+        <ErrorBoundary lang={lang}>
+          <CookieBanner lang={lang} />
+          <PadelAIAgent lang={lang} />
+        </ErrorBoundary>
       </Suspense>
     </div>
   );
