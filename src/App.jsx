@@ -1,9 +1,12 @@
 import React, { useState, useEffect, useCallback, lazy, Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import HeaderPadel from './components/HeaderPadel';
-import PadelAIAgent from './components/PadelAIAgent';
 import LandingPadel from './components/LandingPadel';
 import { useStore } from './services/store';
+
+// Widgets no críticos: se descargan cuando el resto ya está pintado.
+const PadelAIAgent = lazy(() => import('./components/PadelAIAgent'));
+const CookieBanner = lazy(() => import('./components/CookieBanner'));
 
 // Lazy loading por ruta: cada página se descarga solo cuando se visita.
 const LaunchPage = lazy(() => import('./components/LandingPro'));
@@ -46,7 +49,6 @@ const AltaClub = lazy(() => import('./components/AltaClub'));
 const Tienda = lazy(() => import('./components/Tienda'));
 const PostsApp = lazy(() => import('./components/PostsApp'));
 const LegalNotice = lazy(() => import('./components/LegalNotice'));
-const CookieBanner = lazy(() => import('./components/CookieBanner'));
 
 const fallbackStyle = {
   display: 'flex',
@@ -132,8 +134,10 @@ export default function App() {
           <Route path="*" element={<LandingPadel lang={lang} />} />
         </Routes>
       </Suspense>
-      <CookieBanner lang={lang} />
-      <PadelAIAgent lang={lang} />
+      <Suspense fallback={null}>
+        <CookieBanner lang={lang} />
+        <PadelAIAgent lang={lang} />
+      </Suspense>
     </div>
   );
 }

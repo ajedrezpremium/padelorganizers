@@ -88,8 +88,6 @@ const I18N = {
   },
 };
 
-const UTC_DAY = 8; // fecha de demostración (fija para demo)
-
 export default function ClubApp({ lang = 'es' }) {
   const T = I18N[lang] || I18N.es;
   const { user } = useAuth();
