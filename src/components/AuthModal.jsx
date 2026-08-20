@@ -118,7 +118,7 @@ export default function AuthModal({ lang = 'es', onClose, onAuthed }) {
       res = await supabase.auth.resetPasswordForEmail(email);
       setBusy(false);
       if (res.error) { setErr(res.error.message); return; }
-      setOk(T.recoveredSent);
+      setOk(T.recoverSent);
       return;
     }
     if (mode === 'login') {
