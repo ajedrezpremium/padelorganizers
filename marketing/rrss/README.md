@@ -8,7 +8,7 @@ Estrategia y contenidos listos para publicar en LinkedIn, Instagram, Facebook y 
 
 - **Tono**: profesional y cercano, orientado al dueño/gerente de club (B2B) y al jugador (B2C). Hechos y número por delante, cero humo.
 - **Claims autorizados** (no inventar más hasta que la saas tenga métricas reales):
-  - "+65 clubes en el Directorio" (del directorio nacional: Vigo, Madrid, Barcelona, Valencia, Sevilla y Zaragoza).
+  - "+700 clubes en el Directorio" (directorio nacional: 49 ciudades, +798 clubes reales).
   - "4+ formatos de torneo: Americano, Mexicano, Suizo y Eliminatorio".
   - "Punto de Oro digital" y "Marcador en vivo".
   - "CourtManager, control de pistas en tiempo real".
@@ -35,19 +35,19 @@ Estrategia y contenidos listos para publicar en LinkedIn, Instagram, Facebook y 
 ## 3. Bios por red
 
 **LinkedIn (página empresa)**
-> Software con IA para clubes de pádel 🎾 Torneos Americano · Mexicano · Suizo · Eliminatorio, CourtManager (control de pistas), Punto de Oro digital y marcador en vivo. Escuela, reservas y cobro integrado. Directorio con +65 clubes reales. 👉 Demo gratuita: padelorganizers.vercel.app
+> Software con IA para clubes de pádel 🎾 Torneos Americano · Mexicano · Suizo · Eliminatorio, CourtManager (control de pistas), Punto de Oro digital y marcador en vivo. Escuela, reservas y cobro integrado. Directorio con +700 clubes reales. 👉 Demo gratuita: padelorganizers.vercel.app
 
 **Instagram (display name: Padel Organizers)**
 > 🎾 La plataforma pro del pádel
 > 🏆 Torneos con IA · CourtManager · Punto de Oro
-> 📍 +65 clubes en el Directorio
+> 📍 +700 clubes en el Directorio
 > 🆓 Demo gratis · Link en bio
 
 **Facebook (página empresa)**
-> PADEL ORGANIZERS — La plataforma pro de torneos de pádel. Organiza torneos con IA, controla tus pistas con CourtManager, cobra reservas y haz crecer tu club. +65 clubes ya están en nuestro directorio. Demo gratuita → padelorganizers.vercel.app
+> PADEL ORGANIZERS — La plataforma pro de torneos de pádel. Organiza torneos con IA, controla tus pistas con CourtManager, cobra reservas y haz crecer tu club. +700 clubes ya están en nuestro directorio. Demo gratuita → padelorganizers.vercel.app
 
 **X (display name: Padel Organizers)**
-> Software con IA para clubes de pádel 🇪🇸 Torneos · CourtManager · Punto de Oro · Directorio de +65 clubes · Demo gratis. #Padel #CourtManager
+> Software con IA para clubes de pádel 🇪🇸 Torneos · CourtManager · Punto de Oro · Directorio de +700 clubes · Demo gratis. #Padel #CourtManager
 
 ## 4. Cadencia recomendada (mes 1)
 

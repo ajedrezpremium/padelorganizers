@@ -11,7 +11,7 @@ PADEL ORGANIZERS es la plataforma pro de torneos de pádel 🇪🇸
 🕒 CourtManager: control de pistas en tiempo real.
 🎓 Escuela, reservas y cobro recurrente.
 
-Y ahora también: un Directorio nacional con +65 clubes reales de 19 ciudades y la Tienda del Circuito (recomendador, cero e-commerce).
+Y ahora también: un Directorio nacional con +700 clubes reales de 49 ciudades y la Tienda del Circuito (recomendador, cero e-commerce).
 
 ¿Tienes un club o juegas en uno? Entra y prueba la demo gratuita — sin tarjeta.
 

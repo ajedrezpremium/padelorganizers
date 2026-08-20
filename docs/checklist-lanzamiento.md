@@ -11,7 +11,7 @@ Estado: pre-lanzamiento. Flags ⬜ pendiente · ✅ listo · 🔴 bloqueante.
 - ✅ Campaña email completada: **35 clubes** enviados (0 pendientes).
 - ✅ WhatsApp: 30 clubes listos con el gancho 20/20.
 - ✅ Redes creadas: IG `@padelorganizers`, LinkedIn `padel-organizers`, iconos en la landing.
-- ⏳ Pendiente bloqueante para v1.1: dominio propio, webhook Stripe y pago de prueba real.
+- ⏳ Pendiente bloqueante para v1.1: dominio propio y pago de prueba real (webhook Stripe ya verificado).
 
 ---
 
@@ -23,7 +23,7 @@ Estado: pre-lanzamiento. Flags ⬜ pendiente · ✅ listo · 🔴 bloqueante.
 | 2 | **Aplicar migración `20260808040000_split_payments.sql` en Supabase SQL Editor** | ✅ verificado: tabla accesible, insert/delete con `payment_method`/`paypal_order` OK | Usuario |
 | 3 | **Rotar Google Client Secret** (expirado por filtración en chat) y actualizarlo en Supabase → Authentication → Google | ✅ rotado (pendiente test login) | Usuario |
 | 4 | Confirmar `STRIPE_SECRET_KEY` live (no test) en Vercel | ✅ verificado en prod (clave presente en env Production) | Usuario |
-| 5 | Configurar **webhook de Stripe** → `https://padelorganizers.vercel.app/api/webhook` (evento `checkout.session.completed`) | ⬜ 🔴 (v1.1) | Usuario |
+| 5 | Configurar **webhook de Stripe** → `https://padelorganizers.vercel.app/api/webhook` (evento `checkout.session.completed`) | ✅ verificado en prod (endpoint responde y re-verifica sesiones reales; pendiente solo pago real de prueba) | Usuario |
 | 6 | URL de autorización de Google OAuth en Supabase = dominio canónico (https / sin www) | ⬜ | Usuario |
 
 ## 2. Correcciones de código aplicadas este sprint

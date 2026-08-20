@@ -4,7 +4,7 @@
 
 ---
 
-Acabamos de cruzarnos un hito: nuestro Directorio de Clubes y Escuelas ya tiene **+65 clubes reales** de pádel y tenis en **19 ciudades** (Vigo, Madrid, Barcelona, Valencia, Sevilla y Zaragoza, entre otras).
+Acabamos de cruzarnos un hito: nuestro Directorio de Clubes y Escuelas ya tiene **+700 clubes reales** de pádel y tenis en **49 ciudades** (Vigo, Madrid, Barcelona, Valencia, Sevilla y Zaragoza, entre otras).
 
 Cada ficha tiene:
 
