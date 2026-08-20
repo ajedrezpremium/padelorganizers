@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import HeaderPadel from './components/HeaderPadel';
 import PadelAIAgent from './components/PadelAIAgent';
@@ -47,12 +47,29 @@ import CookieBanner from './components/CookieBanner';
 import { useStore } from './services/store';
 
 export default function App() {
-  const [lang, setLang] = useState('es');
+  const [lang, setLang] = useState(() => {
+    try {
+      const fromUrl = new URLSearchParams(window.location.search).get('lang');
+      if (['es', 'en', 'fr', 'pt'].includes(fromUrl)) return fromUrl;
+      const saved = localStorage.getItem('padelorganizers_lang');
+      if (['es', 'en', 'fr', 'pt'].includes(saved)) return saved;
+    } catch (e) { /* noop */ }
+    return 'es';
+  });
   const store = useStore();
+
+  useEffect(() => {
+    try { localStorage.setItem('padelorganizers_lang', lang); } catch (e) { /* noop */ }
+    document.documentElement.lang = lang;
+  }, [lang]);
+
+  const handleLanguageChange = useCallback((next) => {
+    if (['es', 'en', 'fr', 'pt'].includes(next)) setLang(next);
+  }, []);
 
   return (
     <div style={{ minHeight: '100vh', background: 'var(--padel-bg)' }}>
-      <HeaderPadel lang={lang} onLanguageChange={setLang} />
+      <HeaderPadel lang={lang} onLanguageChange={handleLanguageChange} />
       <Routes>
         <Route path="/" element={<LandingPadel lang={lang} />} />
         <Route path="/lanzamiento" element={<LaunchPage lang={lang} />} />

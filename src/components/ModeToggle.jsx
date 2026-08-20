@@ -14,6 +14,16 @@ const I18N = {
     switchToOffline: 'Switch to Local (this browser only)', syncing: 'Syncing…',
     synced: 'Synced', error: 'Sync failed', offDesc: 'Offline',
   },
+  fr: {
+    online: 'Cloud', offline: 'Local', switchToOnline: 'Passer au Cloud (sauvegarder dans Supabase)',
+    switchToOffline: 'Passer en Local (ce navigateur uniquement)', syncing: 'Synchronisation…',
+    synced: 'Synchronisé', error: 'Échec de la synchronisation', offDesc: 'Hors ligne',
+  },
+  pt: {
+    online: 'Cloud', offline: 'Local', switchToOnline: 'Mudar para Cloud (salvar no Supabase)',
+    switchToOffline: 'Mudar para Local (somente este navegador)', syncing: 'Sincronizando…',
+    synced: 'Sincronizado', error: 'Falha ao sincronizar', offDesc: 'Offline',
+  },
 };
 
 export default function ModeToggle({ lang = 'es' }) {

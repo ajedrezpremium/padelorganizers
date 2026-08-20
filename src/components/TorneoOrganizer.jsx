@@ -168,6 +168,172 @@ const I18N = {
     finalTitle: 'Make the tournament feel professional from the first touchpoint',
     finalText: 'PADEL ORGANIZERS helps you turn a tournament into a premium event with an experience that matches players, coaches and sponsors.',
   },
+  fr: {
+    badge: '+ TOURNOI',
+    title: 'Organisez un tournoi de padel pro',
+    subtitle: 'Transformez chaque semaine en une expérience incroyable pour les joueurs, les techniciens et les sponsors grâce à une coordination impeccable, des tableaux clairs et une journée de compétition fluide.',
+    ctaPrimary: 'Essayer la démo',
+    ctaSecondary: 'Demander le plan club',
+    highlights: [
+      { value: '5 phases', label: 'de la planification à la clôture' },
+      { value: '1h15', label: 'par match pour ne pas retarder le calendrier' },
+      { value: '2-3 remplaçants', label: 'pour parer à tout imprévu' },
+      { value: '100%', label: 'de coordination pour un déroulement sans accroc' },
+    ],
+    phasesTitle: 'Le workflow idéal de l’organisateur',
+    phases: [
+      {
+        title: 'Phase 1 · Planification et définition',
+        description: 'Définissez le format, les catégories, le lieu, le budget et le règlement pour poser les bases du tournoi.',
+        items: [
+          'Élimination directe, groupes + éliminatoires ou format américain/mexicain.',
+          'Catégories par niveau, genre et modalité pour équilibrer la compétition.',
+          'Réservation des pistes, négociation avec le club et contrôle du budget.',
+          'Règlement clair avec point d’or, mort subite ou tie-breaks.',
+        ],
+      },
+      {
+        title: 'Phase 2 · Inscriptions et diffusion',
+        description: 'Trouvez vos participants, gérez les paiements et construisez une communication forte dès le premier jour.',
+        items: [
+          'Flyer et diffusion sur les réseaux, WhatsApp et la réception du club.',
+          'Plateforme d’inscription avec coordonnées, niveau et confirmation par e-mail.',
+          'Paiement préalable pour garantir les places et éviter les surprises.',
+          'Groupe de diffusion pour les mises à jour et les horaires.',
+        ],
+      },
+      {
+        title: 'Phase 3 · Tableaux et logistique finale',
+        description: 'Clôturez les listes, tirez les rencontres au sort et préparez la journée avec précision.',
+        items: [
+          'Clôture des inscriptions et têtes de série pour éviter les croisements précoces.',
+          'Tirage en direct, tableaux publiés et horaires échelonnés par créneaux.',
+          'Achats de dernière minute : balles, trophées, eau, fruits et trousse de secours.',
+          'Prévoyez 1h15 ou 1h30 par match selon le format.',
+        ],
+      },
+      {
+        title: 'Phase 4 · Le jour du tournoi',
+        description: 'Passez à la direction de la compétition avec une table de contrôle, une piste et des temps parfaitement organisés.',
+        items: [
+          'Check-in 30 minutes avant avec pack de bienvenue et briefing de piste.',
+          'Tableau ou appli en temps réel avec ordre de jeu et horaires.',
+          'Résolution de conflits et auto-arbitrage en l’absence d’arbitre.',
+          'Musique, photos, vidéos et hydratation constante pour élever l’expérience.',
+        ],
+      },
+      {
+        title: 'Phase 5 · Clôture et post-tournoi',
+        description: 'Terminez l’événement avec des récompenses, un suivi et un retour qui vous aidera à faire encore mieux la prochaine fois.',
+        items: [
+          'Finales sur piste centrale, remise des trophées et tirages cadeaux.',
+          'Paiement des prestataires, nettoyage et clôture logistique de l’installation.',
+          'Photos, résultats et remerciements aux joueurs et sponsors.',
+          'Enquête rapide pour améliorer l’édition suivante.',
+        ],
+      },
+    ],
+    tipsTitle: '3 conseils en or',
+    tips: [
+      {
+        title: 'Point d’or',
+        text: 'Activez le point d’or et le super tie-break pour accélérer les tournois avec beaucoup de paires et éviter les retards.',
+      },
+      {
+        title: 'Invités',
+        text: 'Gardez 2 ou 3 joueurs locaux de confiance prêts à couvrir les absences et à ne pas déséquilibrer le tableau.',
+      },
+      {
+        title: 'Votre appli comme centre névralgique',
+        text: 'Utilisez une plateforme avec des tableaux en temps réel, des horaires sur mobile et des résultats mis à jour instantanément.',
+      },
+    ],
+    finalTitle: 'Faites sentir le tournoi professionnel dès le premier contact',
+    finalText: 'PADEL ORGANIZERS vous aide à transformer un tournoi en événement premium, avec une expérience qui convient aux joueurs, aux techniciens et aux sponsors.',
+  },
+  pt: {
+    badge: '+ TORNEIO',
+    title: 'Organize um torneio de padel pro',
+    subtitle: 'Transforme cada semana numa experiência incrível para jogadores, técnicos e patrocinadores com uma coordenação impecável, quadros claros e um dia de competição que flui.',
+    ctaPrimary: 'Experimentar a demo',
+    ctaSecondary: 'Solicitar plano de clube',
+    highlights: [
+      { value: '5 fases', label: 'do planeamento ao encerramento' },
+      { value: '1h15', label: 'por jogo para não atrasar o calendário' },
+      { value: '2-3 suplentes', label: 'para salvar qualquer imprevisto' },
+      { value: '100%', label: 'coordenação para tudo correr bem' },
+    ],
+    phasesTitle: 'O workflow ideal do organizador',
+    phases: [
+      {
+        title: 'Fase 1 · Planeamento e definição',
+        description: 'Defina o formato, as categorias, a sede, o orçamento e o regulamento para assentar as bases do torneio.',
+        items: [
+          'Eliminação direta, grupos + eliminatórias ou formato americano/mexicano.',
+          'Categorias por nível, género e modalidade para equilibrar a competição.',
+          'Reserva de pistas, negociação com o clube e controlo do orçamento.',
+          'Regulamento claro com ponto de ouro, morte súbita ou desempates.',
+        ],
+      },
+      {
+        title: 'Fase 2 · Inscrições e divulgação',
+        description: 'Conquiste participantes, gerencie pagamentos e construa uma comunicação forte desde o primeiro dia.',
+        items: [
+          'Flyer e divulgação nas redes, WhatsApp e receção do clube.',
+          'Plataforma de inscrição com dados de contacto, nível e confirmação por email.',
+          'Pagamento prévio para garantir vagas e evitar surpresas.',
+          'Grupo de divulgação para atualizações e horários.',
+        ],
+      },
+      {
+        title: 'Fase 3 · Quadros e logística final',
+        description: 'Feche as listas, sorteie os emparelhamentos e prepare o dia com precisão.',
+        items: [
+          'Encerramento das inscrições e cabeças de série para evitar cruzamentos precoces.',
+          'Sorteio em direto, quadros publicados e horários escalonados por faixas.',
+          'Compras de última hora: bolas, troféus, água, fruta e kit de primeiros socorros.',
+          'Planeie 1h15 ou 1h30 por jogo conforme o formato.',
+        ],
+      },
+      {
+        title: 'Fase 4 · O dia do torneio',
+        description: 'Passe a dirigir a competição com uma mesa de controlo, pista e tempos perfeitamente organizados.',
+        items: [
+          'Check-in 30 minutos antes com welcome pack e briefing de pista.',
+          'Quadro ou app em tempo real com ordem de jogo e horários.',
+          'Resolução de conflitos e autoarbitragem quando não há árbitro.',
+          'Música, fotos, vídeos e hidratação constante para elevar a experiência.',
+        ],
+      },
+      {
+        title: 'Fase 5 · Encerramento e pós-torneio',
+        description: 'Feche o evento com prémios, acompanhamento e um retorno que o ajuda a repetir ainda melhor.',
+        items: [
+          'Finais na pista central, entrega de troféus e sorteios de brindes.',
+          'Pagamento a fornecedores, limpeza e encerramento logístico da instalação.',
+          'Fotos, resultados e agradecimentos a jogadores e patrocinadores.',
+          'Inquérito rápido para melhorar a próxima edição.',
+        ],
+      },
+    ],
+    tipsTitle: '3 conselhos de ouro',
+    tips: [
+      {
+        title: 'Ponto de ouro',
+        text: 'Ative o ponto de ouro e o super tie-break para acelerar torneios com muitas duplas e evitar atrasos.',
+      },
+      {
+        title: 'Coringas',
+        text: 'Mantenha 2 ou 3 jogadores locais de confiança prontos para cobrir ausências e não desequilibrar o quadro.',
+      },
+      {
+        title: 'A sua app como centro nevrálgico',
+        text: 'Use uma plataforma com quadros em tempo real, horários no telemóvel e resultados atualizados no instante.',
+      },
+    ],
+    finalTitle: 'Faça o torneio parecer profissional desde o primeiro contacto',
+    finalText: 'PADEL ORGANIZERS ajuda-o a transformar um torneio num evento premium, com uma experiência que se encaixa em jogadores, técnicos e sponsors.',
+  },
 };
 
 const sectionStyle = { maxWidth: '1180px', margin: '0 auto', padding: '0 24px' };
