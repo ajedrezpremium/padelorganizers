@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import {
   listMembers, listPlans, listDues, listPromos, listLoyalty,
-  memberPoints, MEMBERSHIPS, STATUS_LABELS, PLAN_BENEFITS,
+  memberPoints, redeemPromo, MEMBERSHIPS, STATUS_LABELS, PLAN_BENEFITS,
 } from '../services/membershipService';
 
 const I18N = {
@@ -97,9 +97,8 @@ export default function MemberPortal({ lang = 'es' }) {
   async function redeem(promo) {
     setReloading(true);
     try {
-      const mod = await import('../services/membershipService');
-      await mod.redeemPromo(promo.id);
-      const list = await mod.listPromos();
+      await redeemPromo(promo.id);
+      const list = await listPromos();
       setPromos((list || []).filter((p) => p.active));
       setReloading(false);
     } catch { setReloading(false); }

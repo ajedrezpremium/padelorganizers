@@ -103,7 +103,13 @@ const HeaderPadel = ({ lang = 'es', onLanguageChange }) => {
 
   const LANG_LABELS = { es: { label: 'Español', tooltip: 'Cambiar a español' }, en: { label: 'English', tooltip: 'Switch to English' }, fr: { label: 'Français', tooltip: 'Passer au français' }, pt: { label: 'Português', tooltip: 'Mudar para português' } };
 
-  const isOn = (path) => location.pathname === path || path === '/torneo' ? location.pathname.startsWith('/torneo') || location.pathname === '/dashboard' || location.pathname === '/control' || location.pathname === '/analytics' || location.pathname === '/livepro' || location.pathname === '/live' || location.pathname === '/match' : false;
+  const isOn = (path) => {
+    if (path === '/torneo') {
+      return ['/torneo', '/dashboard', '/control', '/analytics', '/livepro', '/live', '/match']
+        .some((p) => location.pathname === p || location.pathname.startsWith(p + '/'));
+    }
+    return location.pathname === path;
+  };
 
   return (
     <header style={{

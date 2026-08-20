@@ -107,3 +107,40 @@ button {
 .nav-ico:hover::after {
   opacity: 1;
 }
+
+/* ===== Responsive mobile ===== */
+@media (max-width: 900px) {
+  header {
+    padding: 10px 14px !important;
+    gap: 8px !important;
+  }
+  header nav {
+    gap: 4px !important;
+  }
+  .nav-ico[data-tooltip]::after {
+    display: none;
+  }
+}
+
+@media (max-width: 600px) {
+  body {
+    font-size: 15px;
+  }
+  header {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+  header > div:first-child {
+    justify-content: space-between !important;
+  }
+  header nav {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .nav-ico {
+    padding: 7px 9px !important;
+  }
+  .nav-ico[data-tooltip]::after {
+    display: none;
+  }
+}
