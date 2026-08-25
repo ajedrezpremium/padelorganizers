@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { listClubes, directorioOnline } from '../services/clubDirectoryService';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import FairMatchesWidget from './FairMatchesWidget';
 
 const markerIcon = L.icon({
   iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
@@ -331,6 +332,9 @@ export default function ClubesDirectory({ lang = 'es' }) {
               {selected.has_school ? <span style={{ ...cardStyles.feat, ...{ marginRight: 6 } }}>{t.school}</span> : null}
               {selected.has_shop ? <span style={{ ...cardStyles.feat, ...{ marginRight: 6 } }}>{t.shop}</span> : null}
               {selected.indoor ? <span style={{ ...cardStyles.feat, ...{ marginRight: 6 } }}>{t.indoor}</span> : <span style={{ ...cardStyles.feat, ...{ marginRight: 6 } }}>{t.outdoor}</span>}
+            </div>
+            <div style={{ marginTop: 16 }}>
+              <FairMatchesWidget club={selected} lang={lang} maxMatches={4} />
             </div>
             {selected.is_verified ? (
               <p style={{ margin: '14px 0 0', padding: '12px 14px', background: '#d1fae5', color: '#065f46', borderRadius: 10, fontSize: 14, fontWeight: 600 }}>
