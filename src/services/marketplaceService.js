@@ -11,16 +11,18 @@
  * tarjeta con enlace al producto correspondiente.
  */
 
-import { CLUBES_SEMILLA } from './clubDirectoryService';
+import { loadSemilla, listClubes } from './clubDirectoryService';
+import { isSupabaseConfigured } from '../lib/supabaseClient';
 import { readAds, buildPlayerPool, SEED_PLAYERS } from './matchmakingService';
 import { listCoaches } from './schoolService';
 import { getState } from './store';
 
 // Torneos próximos derivados del directorio de clubes (uno por ciudad distinta).
-function seedTournaments() {
+async function seedTournaments() {
+  const clubes = isSupabaseConfigured ? await listClubes() : await loadSemilla();
   const seen = new Set();
   const tournaments = [];
-  for (const c of CLUBES_SEMILLA) {
+  for (const c of clubes) {
     if (seen.has(c.city)) continue;
     seen.add(c.city);
     const courtCount = parseInt(String(c.courts || '').match(/\d+/)?.[0] || '4', 10);
@@ -138,8 +140,9 @@ export async function buildMarketplaceFeed({ type = 'all', city = '' } = {}) {
   return items;
 }
 
-export function marketplaceCiudades() {
+export async function marketplaceCiudades() {
+  const clubes = isSupabaseConfigured ? await listClubes() : await loadSemilla();
   const set = new Set();
-  CLUBES_SEMILLA.forEach(c => set.add(c.city));
+  clubes.forEach(c => set.add(c.city));
   return [...set];
 }

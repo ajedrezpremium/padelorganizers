@@ -9,7 +9,7 @@
 import { listReservations, CLUB_PRICE } from './clubService';
 import { listMembers, listDues, listPromos, listLoyalty, memberPoints, MEMBERSHIPS } from './membershipService';
 import { loadMomentsSync } from './momentsService';
-import { listClubes, CLUBES_SEMILLA } from './clubDirectoryService';
+import { listClubes, loadSemilla } from './clubDirectoryService';
 import { getState } from './store';
 
 // ---- movimientos de moneda ----
@@ -184,7 +184,7 @@ export async function clubKpis() {
 
 // ---- clubes del directorio (para el selector de club) ----
 export async function listClubOptions() {
-  try { return await listClubes(); } catch { return CLUBES_SEMILLA; }
+  try { return await listClubes(); } catch { return loadSemilla(); }
 }
 
 // ---- PANEL DEL DUEÑO (#10): ocupación y facturación por pista + RevPAC ----
