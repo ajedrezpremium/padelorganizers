@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ownerDashboard, fmtEuros, slotPriceFor } from '../services/clubCrmService';
+import { ownerDashboard, fmtEuros, slotPriceFor, listClubOptions } from '../services/clubCrmService';
+import FairMatchesWidget from './FairMatchesWidget';
 
 const I18N = {
   es: {
@@ -76,7 +77,10 @@ export default function OwnerDashboard({ lang = 'es' }) {
   const T = I18N[lang] || I18N.es;
   const nav = useNavigate();
   const [data, setData] = useState(null);
+  const [club, setClub] = useState(null);
+  const [clubs, setClubs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadingClub, setLoadingClub] = useState(false);
 
   const load = async () => {
     setLoading(true);
@@ -84,7 +88,15 @@ export default function OwnerDashboard({ lang = 'es' }) {
     setLoading(false);
   };
 
-  useEffect(() => { load(); }, []);
+  const loadClub = async () => {
+    setLoadingClub(true);
+    const clubList = await listClubOptions();
+    setClubs(clubList);
+    if (clubList.length) setClub(clubList[0]);
+    setLoadingClub(false);
+  };
+
+  useEffect(() => { load(); loadClub(); }, []);
 
   return (
     <div style={{ padding: '28px 0 64px', minHeight: '80vh' }}>
@@ -166,6 +178,23 @@ export default function OwnerDashboard({ lang = 'es' }) {
                 +{fmtEuros(data.yieldGain)} · +{data.yieldPct}% {T.gainPct} 🎯
               </div>
             </div>
+
+            {/* Selector de club para widget de partidos parejos */}
+            {club && (
+              <div style={{ ...card, marginBottom: 16 }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+                  <h3 style={{ fontSize: 15, fontWeight: 800, color: 'var(--padel-text)', margin: 0 }}>🎯 Partidos parejos esta semana</h3>
+                  <select
+                    value={club.id}
+                    onChange={(e) => { const c = clubs.find(x => x.id === e.target.value); if (c) setClub(c); }}
+                    style={{ padding: '6px 10px', borderRadius: 8, border: '1px solid var(--padel-border)', background: 'var(--padel-input-bg)', color: 'var(--padel-text)', fontSize: 12 }}
+                  >
+                    {clubs.map(c => <option key={c.id} value={c.id}>{c.name} · {c.city}</option>)}
+                  </select>
+                </div>
+                <FairMatchesWidget club={club} lang={lang} maxMatches={4} />
+              </div>
+            )}
 
             {/* Top horas de facturación */}
             <div style={{ ...card }}>

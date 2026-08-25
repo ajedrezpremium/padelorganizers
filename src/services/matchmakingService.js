@@ -123,3 +123,67 @@ export function levelFromElo(elo = 1500) {
 export function eloBand(level = 3.0) {
   return { min: Math.round(level * 400), max: Math.round(level * 400) + 800 };
 }
+
+// ---- Partidos parejos para un club (widget) ----
+// Devuelve hasta N partidos "parejos" derivados de anuncios "busco cuarto"
+// de jugadores de la misma ciudad/club. Si no hay anuncios reales, usa la bolsa semilla.
+export async function getFairMatchesForClub(club, maxMatches = 4) {
+  const ads = readAds().filter(a => a.status === 'open');
+  const pool = await buildPlayerPool();
+  const city = club?.city?.toLowerCase();
+  const clubName = club?.name?.toLowerCase();
+
+  // Filtrar ads de la ciudad/club o jugadores de la bolsa de esa ciudad
+  const relevantAds = ads.filter(ad => {
+    const player = pool.find(p => p.name === ad.name);
+    if (!player) return true; // mantener si no está en pool
+    const pCity = (player.city || '').toLowerCase();
+    const pClub = (player.club || '').toLowerCase();
+    return pCity === city || pClub === clubName;
+  });
+
+  const matches = [];
+  const used = new Set();
+
+  for (const ad of relevantAds) {
+    const player = pool.find(p => p.name === ad.name) || { name: ad.name, elo: ad.elo, availability: ad.when };
+    const opponents = findMatches(pool, { name: player.name, elo: player.elo, availability: player.availability || [], omit: [...used] });
+    const best = opponents[0];
+    if (best && !used.has(best.name)) {
+      matches.push({
+        player1: { name: player.name, elo: Math.round(player.elo), level: levelFromElo(player.elo) },
+        player2: { name: best.name, elo: Math.round(best.elo), level: levelFromElo(best.elo) },
+        diff: best.diff,
+        when: ad.when || 'Por confirmar',
+        slot: ad.slot || 'Abierto',
+        score: best.score,
+      });
+      used.add(player.name);
+      used.add(best.name);
+    }
+    if (matches.length >= maxMatches) break;
+  }
+
+  // Fallback: si no hay anuncios reales, generar demo desde pool de la ciudad
+  if (matches.length === 0) {
+    const cityPlayers = pool.filter(p => {
+      const pCity = (p.city || '').toLowerCase();
+      return pCity === city;
+    });
+    for (let i = 0; i + 1 < cityPlayers.length && matches.length < maxMatches; i += 2) {
+      const p1 = cityPlayers[i];
+      const p2 = cityPlayers[i + 1];
+      const diff = Math.abs(p1.elo - p2.elo);
+      matches.push({
+        player1: { name: p1.name, elo: p1.elo, level: levelFromElo(p1.elo) },
+        player2: { name: p2.name, elo: p2.elo, level: levelFromElo(p2.elo) },
+        diff,
+        when: 'Demo',
+        slot: 'Disponible',
+        score: Math.max(0, 100 - diff),
+      });
+    }
+  }
+
+  return matches;
+}
