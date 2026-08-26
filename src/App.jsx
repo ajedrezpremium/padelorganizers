@@ -3,6 +3,7 @@ import { Routes, Route, useLocation } from 'react-router-dom';
 import HeaderPadel from './components/HeaderPadel';
 import LandingPadel from './components/LandingPadel';
 import ErrorBoundary from './components/ErrorBoundary';
+import PWAInstallPrompt from './components/PWAInstallPrompt';
 import { useStore } from './services/store';
 
 const TITLES = {
@@ -174,6 +175,7 @@ export default function App() {
           <PadelAIAgent lang={lang} />
         </ErrorBoundary>
       </Suspense>
+      <PWAInstallPrompt lang={lang} />
     </div>
   );
 }
