@@ -3,10 +3,16 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎾</text></svg>" />
+    <link rel="manifest" href="/manifest.json" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#10b981" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="PadelOrg" />
+    <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+    <meta name="mobile-web-app-capable" content="yes" />
     <title>PADELORGANIZERS.COM — La Plataforma Pro de Torneos de Pádel</title>
     <meta name="description" content="La plataforma SaaS con IA para torneos de pádel, control de pistas CourtManager, marcador con Punto de Oro, ranking en vivo, directorio de más de 700 clubes reales y reservas. Demo gratuita." />
-    <meta name="theme-color" content="#0a0f0c" />
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://padelorganizers.vercel.app/" />
     <!-- Open Graph (vista previa en Facebook / LinkedIn / WhatsApp) -->
@@ -46,5 +52,10 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js').catch(() => {});
+      }
+    </script>
   </body>
 </html>
