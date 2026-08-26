@@ -4,6 +4,7 @@ import HeaderPadel from './components/HeaderPadel';
 import LandingPadel from './components/LandingPadel';
 import ErrorBoundary from './components/ErrorBoundary';
 import PWAInstallPrompt from './components/PWAInstallPrompt';
+import ExitIntentPopup from './components/ExitIntentPopup';
 import { useStore } from './services/store';
 
 const TITLES = {
@@ -176,6 +177,7 @@ export default function App() {
         </ErrorBoundary>
       </Suspense>
       <PWAInstallPrompt lang={lang} />
+      <ExitIntentPopup lang={lang} enabled={true} delayMs={20000} />
     </div>
   );
 }
