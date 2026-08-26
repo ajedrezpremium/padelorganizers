@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import LogoPadel from './LogoPadel';
 import PadelAIAgent from './PadelAIAgent';
 import DemoLeadModal from './DemoLeadModal';
+import NewsletterSignup from './NewsletterSignup';
 
 const FeatureIcon = ({ name, size = 28, color = 'var(--padel-lime)' }) => {
   const icons = {
@@ -740,7 +741,10 @@ export default function LandingPadel({ lang = 'es' }) {
       </section>
 
       {/* FOOTER */}
-      <footer style={{ padding: '24px', textAlign: 'center', fontSize: '13px', color: 'var(--padel-muted)', borderTop: '1px solid var(--padel-border)' }}>
+      <footer style={{ padding: '32px 24px', textAlign: 'center', color: 'var(--padel-muted)', borderTop: '1px solid var(--padel-border)' }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto 24px' }}>
+          <NewsletterSignup lang={lang} variant="card" />
+        </div>
         <div style={{ display: 'flex', justifyContent: 'center', gap: '14px', marginBottom: '14px' }}>
           <a href="https://www.instagram.com/padelorganizers/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" title="Instagram" style={socialIcon('#E1306C')}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -753,8 +757,10 @@ export default function LandingPadel({ lang = 'es' }) {
             </svg>
           </a>
         </div>
-        © 2026 {T.footer} ·{' '}
-        <a href="/legal" style={{ color: '#38bdf8', textDecoration: 'none', fontWeight: 600 }}>Aviso legal / Cookies</a>
+        <div style={{ fontSize: 13, fontWeight: 600 }}>
+          © 2026 {T.footer} ·{' '}
+          <a href="/legal" style={{ color: '#38bdf8', textDecoration: 'none', fontWeight: 600 }}>Aviso legal / Cookies</a>
+        </div>
       </footer>
 
       {/* Agente IA experto en pádel — permanente abajo a la derecha */}
