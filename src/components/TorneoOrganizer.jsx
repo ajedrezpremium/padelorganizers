@@ -356,11 +356,14 @@ export default function TorneoOrganizer({ lang = 'es' }) {
             {T.subtitle}
           </p>
           <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-            <button onClick={() => navigate('/demo')} className="pulse-glow" style={{ background: 'linear-gradient(135deg,#10b981,#059669)', color: '#fff', border: 'none', padding: '14px 24px', borderRadius: 12, fontWeight: 800, fontSize: 15, cursor: 'pointer' }}>
-              🚀 {T.ctaPrimary}
+            <button onClick={() => navigate('/torneo/crear')} className="pulse-glow" style={{ background: 'linear-gradient(135deg,#10b981,#059669)', color: '#fff', border: 'none', padding: '14px 24px', borderRadius: 12, fontWeight: 800, fontSize: 15, cursor: 'pointer' }}>
+              🎾 Crear mi torneo →
             </button>
-            <button onClick={() => navigate('/club')} style={{ background: 'rgba(255,255,255,0.06)', color: '#fff', border: '1px solid rgba(255,255,255,0.2)', padding: '14px 24px', borderRadius: 12, fontWeight: 700, fontSize: 15, cursor: 'pointer' }}>
-              🏟️ {T.ctaSecondary}
+            <button onClick={() => navigate('/control')} style={{ background: 'rgba(255,255,255,0.06)', color: '#fff', border: '1px solid rgba(255,255,255,0.2)', padding: '14px 24px', borderRadius: 12, fontWeight: 700, fontSize: 15, cursor: 'pointer' }}>
+              🎛️ Central de Control
+            </button>
+            <button onClick={() => navigate('/demo')} style={{ background: 'rgba(255,255,255,0.06)', color: '#fff', border: '1px solid rgba(255,255,255,0.12)', padding: '14px 24px', borderRadius: 12, fontWeight: 700, fontSize: 15, cursor: 'pointer' }}>
+              🚀 {T.ctaPrimary}
             </button>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 14, marginTop: 28 }}>
@@ -421,8 +424,8 @@ export default function TorneoOrganizer({ lang = 'es' }) {
         <div style={{ ...sectionStyle, background: 'linear-gradient(135deg, rgba(16,185,129,0.12), rgba(251,113,133,0.12))', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 24, padding: '32px 24px', textAlign: 'center' }}>
           <h2 style={{ fontSize: 24, fontWeight: 900, color: '#fff', marginBottom: 10 }}>{T.finalTitle}</h2>
           <p style={{ color: '#cbd5e1', maxWidth: 720, margin: '0 auto 18px', lineHeight: 1.7 }}>{T.finalText}</p>
-          <button onClick={() => navigate('/demo')} className="pulse-glow" style={{ background: 'linear-gradient(135deg,#10b981,#059669)', color: '#fff', border: 'none', padding: '12px 22px', borderRadius: 12, fontWeight: 800, fontSize: 15, cursor: 'pointer' }}>
-            {T.ctaPrimary}
+          <button onClick={() => navigate('/torneo/crear')} className="pulse-glow" style={{ background: 'linear-gradient(135deg,#10b981,#059669)', color: '#fff', border: 'none', padding: '12px 22px', borderRadius: 12, fontWeight: 800, fontSize: 15, cursor: 'pointer' }}>
+            🎾 Crear mi torneo →
           </button>
         </div>
       </section>
