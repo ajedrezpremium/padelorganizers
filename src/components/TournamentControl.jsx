@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import ProPaywall from './ProPaywall';
 import {
   buildTaskList, TASK_PHASES, taskStats, readManualTasks, toggleManualTask,
   regenerateBracket, loadDemoTournament, tournamentName, currentSeason,
@@ -150,6 +151,7 @@ export default function TournamentControl({ lang = 'es' }) {
           </div>
         </div>
         <p style={{ fontSize: 11.5, color: 'var(--padel-muted)', margin: '0 0 18px' }}>ℹ️ {T.demoNote}</p>
+        <div style={{ marginBottom: 18 }}><ProPaywall lang={lang} feature="Central de Control" cta="Desbloquear Pro" /></div>
 
         {/* KPI bar */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px,1fr))', gap: 12, marginBottom: 20 }}>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const I18N = {
@@ -101,8 +101,20 @@ const sectionStyle = { maxWidth: '1100px', margin: '0 auto', padding: '0 24px' }
 export default function LaunchPage({ lang = 'es' }) {
   const T = I18N[lang] || I18N.es;
   const navigate = useNavigate();
+  const [checkoutBusy, setCheckoutBusy] = useState(null);
   const offers = T.offers || [];
   const segments = T.segments || [];
+
+  const goCheckout = async (plan) => {
+    setCheckoutBusy(plan);
+    try {
+      const r = await fetch('/api/checkout-subscription', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ plan }) });
+      const j = await r.json();
+      if (j.url) window.location.href = j.url;
+      else if (j.demo) { alert(j.message || 'Modo demo: Stripe no configurado'); setCheckoutBusy(null); }
+      else throw new Error(j.error || 'error');
+    } catch (e) { alert(e.message || 'Error al iniciar el pago'); setCheckoutBusy(null); }
+  };
 
   return (
     <div>
@@ -144,11 +156,14 @@ export default function LaunchPage({ lang = 'es' }) {
                 <h3 style={{ fontSize: 16, fontWeight: 800, color: '#fff', marginBottom: 8 }}>{p.name}</h3>
                 <div style={{ fontSize: 28, fontWeight: 900, color: p.hot ? '#84cc16' : '#fff' }}>{p.price}</div>
                 <div style={{ fontSize: 13, color: '#94a3b8' }}>{p.period}</div>
-                <ul style={{ listStyle: 'none', padding: 0, margin: '14px 0 0' }}>
+                <ul style={{ listStyle: 'none', padding: 0, margin: '14px 0 14px' }}>
                   {(p.features || []).map((f, j) => (
                     <li key={j} style={{ fontSize: 14, color: '#cbd5e1', padding: '5px 0', borderBottom: '1px dashed rgba(255,255,255,0.06)' }}>✓ {f}</li>
                   ))}
                 </ul>
+                <button onClick={() => goCheckout(p.hot ? 'pro' : 'starter')} disabled={!!checkoutBusy} style={{ width: '100%', padding: '12px', borderRadius: 10, border: 'none', background: p.hot ? 'linear-gradient(135deg,#10b981,#059669)' : 'rgba(255,255,255,0.08)', color: '#fff', fontWeight: 800, fontSize: 13, cursor: checkoutBusy ? 'wait' : 'pointer', opacity: checkoutBusy ? 0.6 : 1 }}>
+                  {checkoutBusy === (p.hot ? 'pro' : 'starter') ? '…' : p.hot ? 'Activar Pro — 3 meses gratis →' : 'Empezar gratis →'}
+                </button>
               </div>
             ))}
           </div>
@@ -187,9 +202,14 @@ export default function LaunchPage({ lang = 'es' }) {
             ))}
           </div>
           <h3 style={{ fontSize: 24, fontWeight: 900, color: '#fff', marginTop: 40 }}>{T.cta}</h3>
-          <button onClick={() => navigate('/demo')} className="pulse-glow" style={{ marginTop: 18, background: 'linear-gradient(135deg,#10b981,#059669)', color: '#fff', border: 'none', padding: '14px 32px', borderRadius: 12, fontWeight: 800, fontSize: 15, cursor: 'pointer' }}>
-            🏆 {T.ctaDemo}
-          </button>
+          <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', marginTop: 18 }}>
+            <button onClick={() => goCheckout('pro')} disabled={!!checkoutBusy} style={{ background: 'linear-gradient(135deg,#10b981,#059669)', color: '#fff', border: 'none', padding: '14px 32px', borderRadius: 12, fontWeight: 800, fontSize: 15, cursor: checkoutBusy ? 'wait' : 'pointer' }}>
+              🏆 Activar Pro — 3 meses gratis
+            </button>
+            <button onClick={() => navigate('/demo')} style={{ background: 'rgba(255,255,255,0.06)', color: '#fff', border: '1px solid rgba(255,255,255,0.2)', padding: '14px 32px', borderRadius: 12, fontWeight: 800, fontSize: 15, cursor: 'pointer' }}>
+              🚀 {T.ctaDemo}
+            </button>
+          </div>
         </div>
       </section>
 
