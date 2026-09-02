@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, lazy, Suspense } from 'react';
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import HeaderPadel from './components/HeaderPadel';
 import LandingPadel from './components/LandingPadel';
 import ErrorBoundary from './components/ErrorBoundary';
@@ -135,8 +135,8 @@ export default function App() {
           <Route path="/livepro" element={<LiveScorePro lang={lang} state={store} />} />
           <Route path="/club" element={<ClubApp lang={lang} />} />
           <Route path="/socios" element={<MembersApp lang={lang} />} />
-          <Route path="/crm" element={<ClubCrm lang={lang} />} />
-          <Route path="/panel" element={<OwnerDashboard lang={lang} />} />
+          <Route path="/crm" element={<Navigate to="/admin" replace />} />
+          <Route path="/panel" element={<Navigate to="/admin" replace />} />
           <Route path="/iot" element={<IotAccess lang={lang} />} />
           <Route path="/luces" element={<QrLight lang={lang} />} />
           <Route path="/sponsors" element={<SponsorsManager lang={lang} />} />
