@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import ProPaywall from './ProPaywall';
 import {
   buildTaskList, TASK_PHASES, taskStats, readManualTasks, toggleManualTask,
-  regenerateBracket, clearBracket, generateSchedule, loadDemoTournament, tournamentName, currentSeason,
+  regenerateBracket, clearBracket, generateSchedule, generateGroupsForControl, loadDemoTournament, tournamentName, currentSeason,
 } from '../services/tournamentTasks';
 import { getState } from '../services/store';
 
@@ -126,6 +126,7 @@ export default function TournamentControl({ lang = 'es' }) {
     if (t.action.kind === 'navigate') nav(t.action.href);
     if (t.action.kind === 'build') { regenerateBracket(); refresh(); }
     if (t.action.kind === 'schedule') { generateSchedule(); refresh(); }
+    if (t.action.kind === 'groups') { generateGroupsForControl(); refresh(); }
     if (t.action.kind === 'none') { setManual(toggleManualTask(t.key)); refresh(); }
   };
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useStore } from '../services/store';
+import { useStore, setState } from '../services/store';
 import { pullState } from '../services/cloudService';
 import { COURT_STATUS } from '../services/padelEngine';
 import AnalyticsBoard from './AnalyticsBoard';
@@ -187,6 +187,15 @@ export default function TournamentPublic({ lang = 'es' }) {
   const [loading, setLoading] = useState(false);
   const [missing, setMissing] = useState(false);
   const [joined, setJoined] = useState(false);
+  const [editingPlayerId, setEditingPlayerId] = useState(null);
+  const [editPlayerName, setEditPlayerName] = useState('');
+  const [editPlayerElo, setEditPlayerElo] = useState(1500);
+  const [showAddPlayer, setShowAddPlayer] = useState(false);
+  const [newPlayerName, setNewPlayerName] = useState('');
+  const [newPlayerElo, setNewPlayerElo] = useState(1500);
+  const [showAddPair, setShowAddPair] = useState(false);
+  const [pairP1, setPairP1] = useState('');
+  const [pairP2, setPairP2] = useState('');
 
   const isLive = store.tournament?.id === id;
   const state = isLive ? store : remote;
@@ -248,6 +257,43 @@ export default function TournamentPublic({ lang = 'es' }) {
     setTimeout(() => setJoined(false), 4000);
   };
 
+  const canEdit = isLive;
+  const startEditPlayer = (p) => { setEditingPlayerId(p.id); setEditPlayerName(p.name); setEditPlayerElo(p.elo); };
+  const saveEditPlayer = () => {
+    if (!editingPlayerId) return;
+    const st = getState();
+    const upd = st.players.map(pl => pl.id===editingPlayerId ? { ...pl, name: editPlayerName.trim()||pl.name, elo: Number(editPlayerElo)||pl.elo, level: Math.round((1 + (Number(editPlayerElo)-1200)/200)*10)/10 } : pl);
+    setState({ ...st, players: upd });
+    setEditingPlayerId(null);
+  };
+  const deletePlayer = (pid) => {
+    if (!confirm('¿Borrar jugador?')) return;
+    const st = getState();
+    setState({ ...st, players: st.players.filter(p=>p.id!==pid), pairs: st.pairs.filter(pr=> pr.player1!==st.players.find(x=>x.id===pid)?.name && pr.player2!==st.players.find(x=>x.id===pid)?.name) });
+  };
+  const addPlayer = () => {
+    if (!newPlayerName.trim()) return;
+    const st = getState();
+    const np = { id:`pl-${Date.now()}`, name: newPlayerName.trim(), elo: Number(newPlayerElo)||1500, level: Math.round((1 + (Number(newPlayerElo)-1200)/200)*10)/10, matchesPlayed:0, wins:0, losses:0 };
+    setState({ ...st, players: [...st.players, np] });
+    setNewPlayerName(''); setShowAddPlayer(false);
+  };
+  const deletePair = (pairId) => {
+    if (!confirm('¿Borrar pareja?')) return;
+    const st = getState();
+    setState({ ...st, pairs: st.pairs.filter(p=>p.id!==pairId) });
+  };
+  const addPair = () => {
+    if (!pairP1 || !pairP2 || pairP1===pairP2) return alert('Elige dos jugadores distintos');
+    const st = getState();
+    const p1 = st.players.find(p=>p.id===pairP1);
+    const p2 = st.players.find(p=>p.id===pairP2);
+    if (!p1 || !p2) return;
+    const np = { id:`p-${Date.now()}`, player1: p1.name, player2: p2.name, ranking: st.pairs.length+1, points:0, gamesWon:0, gamesLost:0, diff:0, matchesPlayed:0 };
+    setState({ ...st, pairs: [...st.pairs, np] });
+    setShowAddPair(false); setPairP1(''); setPairP2('');
+  };
+
   return (
     <div style={{ padding: '24px', maxWidth: '1100px', margin: '0 auto' }}>
       {/* HERO */}
@@ -304,27 +350,77 @@ export default function TournamentPublic({ lang = 'es' }) {
       {/* DATOS EN VIVO */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px', marginBottom: '16px' }}>
         <div style={card}>
-          <h3 style={{ fontSize: '16px', fontWeight: 800, color: '#fff', margin: '0 0 12px' }}>{T.players}</h3>
+          <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:12 }}>
+            <h3 style={{ fontSize: '16px', fontWeight: 800, color: '#fff', margin: 0 }}>{T.players}</h3>
+            {canEdit && <button onClick={()=>setShowAddPlayer(v=>!v)} style={{ padding:'6px 10px', borderRadius:8, border:'1px solid var(--padel-border)', background:'rgba(16,185,129,0.12)', color:'#a3e635', fontWeight:700, fontSize:11, cursor:'pointer' }}>+ Jugador</button>}
+          </div>
+          {canEdit && showAddPlayer && (
+            <div style={{ display:'flex', gap:8, marginBottom:10, flexWrap:'wrap' }}>
+              <input value={newPlayerName} onChange={e=>setNewPlayerName(e.target.value)} placeholder="Nombre" style={{ flex:'1 1 120px', padding:'8px 10px', borderRadius:8, border:'1px solid var(--padel-border)', background:'var(--padel-hover-bg)', color:'#fff', fontSize:12 }} />
+              <input type="number" value={newPlayerElo} onChange={e=>setNewPlayerElo(e.target.value)} placeholder="Elo" style={{ width:90, padding:'8px 10px', borderRadius:8, border:'1px solid var(--padel-border)', background:'var(--padel-hover-bg)', color:'#fff', fontSize:12 }} />
+              <button onClick={addPlayer} style={{ padding:'8px 12px', borderRadius:8, border:'none', background:'#10b981', color:'#fff', fontWeight:800, fontSize:12, cursor:'pointer' }}>Añadir</button>
+            </div>
+          )}
           {sortedPlayers.map((p, i) => (
             <div key={p.id} style={{ ...rowCls, ...(i === 0 ? { background: 'rgba(132,204,22,0.08)' } : {}) }}>
-<span style={{ fontWeight: 700, color: i === 0 ? '#84cc16' : '#f0fdf4', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <span style={{ fontSize: '11px', color: '#64748b', width: 18 }}>{i + 1}</span>
-                  <button onClick={() => navigate(`/player/${encodeURIComponent(p.name)}?t=${encodeURIComponent(id)}`)} style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer', font: 'inherit', color: 'inherit', textAlign: 'left', textDecoration: 'underline', textDecorationColor: 'rgba(16,185,129,0.4)', textUnderlineOffset: '3px' }}>{p.name}</button>
-                </span>
-                <span style={{ fontSize: '12px', fontWeight: 800, color: '#cbd5e1' }}>
-                  <span style={{ color: '#10b981' }}>{'⭐'.repeat(Math.max(1, Math.round(p.level)))}</span> {p.level.toFixed(1)}
-                </span>
+              {editingPlayerId===p.id ? (
+                <>
+                  <span style={{ display:'flex', gap:6, alignItems:'center', flex:1 }}>
+                    <input value={editPlayerName} onChange={e=>setEditPlayerName(e.target.value)} style={{ flex:1, padding:'6px 8px', borderRadius:6, border:'1px solid var(--padel-border)', background:'var(--padel-hover-bg)', color:'#fff', fontSize:12 }} />
+                    <input type="number" value={editPlayerElo} onChange={e=>setEditPlayerElo(e.target.value)} style={{ width:80, padding:'6px 8px', borderRadius:6, border:'1px solid var(--padel-border)', background:'var(--padel-hover-bg)', color:'#fff', fontSize:12 }} />
+                  </span>
+                  <span style={{ display:'flex', gap:4 }}>
+                    <button onClick={saveEditPlayer} style={{ padding:'4px 8px', borderRadius:6, border:'none', background:'#10b981', color:'#fff', fontWeight:700, fontSize:11, cursor:'pointer' }}>✓</button>
+                    <button onClick={()=>setEditingPlayerId(null)} style={{ padding:'4px 8px', borderRadius:6, border:'1px solid var(--padel-border)', background:'transparent', color:'#94a3b8', fontSize:11, cursor:'pointer' }}>✕</button>
+                  </span>
+                </>
+              ) : (
+                <>
+                  <span style={{ fontWeight: 700, color: i === 0 ? '#84cc16' : '#f0fdf4', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span style={{ fontSize: '11px', color: '#64748b', width: 18 }}>{i + 1}</span>
+                    <button onClick={() => navigate(`/player/${encodeURIComponent(p.name)}?t=${encodeURIComponent(id)}`)} style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer', font: 'inherit', color: 'inherit', textAlign: 'left', textDecoration: 'underline', textDecorationColor: 'rgba(16,185,129,0.4)', textUnderlineOffset: '3px' }}>{p.name}</button>
+                  </span>
+                  <span style={{ display:'flex', alignItems:'center', gap:8 }}>
+                    <span style={{ fontSize: '12px', fontWeight: 800, color: '#cbd5e1' }}><span style={{ color: '#10b981' }}>{'⭐'.repeat(Math.max(1, Math.round(p.level)))}</span> {p.level.toFixed(1)}</span>
+                    {canEdit && (
+                      <>
+                        <button onClick={()=>startEditPlayer(p)} style={{ background:'none', border:'1px solid var(--padel-border)', color:'#94a3b8', borderRadius:6, padding:'2px 6px', fontSize:10, cursor:'pointer' }}>✎</button>
+                        <button onClick={()=>deletePlayer(p.id)} style={{ background:'none', border:'1px solid rgba(251,113,133,0.3)', color:'#fb7185', borderRadius:6, padding:'2px 6px', fontSize:10, cursor:'pointer' }}>🗑</button>
+                      </>
+                    )}
+                  </span>
+                </>
+              )}
             </div>
           ))}
         </div>
 
         <div style={card}>
-          <h3 style={{ fontSize: '16px', fontWeight: 800, color: '#fff', margin: '0 0 12px' }}>{T.pairs}</h3>
+          <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:12 }}>
+            <h3 style={{ fontSize: '16px', fontWeight: 800, color: '#fff', margin: 0 }}>{T.pairs}</h3>
+            {canEdit && <button onClick={()=>setShowAddPair(v=>!v)} style={{ padding:'6px 10px', borderRadius:8, border:'1px solid var(--padel-border)', background:'rgba(251,191,36,0.12)', color:'#fbbf24', fontWeight:700, fontSize:11, cursor:'pointer' }}>+ Pareja</button>}
+          </div>
+          {canEdit && showAddPair && (
+            <div style={{ display:'flex', gap:8, marginBottom:10, flexWrap:'wrap' }}>
+              <select value={pairP1} onChange={e=>setPairP1(e.target.value)} style={{ flex:1, padding:'8px', borderRadius:8, border:'1px solid var(--padel-border)', background:'var(--padel-hover-bg)', color:'#fff', fontSize:12 }}>
+                <option value="">Jugador 1</option>
+                {sortedPlayers.map(pl=><option key={pl.id} value={pl.id}>{pl.name}</option>)}
+              </select>
+              <select value={pairP2} onChange={e=>setPairP2(e.target.value)} style={{ flex:1, padding:'8px', borderRadius:8, border:'1px solid var(--padel-border)', background:'var(--padel-hover-bg)', color:'#fff', fontSize:12 }}>
+                <option value="">Jugador 2</option>
+                {sortedPlayers.map(pl=><option key={pl.id} value={pl.id}>{pl.name}</option>)}
+              </select>
+              <button onClick={addPair} style={{ padding:'8px 12px', borderRadius:8, border:'none', background:'#fbbf24', color:'#1f2937', fontWeight:800, fontSize:12, cursor:'pointer' }}>Añadir</button>
+            </div>
+          )}
           {sortedPairs.length === 0 && <div style={{ fontSize: '13px', color: '#64748b' }}>—</div>}
           {sortedPairs.map((p) => (
             <div key={p.id} style={rowCls}>
               <span style={{ fontWeight: 700, color: '#f0fdf4' }}>#{p.ranking} {p.player1.split(' ')[0]} / {p.player2.split(' ')[0]}</span>
-              <span style={{ fontSize: '12px', fontWeight: 800, color: '#84cc16' }}>{p.points} {T.points}</span>
+              <span style={{ display:'flex', alignItems:'center', gap:8 }}>
+                <span style={{ fontSize: '12px', fontWeight: 800, color: '#84cc16' }}>{p.points} {T.points}</span>
+                {canEdit && <button onClick={()=>deletePair(p.id)} style={{ background:'none', border:'1px solid rgba(251,113,133,0.3)', color:'#fb7185', borderRadius:6, padding:'2px 6px', fontSize:10, cursor:'pointer' }}>🗑</button>}
+              </span>
             </div>
           ))}
         </div>
