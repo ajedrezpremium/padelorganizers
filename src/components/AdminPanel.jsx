@@ -119,7 +119,22 @@ export default function AdminPanel({ lang='es' }) {
           <div style={{ fontSize:11, color:'var(--padel-muted)', marginTop:8 }}>→ Infantil mucho alumno pero poco margen. Invierte en adultos/particulares.</div>
         </div>
       )}
-      {tab==='INTELIGENCIA' && <div style={card}><h3 style={h2}>🤖 AI Business Manager</h3><p style={{ fontSize:13, color:'var(--padel-muted)' }}>“Ingresos +8% pero margen -3% por horas personal. Pista 3 94% 18-21h → sube prime. 18 alumnos en riesgo (7 Adultos B).”</p></div>}
+      {tab==='INTELIGENCIA' && (
+        <div style={card}>
+          <h3 style={h2}>🤖 AI Business Manager — “¿Cómo va mi club?”</h3>
+          <div style={{ background:'rgba(16,185,129,0.08)', border:'1px solid rgba(16,185,129,0.2)', borderRadius:12, padding:14, marginBottom:12 }}>
+            <div style={{ fontSize:13, color:'var(--padel-text)', lineHeight:1.6 }}>
+              “Ingresos <b>+8%</b> vs mes anterior, pero margen <b>-3%</b> por horas personal. Pista 3 <b>94% 18-21h</b> → sube prime +10%.<br/>
+              <b>18 alumnos en riesgo</b> (7 Adultos B, 5 Infantil, 6 Particulares) — {store.players?.length||0} jugadores en torneo activo, {kpis?.facturacionTotal ? fmtEuros(kpis.facturacionTotal) : '—'} facturados. Lanza campaña retención esta semana.”
+            </div>
+          </div>
+          <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(200px,1fr))', gap:10 }}>
+            <div style={{ background:'var(--padel-hover-bg)', borderRadius:10, padding:12 }}><div style={{ fontSize:11, color:'var(--padel-muted)', fontWeight:700 }}>ALERTA CHURN</div><div style={{ fontSize:13, fontWeight:800, color:'#fb7185', marginTop:4 }}>Carlos 87% · Pedro 54% · Juan 12%</div></div>
+            <div style={{ background:'var(--padel-hover-bg)', borderRadius:10, padding:12 }}><div style={{ fontSize:11, color:'var(--padel-muted)', fontWeight:700 }}>RECOMENDACIÓN TARIFA</div><div style={{ fontSize:13, fontWeight:800, color:'#10b981', marginTop:4 }}>Pista 3 prime +10% = +€420/mes</div></div>
+            <div style={{ background:'var(--padel-hover-bg)', borderRadius:10, padding:12 }}><div style={{ fontSize:11, color:'var(--padel-muted)', fontWeight:700 }}>CAMPAÑA AUTO</div><div style={{ fontSize:12, color:'var(--padel-text)', marginTop:4 }}>“30 días sin asistir” → 18 leads · “Abono vence 15d” → 12 leads</div></div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

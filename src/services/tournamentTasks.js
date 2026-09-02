@@ -6,7 +6,7 @@
  */
 
 import { getState, resetState, buildTournament } from './store';
-import { generatePredictivePairings, generatePredictiveMatches, generateKnockout, generateMexicanoPairings, scheduleWithRest } from './padelEngine';
+import { generatePredictivePairings, generatePredictiveMatches, generateKnockout, generateMexicanoPairings, scheduleWithRest, generateGroups } from './padelEngine';
 import { currentSeason } from './leagueService';
 
 function state() { return getState() || {}; }
@@ -52,8 +52,21 @@ export function generateSchedule() {
   if (!data.matches?.length || !data.courts?.length) return 0;
   const slot = parseInt(String(data.tournament?.slot || '75').replace(/\D/g,''),10) || 75;
   const sched = scheduleWithRest(data.matches, data.courts, 9, slot, 30);
-  buildTournament({ ...data, schedule: sched, tournament: { ...data.tournament, state: 'SCHEDULED', status: 'scheduled' } });
+  buildTournament({ ...data, schedule: sched, tournament: { ...data.tournament, state: 'SCHEDULED', status: 'scheduled', auditLog: [...(data.tournament.auditLog||[]), { at: new Date().toISOString(), action: 'schedule', count: sched.length }] } });
   return sched.length;
+}
+export function generateGroupsForControl() {
+  const data = state();
+  if (!data.players?.length) return 0;
+  const groups = generateGroups(data, 4);
+  buildTournament({ ...data, groups, tournament: { ...data.tournament, auditLog: [...(data.tournament.auditLog||[]), { at: new Date().toISOString(), action: 'groups', count: groups.length }] } });
+  return groups.length;
+}
+export function recordWO(matchId, reason='W.O.') {
+  const data = state();
+  const upd = data.matches.map(m=> m.id===matchId ? { ...m, status: 'wo', woReason: reason, audit: [...(m.audit||[]), { at: new Date().toISOString(), by: 'árbitro', change: reason }] } : m);
+  buildTournament({ ...data, matches: upd, tournament: { ...data.tournament, auditLog: [...(data.tournament.auditLog||[]), { at: new Date().toISOString(), action: 'wo', matchId, reason }] } });
+  return upd.length;
 }
 export function loadDemoTournament() { resetState(); return getState(); }
 
@@ -83,7 +96,7 @@ export function buildTaskList() {
     // ── Fase 2 · Inscripciones y difusión (10) ──
     { phase: 2, auto: true, key: 's-players', title: 'Jugadores inscritos (mínimo 4)', done: () => hasPlayers(4), action: { kind: 'navigate', href: '/importar', label: 'Añadir' } },
     { phase: 2, auto: true, key: 's-nivels', title: 'Nivel / Elo asignado a cada jugador', done: () => (state().players || []).length >= 4 && (state().players || []).every(p => (p.elo || 0) > 0), action: { kind: 'navigate', href: '/importar', label: 'Ajustar' } },
-    { phase: 2, auto: false, key: 's-groups', title: 'Categorías o grupos por nivel creados', done: () => checkManual('s-groups'), action: { kind: 'none', label: 'Manual' } },
+    { phase: 2, auto: true, key: 's-groups', title: 'Grupos Round Robin generados (4×4)', done: () => (state().groups||[]).length>0, action: { kind: 'groups', label: 'Generar grupos' } },
     { phase: 2, auto: false, key: 's-pay', title: 'Pago previo verificado (Stripe/PayPal)', done: () => checkManual('s-pay'), action: { kind: 'none', label: 'Manual' } },
     { phase: 2, auto: false, key: 's-flyer', title: 'Flyer digital generado y difundido', done: () => checkManual('s-flyer'), action: { kind: 'none', label: 'Manual' } },
     { phase: 2, auto: false, key: 's-social', title: 'Difusión en redes / WhatsApp / recepción', done: () => checkManual('s-social'), action: { kind: 'none', label: 'Manual' } },
