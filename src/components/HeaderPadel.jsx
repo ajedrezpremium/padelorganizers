@@ -121,8 +121,35 @@ const HeaderPadel = ({ lang = 'es', onLanguageChange }) => {
       borderBottom: '1px solid var(--padel-header-border)', position: 'sticky', top: 0, zIndex: 1000,
       gap: '12px', flexWrap: 'wrap',
     }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }} onClick={() => navigate('/')}>
-        <LogoPadel size={30} tagline="COURTMANAGER® AI" />
+      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }} onClick={() => navigate('/')}>
+          <LogoPadel size={30} tagline="COURTMANAGER® AI" />
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '4px 8px', background: 'rgba(56,189,248,0.08)', border: '1px solid rgba(56,189,248,0.18)', borderRadius: 12 }}>
+          <span style={{ fontSize: 10, fontWeight: 800, color: '#38bdf8', letterSpacing: 0.8, marginRight: 4 }}>PRODUCTOS</span>
+          <NavDrop tooltip="Admin PRO" to="/admin" icon="dashboard" color="#38bdf8" active={location.pathname.startsWith('/admin')} highlight children={[
+            ['🏢 Panel Admin PRO', '/admin'],
+            ['📊 Dashboard CEO', '/admin'],
+            ['💶 Finanzas', '/admin'],
+          ]} />
+          <NavDrop
+            tooltip={t.tournaments}
+            to="/torneo"
+            icon="raquet"
+            color="#34d399"
+            active={isOn('/torneo')}
+            children={[
+              ['🏟️ ' + t.tournaments, '/torneo'],
+              ['🗓️ ' + t.calendar, '/calendario'],
+              ['📊 ' + t.dashboard, '/dashboard'],
+              ['🎬 ' + t.livepro, '/livepro'],
+              ['📺 ' + t.live, '/live'],
+              ['🎛️ ' + t.control, '/control'],
+              ['📈 ' + t.analytics, '/analytics'],
+              ['🤝 ' + t.match, '/match'],
+            ]}
+          />
+        </div>
       </div>
 
       <nav style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
@@ -140,32 +167,6 @@ const HeaderPadel = ({ lang = 'es', onLanguageChange }) => {
             <NavIcon name={role === 'member' || role === 'both' ? 'membercard' : 'student'} size={20} />
           </Link>
         )}
-
-        {/* 1 · Admin PRO (nº1, pack de pago tras prueba) */}
-        <NavDrop tooltip="Admin PRO" to="/admin" icon="dashboard" color="#38bdf8" active={location.pathname.startsWith('/admin')} highlight children={[
-          ['🏢 Panel Admin PRO', '/admin'],
-          ['📊 Dashboard CEO', '/admin'],
-          ['💶 Finanzas', '/admin'],
-        ]} />
-
-        {/* 2 · Torneos (hub premium de eventos: dashboard, live, control, analíticas, match) */}
-        <NavDrop
-          tooltip={t.tournaments}
-          to="/torneo"
-          icon="raquet"
-          color="#34d399"
-          active={isOn('/torneo')}
-          children={[
-            ['🏟️ ' + t.tournaments, '/torneo'],
-            ['🗓️ ' + t.calendar, '/calendario'],
-            ['📊 ' + t.dashboard, '/dashboard'],
-            ['🎬 ' + t.livepro, '/livepro'],
-            ['📺 ' + t.live, '/live'],
-            ['🎛️ ' + t.control, '/control'],
-            ['📈 ' + t.analytics, '/analytics'],
-            ['🤝 ' + t.match, '/match'],
-          ]}
-        />
 
         {/* 2 · Club (reservas, socios, mi carné) */}
         <NavDrop tooltip={t.club} to="/club" icon="club" color="#10b981" active={location.pathname.startsWith('/club') || location.pathname.startsWith('/iot')} children={[
