@@ -36,7 +36,6 @@ export default function TournamentInscriptions({ tournamentId, lang='es' }) {
         {st==='DRAFT' && <button onClick={()=>setState('OPEN')} style={{ padding:'8px 14px', borderRadius:8, border:'none', background:'#10b981', color:'#fff', fontWeight:700, fontSize:12, cursor:'pointer' }}>Abrir inscripciones →</button>}
         {st==='OPEN' && <button onClick={()=>setState('REGISTRATION_CLOSED')} style={{ padding:'8px 14px', borderRadius:8, border:'none', background:'#fbbf24', color:'#1f2937', fontWeight:700, fontSize:12, cursor:'pointer' }}>Cerrar inscripciones → Generar cuadro</button>}
         <button onClick={()=>{ navigator.clipboard?.writeText(link); setCopied(true); setTimeout(()=>setCopied(false),1500); }} style={{ padding:'8px 14px', borderRadius:8, border:'1px solid var(--padel-border)', background:'var(--padel-hover-bg)', color:'var(--padel-text)', fontWeight:700, fontSize:12, cursor:'pointer' }}>{copied?'✓ Copiado':`🔗 Copiar link`}</button>
-        <a href={link} target="_blank" rel="noreferrer" style={{ padding:'8px 14px', borderRadius:8, border:'1px solid var(--padel-border)', background:'transparent', color:'var(--padel-muted)', fontWeight:700, fontSize:12, textDecoration:'none' }}>↗ Ver página pública</a>
       </div>
       {st==='OPEN' && (
         <div style={{ display:'flex', gap:12, alignItems:'center', marginTop:12, flexWrap:'wrap' }}>
