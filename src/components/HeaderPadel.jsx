@@ -103,7 +103,7 @@ const HeaderPadel = ({ lang = 'es', onLanguageChange }) => {
     setRole(isMember && isStudent ? 'both' : isMember ? 'member' : isStudent ? 'student' : 'player');
   }, [user]);
 
-  const LANG_LABELS = { es: { label: 'ES', flag: '🇪🇸', tooltip: 'Cambiar a español' }, en: { label: 'EN', flag: '🇬🇧', tooltip: 'Switch to English' }, fr: { label: 'FR', flag: '🇫🇷', tooltip: 'Passer au français' }, pt: { label: 'PT', flag: '🇵🇹', tooltip: 'Mudar para português' } };
+  const LANG_LABELS = { es: { label: 'ES', tooltip: 'Cambiar a español' }, en: { label: 'EN', tooltip: 'Switch to English' }, fr: { label: 'FR', tooltip: 'Passer au français' }, pt: { label: 'PT', tooltip: 'Mudar para português' } };
   const [langOpen, setLangOpen] = useState(false);
 
   const isOn = (path) => {
@@ -125,8 +125,7 @@ const HeaderPadel = ({ lang = 'es', onLanguageChange }) => {
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }} onClick={() => navigate('/')}>
           <LogoPadel size={30} tagline="COURTMANAGER® AI" />
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '4px 8px', background: 'rgba(56,189,248,0.08)', border: '1px solid rgba(56,189,248,0.18)', borderRadius: 12 }}>
-          <span style={{ fontSize: 10, fontWeight: 800, color: '#38bdf8', letterSpacing: 0.8, marginRight: 4 }}>PRODUCTOS</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '4px 6px', background: 'rgba(56,189,248,0.08)', border: '1px solid rgba(56,189,248,0.18)', borderRadius: 12 }}>
           <NavDrop tooltip="Admin PRO" to="/admin" icon="dashboard" color="#38bdf8" active={location.pathname.startsWith('/admin')} highlight children={[
             ['🏢 Panel Admin PRO', '/admin'],
             ['📊 Dashboard CEO', '/admin'],
@@ -183,11 +182,7 @@ const HeaderPadel = ({ lang = 'es', onLanguageChange }) => {
           ['👨‍🏫 ' + t.coachDiscovery, '/coaches'],
         ]} />
 
-        {/* 4 · CRM */}
-        <NavDrop tooltip={t.crm} to="/crm" icon="crm" color="#2dd4bf" active={location.pathname.startsWith('/crm') || location.pathname.startsWith('/panel')} children={[
-          ['👔 ' + t.crm, '/crm'],
-          ['📈 ' + t.ownerPanel, '/panel'],
-        ]} />
+
 
         {/* 5 · Marketing */}
         <NavDrop tooltip={t.marketing} to="/marketing" icon="marketing" color="#fb7185" active={location.pathname.startsWith('/marketing') || location.pathname.startsWith('/sponsors') || location.pathname.startsWith('/posts')} children={[
@@ -223,13 +218,13 @@ const HeaderPadel = ({ lang = 'es', onLanguageChange }) => {
 
         <div style={{ position: 'relative' }} onMouseLeave={() => setLangOpen(false)}>
           <button onClick={() => setLangOpen(o=>!o)} title={LANG_LABELS[lang]?.tooltip} aria-label={LANG_LABELS[lang]?.tooltip} style={{ display:'flex', alignItems:'center', gap:6, background:'var(--padel-hover-bg)', color:'var(--padel-text)', border:'1px solid var(--padel-border)', padding:'6px 10px', borderRadius:8, fontSize:12, fontWeight:800, cursor:'pointer' }}>
-            <span>{LANG_LABELS[lang]?.flag}</span> {LANG_LABELS[lang]?.label} <span style={{ fontSize:10, opacity:0.6 }}>▼</span>
+            {LANG_LABELS[lang]?.label} <span style={{ fontSize:10, opacity:0.6 }}>▼</span>
           </button>
           {langOpen && (
-            <div style={{ position:'absolute', top:36, right:0, zIndex:1200, background:'var(--padel-card-bg)', border:'1px solid var(--padel-border)', borderRadius:10, boxShadow:'0 12px 32px rgba(0,0,0,0.35)', padding:4, minWidth:140, display:'flex', flexDirection:'column', gap:2 }}>
+            <div style={{ position:'absolute', top:36, right:0, zIndex:1200, background:'var(--padel-card-bg)', border:'1px solid var(--padel-border)', borderRadius:10, boxShadow:'0 12px 32px rgba(0,0,0,0.35)', padding:4, minWidth:120, display:'flex', flexDirection:'column', gap:2 }}>
               {['es','en','fr','pt'].map(l=>(
                 <button key={l} onClick={()=>{ onLanguageChange && onLanguageChange(l); setLangOpen(false); }} style={{ display:'flex', alignItems:'center', gap:8, padding:'8px 10px', borderRadius:8, border:'none', background: lang===l?'rgba(16,185,129,0.15)':'transparent', color: lang===l?'#10b981':'var(--padel-text)', fontWeight:700, fontSize:13, cursor:'pointer', textAlign:'left' }}>
-                  <span>{LANG_LABELS[l].flag}</span> {LANG_LABELS[l].label} <span style={{ marginLeft:'auto', fontSize:11, color:'var(--padel-muted)' }}>{l.toUpperCase()}</span>
+                  {LANG_LABELS[l].label}
                 </button>
               ))}
             </div>

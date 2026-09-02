@@ -66,6 +66,7 @@ export function setState(updater) {
   if (next === state) return;
   state = next;
   emit();
+  persistTournamentMap(next);
 }
 
 export function resetState() {
@@ -80,6 +81,7 @@ export function buildTournament(data) {
   if (!data || !data.tournament) return;
   state = data;
   emit();
+  persistTournamentMap(data);
 }
 
 export const TOURNAMENT_STATES = ['DRAFT','OPEN','REGISTRATION_CLOSED','DRAW_CREATED','SCHEDULED','LIVE','FINAL','CLOSED','ARCHIVED'];
@@ -123,6 +125,33 @@ export function transitionState(newState) {
   if (!TOURNAMENT_STATES.includes(newState)) return cur;
   const next = { ...cur, tournament: { ...cur.tournament, state: newState, status: newState.toLowerCase(), auditLog: [...(cur.tournament.auditLog||[]), { at: new Date().toISOString(), from: cur.tournament.state, to: newState }] } };
   setState(next);
+  persistTournamentMap(next);
+  return next;
+}
+
+const MAP_KEY = 'padelorganizers-tournaments';
+export function persistTournamentMap(data) {
+  try {
+    const raw = localStorage.getItem(MAP_KEY);
+    const map = raw ? JSON.parse(raw) : {};
+    const id = data?.tournament?.id;
+    if (id) { map[id] = data; localStorage.setItem(MAP_KEY, JSON.stringify(map)); }
+  } catch {}
+}
+export function getTournamentById(id) {
+  try {
+    const raw = localStorage.getItem(MAP_KEY);
+    if (raw) { const map = JSON.parse(raw); if (map[id]) return map[id]; }
+  } catch {}
+  const cur = getState();
+  if (cur?.tournament?.id === id) return cur;
+  return null;
+}
+export function saveTournamentById(id, updater) {
+  const existing = getTournamentById(id) || getState();
+  const next = typeof updater === 'function' ? updater(existing) : updater;
+  if (existing.tournament?.id === getState().tournament?.id) setState(next);
+  persistTournamentMap(next);
   return next;
 }
 
