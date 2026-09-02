@@ -524,3 +524,70 @@ export function generateKnockout(data) {
   }
   return { teams, matches };
 }
+
+// --- Cuadro B / Consolación (perdedores R1) ---
+export function generateCuadroB(data, mainMatches) {
+  const losers = (mainMatches || data.matches || []).filter(m => m.status === 'completed' && m.loserIds).map(m => m.loserIds).flat();
+  if (losers.length < 2) return [];
+  const teams = [];
+  for (let i=0;i+1<losers.length;i+=2) teams.push([losers[i], losers[i+1]]);
+  return teams.map((t,i)=>({ ...pairToMatch(data, t, teams[(i+1)%teams.length]||t), round: 900+i, bracket: 'B' }));
+}
+
+// --- Grupos Round Robin ---
+export function generateGroups(data, groupSize=4) {
+  const sorted = [...data.players].sort((a,b)=>b.elo-a.elo);
+  const n = sorted.length;
+  const numGroups = Math.ceil(n/2 / groupSize);
+  const groups=[];
+  for(let g=0; g<numGroups; g++){
+    const members=[];
+    for(let i=g; i < n/2; i+=numGroups){
+      const idx=i*2;
+      if(sorted[idx]) members.push(sorted[idx].id);
+      if(sorted[idx+1]) members.push(sorted[idx+1].id);
+    }
+    if(members.length) groups.push({ id:`g${g+1}`, name:`Grupo ${String.fromCharCode(65+g)}`, memberIds: members.slice(0, groupSize*2) });
+  }
+  return groups;
+}
+
+// --- Scheduler con descanso mínimo (evita 10:30→10:35) ---
+export function scheduleWithRest(matches, courts, startHour=9, slotMin=75, restMin=30) {
+  const schedule=[];
+  const lastPlayed={};
+  let current = startHour*60;
+  const courtQueue=[...courts];
+  for(const m of matches){
+    const pIds=[...(m.playerIds1||[]), ...(m.playerIds2||[])];
+    const needRest = pIds.some(id=> lastPlayed[id] && current - lastPlayed[id] < restMin);
+    if(needRest) current += restMin;
+    const court = courtQueue.shift(); courtQueue.push(court);
+    const hour = String(Math.floor(current/60)).padStart(2,'0');
+    const min = String(current%60).padStart(2,'0');
+    schedule.push({ matchId: m.id, courtId: court.id, time: `${hour}:${min}`, slotMin });
+    pIds.forEach(id=> lastPlayed[id]=current);
+    if(schedule.length % courts.length === 0) current += slotMin;
+  }
+  return schedule;
+}
+
+// --- Points Engine ---
+export const POINTS_TABLE = { '1':1000, '2':700, '3-4':500, '5-8':350, '9-16':200, '17-32':100, '33-64':50 };
+export function pointsForPosition(pos, table=POINTS_TABLE){
+  if(table[String(pos)]) return table[String(pos)];
+  for(const k of Object.keys(table)){ if(k.includes('-')){ const [a,b]=k.split('-').map(Number); if(pos>=a && pos<=b) return table[k]; } }
+  return 0;
+}
+export function rankingFromTournament(data){
+  const finished=[...data.matches].filter(m=>m.status==='completed').sort((a,b)=>b.round-a.round);
+  const seen=new Set();
+  const order=[];
+  for(const m of finished){
+    const w=m.winnerIds||m.playerIds1||[];
+    const l=m.loserIds||m.playerIds2||[];
+    if(w.length && !seen.has(w.join(','))){ order.push(w); w.forEach(id=>seen.add(id)); }
+    if(l.length && !seen.has(l.join(','))){ order.push(l); l.forEach(id=>seen.add(id)); }
+  }
+  return order.map((ids,idx)=>({ ids, pos: idx+1, points: pointsForPosition(idx+1) }));
+}

@@ -82,10 +82,28 @@ export function buildTournament(data) {
   emit();
 }
 
+export const TOURNAMENT_STATES = ['DRAFT','OPEN','REGISTRATION_CLOSED','DRAW_CREATED','SCHEDULED','LIVE','FINAL','CLOSED','ARCHIVED'];
+export const CATEGORIES = ['masculino','femenino','mixto'];
+export const LEVELS = ['iniciacion','intermedio','avanzado','open'];
+
+export function nextState(current) {
+  const idx = TOURNAMENT_STATES.indexOf(current);
+  return idx >= 0 && idx < TOURNAMENT_STATES.length - 1 ? TOURNAMENT_STATES[idx+1] : current;
+}
+
 // Estado por defecto para "mi torneo" (además del demo importable).
 export function emptyTournamentData(id = 'torneo-organizador') {
   return {
-    tournament: { id, name: 'Mi Torneo', club: 'Mi Club', modality: 'americano', totalCourts: 4, pointsPerMatch: 24, goldPoint: true, status: 'active', lang: 'es' },
+    tournament: {
+      id, name: 'Mi Torneo', club: 'Mi Club', city: '', modality: 'americano',
+      category: 'masculino', level: 'open', gender: 'masculino',
+      categories: [{ gender: 'masculino', level: 'open', maxPairs: 16 }],
+      totalCourts: 4, pointsPerMatch: 24, goldPoint: true,
+      status: 'DRAFT', state: 'DRAFT', lang: 'es',
+      maxPairs: 32, sets: 3, gamesPerSet: 6, tieBreak: true, superTieBreak: true,
+      pointsSystem: { '1': 1000, '2': 700, '3-4': 500, '5-8': 350, '9-16': 200, '17-32': 100 },
+      auditLog: [], createdAt: new Date().toISOString()
+    },
     courts: [
       { id: 1, name: 'Pista 1', status: 'free', matchId: null, startTime: null },
       { id: 2, name: 'Pista 2', status: 'free', matchId: null, startTime: null },
@@ -95,7 +113,17 @@ export function emptyTournamentData(id = 'torneo-organizador') {
     pairs: [],
     players: [],
     matches: [],
+    groups: [],
+    schedule: [],
   };
+}
+
+export function transitionState(newState) {
+  const cur = getState();
+  if (!TOURNAMENT_STATES.includes(newState)) return cur;
+  const next = { ...cur, tournament: { ...cur.tournament, state: newState, status: newState.toLowerCase(), auditLog: [...(cur.tournament.auditLog||[]), { at: new Date().toISOString(), from: cur.tournament.state, to: newState }] } };
+  setState(next);
+  return next;
 }
 
 // Actualiza el marcador EN VIVO de un partido (juegos/puntos/sets del set actual).

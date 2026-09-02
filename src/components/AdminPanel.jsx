@@ -76,12 +76,49 @@ export default function AdminPanel({ lang='es' }) {
       )}
 
       {tab==='NEGOCIO' && <div style={card}><h3 style={h2}>Ingresos vs Gastos</h3><p style={{ fontSize:13, color:'var(--padel-muted)' }}>Escuela, cuotas, reservas, torneos, eventos, patrocinios, tienda vs profesores, pistas, alquiler, marketing. Margen = ingresos − costes.</p><div style={{ fontSize:22, fontWeight:900, color:'#10b981' }}>{fmtEuros(CEO_MOCK.ingresos - 33430)} margen</div></div>}
-      {tab==='CLIENTES' && <div style={card}><h3 style={h2}>CRM — Cliente 360º</h3><p style={{ fontSize:13, color:'var(--padel-muted)' }}>Juan · 4 años · €3.840 ingresos · 17 torneos · 23 particulares · Riesgo 12%. CLV y churn predictivo.</p></div>}
+      {tab==='CLIENTES' && (
+        <div style={card}>
+          <h3 style={h2}>CRM — Cliente 360º · CLV</h3>
+          <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(200px,1fr))', gap:12 }}>
+            {[
+              ['Juan García','4 años','€3.840','€960/año','17 torneos','23 particulares','12% riesgo','🟢'],
+              ['Carlos Ruiz','1.2 años','€420','€350/año','2 torneos','1 particular','87% riesgo','🔴'],
+              ['Pedro López','2.5 años','€1.820','€728/año','8 torneos','12 particulares','54% riesgo','🟠'],
+            ].map(([n,ant,tot,avg,tor,par,riesgo,dot])=>(
+              <div key={n} style={{ background:'var(--padel-hover-bg)', borderRadius:12, padding:12 }}>
+                <div style={{ fontWeight:800, fontSize:13 }}>{dot} {n}</div>
+                <div style={{ fontSize:11, color:'var(--padel-muted)', marginTop:4 }}>{ant} · {tot} · {avg}</div>
+                <div style={{ fontSize:11, color:'var(--padel-muted)' }}>{tor} · {par} · Riesgo {riesgo}</div>
+              </div>
+            ))}
+          </div>
+          <div style={{ fontSize:11, color:'var(--padel-muted)', marginTop:10 }}>Churn 3,2% · IA detecta: menos asistencia, menos reservas, impagos → alerta antes de perder al cliente.</div>
+        </div>
+      )}
       {tab==='EQUIPO' && <div style={card}><h3 style={h2}>Profesores</h3><p style={{ fontSize:13, color:'var(--padel-muted)' }}>Horas, ocupación, margen por profe. Ej: Profe A €8.400 ingresos / €4.200 coste = €4.200 margen · 91% ocupación.</p></div>}
       {tab==='ESCUELA' && <div style={card}><h3 style={h2}>Escuela — Temporada → Grupos → Alumnos</h3><p style={{ fontSize:13, color:'var(--padel-muted)' }}>Grupo Adultos 3: Mar 18:00 Pista 2 · 6/8 ocupación · 92% asistencia · Alerta: Carlos 3 ausencias.</p></div>}
       {tab==='CLUB' && <div style={card}><h3 style={h2}>Pistas — Pista → Horario → Actividad → Ingreso</h3><p style={{ fontSize:13, color:'var(--padel-muted)' }}>Pista 4: 82% ocupación · €450/día. Prime 18-21h 94% → subir tarifa +10%.</p></div>}
       {tab==='COMPETICIÓN' && <div style={card}><h3 style={h2}>Competición</h3><p style={{ fontSize:13, color:'var(--padel-muted)' }}>Torneos, ligas, rankings, circuitos. Conecta con motor de torneos (/control) y ranking ELO.</p></div>}
-      {tab==='FINANZAS' && <div style={card}><h3 style={h2}>Finanzas</h3><p style={{ fontSize:13, color:'var(--padel-muted)' }}>Rentabilidad por actividad: Adultos €6.300 · Niños €2.400 · Particulares €2.700. Decide dónde invertir.</p></div>}
+      {tab==='FINANZAS' && (
+        <div style={card}>
+          <h3 style={h2}>Rentabilidad por actividad</h3>
+          <table style={{ width:'100%', borderCollapse:'collapse', fontSize:13, marginTop:8 }}>
+            <thead><tr style={{ color:'var(--padel-muted)', fontSize:11 }}><th style={{textAlign:'left', padding:'6px'}}>Actividad</th><th style={{textAlign:'right', padding:'6px'}}>Ingresos</th><th style={{textAlign:'right', padding:'6px'}}>Coste</th><th style={{textAlign:'right', padding:'6px'}}>Margen</th></tr></thead>
+            <tbody>
+              {[
+                ['Escuela adultos',12400,6100],
+                ['Escuela niños',7200,4800],
+                ['Particulares',5600,2900],
+                ['Torneos',4200,2100],
+                ['Eventos',8500,5700],
+              ].map(([a,ing,cos])=>(
+                <tr key={a} style={{ borderTop:'1px solid var(--padel-border)' }}><td style={{padding:'8px 6px', fontWeight:700}}>{a}</td><td style={{textAlign:'right', padding:'6px'}}>{fmtEuros(ing)}</td><td style={{textAlign:'right', padding:'6px', color:'#fb7185'}}>{fmtEuros(cos)}</td><td style={{textAlign:'right', padding:'6px', fontWeight:800, color: ing-cos>3000?'#10b981':'#fbbf24'}}>{fmtEuros(ing-cos)}</td></tr>
+              ))}
+            </tbody>
+          </table>
+          <div style={{ fontSize:11, color:'var(--padel-muted)', marginTop:8 }}>→ Infantil mucho alumno pero poco margen. Invierte en adultos/particulares.</div>
+        </div>
+      )}
       {tab==='INTELIGENCIA' && <div style={card}><h3 style={h2}>🤖 AI Business Manager</h3><p style={{ fontSize:13, color:'var(--padel-muted)' }}>“Ingresos +8% pero margen -3% por horas personal. Pista 3 94% 18-21h → sube prime. 18 alumnos en riesgo (7 Adultos B).”</p></div>}
     </div>
   );
