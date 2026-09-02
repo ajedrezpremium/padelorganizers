@@ -6,7 +6,7 @@
  */
 
 import { getState, resetState, buildTournament } from './store';
-import { generatePredictivePairings, generatePredictiveMatches, generateKnockout, generateMexicanoPairings } from './padelEngine';
+import { generatePredictivePairings, generatePredictiveMatches, generateKnockout, generateMexicanoPairings, scheduleWithRest } from './padelEngine';
 import { currentSeason } from './leagueService';
 
 function state() { return getState() || {}; }
@@ -44,8 +44,16 @@ export function regenerateBracket() {
 
 export function clearBracket() {
   const data = state();
-  buildTournament({ ...data, matches: [], pairs: data.pairs || [] });
+  buildTournament({ ...data, matches: [], pairs: data.pairs || [], schedule: [] });
   return 0;
+}
+export function generateSchedule() {
+  const data = state();
+  if (!data.matches?.length || !data.courts?.length) return 0;
+  const slot = parseInt(String(data.tournament?.slot || '75').replace(/\D/g,''),10) || 75;
+  const sched = scheduleWithRest(data.matches, data.courts, 9, slot, 30);
+  buildTournament({ ...data, schedule: sched, tournament: { ...data.tournament, state: 'SCHEDULED', status: 'scheduled' } });
+  return sched.length;
 }
 export function loadDemoTournament() { resetState(); return getState(); }
 
@@ -90,7 +98,7 @@ export function buildTaskList() {
     { phase: 3, auto: true, key: 'd-seeds', title: 'Cabezas de serie asignadas (evitar cruces tempranos)', done: () => hasTField('seed') || checkManual('d-seeds'), action: { kind: 'none', label: 'Manual' } },
     { phase: 3, auto: true, key: 'd-courts', title: 'Pistas asignadas (CourtManager)', done: () => (state().courts || []).length >= 2, action: { kind: 'navigate', href: '/dashboard', label: 'Abrir' } },
     { phase: 3, auto: true, key: 'd-livepro', title: 'LiveScore Pro preparado', done: () => hasMatches(), action: { kind: 'navigate', href: '/livepro', label: 'Abrir' } },
-    { phase: 3, auto: false, key: 'd-schedule', title: 'Horarios escalonados publicados (75/90 min)', done: () => checkManual('d-schedule'), action: { kind: 'none', label: 'Manual' } },
+    { phase: 3, auto: true, key: 'd-schedule', title: 'Horarios con descanso (anti 10:30→10:35) generados', done: () => (state().schedule||[]).length >0, action: { kind: 'schedule', label: 'Generar horarios' } },
     { phase: 3, auto: false, key: 'd-shopping', title: 'Compras: pelotas, trofeos, agua, fruta, botiquín', done: () => checkManual('d-shopping'), action: { kind: 'none', label: 'Manual' } },
     { phase: 3, auto: false, key: 'd-notify', title: 'Notificaciones enviadas (horarios + pistas)', done: () => checkManual('d-notify'), action: { kind: 'none', label: 'Manual' } },
     { phase: 3, auto: false, key: 'd-referee', title: 'Árbitros asignados (si aplica)', done: () => checkManual('d-referee'), action: { kind: 'none', label: 'Manual' } },

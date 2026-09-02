@@ -4,6 +4,8 @@ import PadelLegends from './PadelLegends';
 import {
   ensureCurrentLeague, listLeague, upsertEntry, BADGES, badgeIcon, currentSeason,
 } from '../services/leagueService';
+import { getState } from '../services/store';
+import { rankingFromTournament, pointsForPosition } from '../services/padelEngine';
 
 const I18N = {
   es: {
@@ -156,6 +158,25 @@ export default function RankedLeague({ lang = 'es', online }) {
         </div>
       </div>
 
+      {(() => {
+        const st = getState();
+        const tr = rankingFromTournament(st);
+        if (!tr.length) return null;
+        return (
+          <div style={{ ...card, marginBottom: 16, borderColor: 'rgba(251,191,36,0.4)' }}>
+            <h3 style={{ fontSize: 15, fontWeight: 800, color: '#fbbf24', margin: '0 0 4px' }}>🏆 Clasificación del torneo — {st.tournament?.name || 'Torneo activo'} · Puntos 1000/700/500</h3>
+            <p style={{ fontSize: 11, color: '#94a3b8', margin: '0 0 10px' }}>Ciclo cerrado: TORNEO → PUNTOS → RANKING CIRCUITO</p>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px,1fr))', gap: 8 }}>
+              {tr.slice(0,8).map(r => (
+                <div key={r.ids.join('-')} style={{ background: 'rgba(0,0,0,0.2)', borderRadius: 10, padding: '8px 10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontSize: 12, fontWeight: 700, color: '#f0fdf4' }}>#{r.pos} {r.ids.map(id=> (st.players.find(p=>p.id===id)?.name||id).split(' ')[0]).join(' / ')}</span>
+                  <span style={{ fontSize: 12, fontWeight: 800, color: '#fbbf24' }}>{r.points} pts</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      })()}
       <div style={{ display: 'grid', gridTemplateColumns: 'minmax(260px,0.9fr) 1.3fr', gap: 20, alignItems: 'start' }}>
         <div style={card}>
           <h3 style={{ fontSize: '16px', fontWeight: 800, color: '#fff', margin: '0 0 4px' }}>{T.club}</h3>
