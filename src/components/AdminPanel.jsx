@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { getState } from '../services/store';
 import { ownerDashboard, fmtEuros } from '../services/clubCrmService';
 
-const TABS = ['CEO','NEGOCIO','CLIENTES','EQUIPO','ESCUELA','CLUB','COMPETICIÓN','FINANZAS','INTELIGENCIA'];
+const TABS = ['CEO','NEGOCIO','CLIENTES','EQUIPO','ESCUELA','CLUB','COMPETICIÓN','FINANZAS','MARKETING','COMUNIDAD','INTELIGENCIA'];
 
 const CEO_MOCK = {
   ingresos: 48250, beneficio: 14820, alumnos: 384, socios: 612, ocupacion: 78, churn: 3.2,
@@ -155,6 +155,24 @@ export default function AdminPanel({ lang='es' }) {
           <div style={{ fontSize:11, color:'var(--padel-muted)', marginTop:8 }}>→ Infantil mucho alumno pero poco margen. Torneos ahora con dato real de /panel.</div>
         </div>
       );})()}
+      {tab==='MARKETING' && (
+        <div style={card}>
+          <h3 style={h2}>📣 Marketing</h3>
+          <p style={{ fontSize:13, color:'var(--padel-muted)', marginBottom:12 }}>Campañas, promociones, eventos, newsletter y AI Marketing. Gestiona desde aquí y publica en /marketing.</p>
+          <div style={{ display:'flex', gap:8, flexWrap:'wrap' }}>
+            <a href="/marketing" style={{ padding:'8px 14px', borderRadius:8, background:'var(--padel-emerald)', color:'#fff', fontWeight:700, fontSize:12, textDecoration:'none' }}>Abrir Marketing →</a>
+            <a href="/sponsors" style={{ padding:'8px 14px', borderRadius:8, border:'1px solid var(--padel-border)', background:'var(--padel-hover-bg)', color:'var(--padel-text)', fontWeight:700, fontSize:12, textDecoration:'none' }}>Patrocinadores</a>
+            <a href="/posts" style={{ padding:'8px 14px', borderRadius:8, border:'1px solid var(--padel-border)', background:'var(--padel-hover-bg)', color:'var(--padel-text)', fontWeight:700, fontSize:12, textDecoration:'none' }}>Crónicas IA</a>
+          </div>
+        </div>
+      )}
+      {tab==='COMUNIDAD' && (
+        <div style={card}>
+          <h3 style={h2}>💬 Comunidad</h3>
+          <p style={{ fontSize:13, color:'var(--padel-muted)', marginBottom:12 }}>Tablón, chat y grupos de tu club. Todo centralizado aquí.</p>
+          <a href="/comunidad" style={{ padding:'8px 14px', borderRadius:8, background:'var(--padel-emerald)', color:'#fff', fontWeight:700, fontSize:12, textDecoration:'none' }}>Abrir Comunidad →</a>
+        </div>
+      )}
       {tab==='INTELIGENCIA' && (
         <div style={card}>
           <h3 style={h2}>🤖 AI Business Manager — “¿Cómo va mi club?”</h3>
