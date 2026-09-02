@@ -103,7 +103,8 @@ const HeaderPadel = ({ lang = 'es', onLanguageChange }) => {
     setRole(isMember && isStudent ? 'both' : isMember ? 'member' : isStudent ? 'student' : 'player');
   }, [user]);
 
-  const LANG_LABELS = { es: { label: 'Español', tooltip: 'Cambiar a español' }, en: { label: 'English', tooltip: 'Switch to English' }, fr: { label: 'Français', tooltip: 'Passer au français' }, pt: { label: 'Português', tooltip: 'Mudar para português' } };
+  const LANG_LABELS = { es: { label: 'ES', flag: '🇪🇸', tooltip: 'Cambiar a español' }, en: { label: 'EN', flag: '🇬🇧', tooltip: 'Switch to English' }, fr: { label: 'FR', flag: '🇫🇷', tooltip: 'Passer au français' }, pt: { label: 'PT', flag: '🇵🇹', tooltip: 'Mudar para português' } };
+  const [langOpen, setLangOpen] = useState(false);
 
   const isOn = (path) => {
     if (path === '/torneo') {
@@ -140,14 +141,20 @@ const HeaderPadel = ({ lang = 'es', onLanguageChange }) => {
           </Link>
         )}
 
-        {/* 1 · Torneos (hub premium de eventos: dashboard, live, control, analíticas, match) */}
+        {/* 1 · Admin PRO (nº1, pack de pago tras prueba) */}
+        <NavDrop tooltip="Admin PRO" to="/admin" icon="dashboard" color="#38bdf8" active={location.pathname.startsWith('/admin')} highlight children={[
+          ['🏢 Panel Admin PRO', '/admin'],
+          ['📊 Dashboard CEO', '/admin'],
+          ['💶 Finanzas', '/admin'],
+        ]} />
+
+        {/* 2 · Torneos (hub premium de eventos: dashboard, live, control, analíticas, match) */}
         <NavDrop
           tooltip={t.tournaments}
           to="/torneo"
           icon="raquet"
           color="#34d399"
           active={isOn('/torneo')}
-          highlight
           children={[
             ['🏟️ ' + t.tournaments, '/torneo'],
             ['🗓️ ' + t.calendar, '/calendario'],
@@ -209,23 +216,23 @@ const HeaderPadel = ({ lang = 'es', onLanguageChange }) => {
         {/* 10 · Lanzamiento */}
         <NavDrop tooltip={t.launch} to="/lanzamiento" icon="rocket" color="#fb7185" active={location.pathname.startsWith('/lanzamiento')} children={[]} />
 
-        {/* 11 · Admin PRO */}
-        <NavDrop tooltip="Admin PRO" to="/admin" icon="dashboard" color="#38bdf8" active={location.pathname.startsWith('/admin')} highlight children={[
-          ['🏢 Panel Admin PRO', '/admin'],
-          ['📊 Dashboard CEO', '/admin'],
-          ['💶 Finanzas', '/admin'],
-        ]} />
-
         <ModeToggle lang={lang} />
         <UserMenu lang={lang} />
         <ThemeToggle lang={lang} />
 
-        <div style={{ display: 'flex', gap: '4px', background: 'var(--padel-hover-bg)', padding: '4px', borderRadius: '8px', border: '1px solid var(--padel-border)' }}>
-          {['es', 'en', 'fr', 'pt'].map((l) => (
-            <button key={l} onClick={() => onLanguageChange && onLanguageChange(l)} title={LANG_LABELS[l]?.tooltip || l.toUpperCase()} aria-label={LANG_LABELS[l]?.tooltip || l.toUpperCase()} style={{
-              background: lang === l ? 'var(--padel-emerald)' : 'transparent', color: lang === l ? '#fff' : 'var(--padel-muted)', border: 'none', padding: '4px 8px', borderRadius: '6px', fontSize: '11px', fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s ease',
-            }}>{l.toUpperCase()}</button>
-          ))}
+        <div style={{ position: 'relative' }} onMouseLeave={() => setLangOpen(false)}>
+          <button onClick={() => setLangOpen(o=>!o)} title={LANG_LABELS[lang]?.tooltip} aria-label={LANG_LABELS[lang]?.tooltip} style={{ display:'flex', alignItems:'center', gap:6, background:'var(--padel-hover-bg)', color:'var(--padel-text)', border:'1px solid var(--padel-border)', padding:'6px 10px', borderRadius:8, fontSize:12, fontWeight:800, cursor:'pointer' }}>
+            <span>{LANG_LABELS[lang]?.flag}</span> {LANG_LABELS[lang]?.label} <span style={{ fontSize:10, opacity:0.6 }}>▼</span>
+          </button>
+          {langOpen && (
+            <div style={{ position:'absolute', top:36, right:0, zIndex:1200, background:'var(--padel-card-bg)', border:'1px solid var(--padel-border)', borderRadius:10, boxShadow:'0 12px 32px rgba(0,0,0,0.35)', padding:4, minWidth:140, display:'flex', flexDirection:'column', gap:2 }}>
+              {['es','en','fr','pt'].map(l=>(
+                <button key={l} onClick={()=>{ onLanguageChange && onLanguageChange(l); setLangOpen(false); }} style={{ display:'flex', alignItems:'center', gap:8, padding:'8px 10px', borderRadius:8, border:'none', background: lang===l?'rgba(16,185,129,0.15)':'transparent', color: lang===l?'#10b981':'var(--padel-text)', fontWeight:700, fontSize:13, cursor:'pointer', textAlign:'left' }}>
+                  <span>{LANG_LABELS[l].flag}</span> {LANG_LABELS[l].label} <span style={{ marginLeft:'auto', fontSize:11, color:'var(--padel-muted)' }}>{l.toUpperCase()}</span>
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       </nav>
     </header>
