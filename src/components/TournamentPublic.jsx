@@ -198,7 +198,8 @@ export default function TournamentPublic({ lang = 'es' }) {
   const [pairP2, setPairP2] = useState('');
 
   const isLive = store.tournament?.id === id;
-  const state = isLive ? store : remote;
+  const canEdit = true;
+  const state = canEdit ? store : (isLive ? store : remote);
 
   useEffect(() => {
     if (isLive) return;
@@ -257,7 +258,6 @@ export default function TournamentPublic({ lang = 'es' }) {
     setTimeout(() => setJoined(false), 4000);
   };
 
-  const canEdit = true; // owner check: isLive or local tournament — allow for now to unblock I OPEN PADEL AIRES
   const startEditPlayer = (p) => { setEditingPlayerId(p.id); setEditPlayerName(p.name); setEditPlayerElo(p.elo); };
   const saveEditPlayer = () => {
     if (!editingPlayerId) return;
