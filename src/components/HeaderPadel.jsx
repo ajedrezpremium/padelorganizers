@@ -209,6 +209,13 @@ const HeaderPadel = ({ lang = 'es', onLanguageChange }) => {
         {/* 10 · Lanzamiento */}
         <NavDrop tooltip={t.launch} to="/lanzamiento" icon="rocket" color="#fb7185" active={location.pathname.startsWith('/lanzamiento')} children={[]} />
 
+        {/* 11 · Admin PRO */}
+        <NavDrop tooltip="Admin PRO" to="/admin" icon="dashboard" color="#38bdf8" active={location.pathname.startsWith('/admin')} highlight children={[
+          ['🏢 Panel Admin PRO', '/admin'],
+          ['📊 Dashboard CEO', '/admin'],
+          ['💶 Finanzas', '/admin'],
+        ]} />
+
         <ModeToggle lang={lang} />
         <UserMenu lang={lang} />
         <ThemeToggle lang={lang} />
