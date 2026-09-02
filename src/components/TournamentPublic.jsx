@@ -267,11 +267,22 @@ export default function TournamentPublic({ lang = 'es' }) {
     setEditingPlayerId(null);
   };
   const deletePlayer = (pid) => {
-    if (!confirm('¿Borrar jugador y sus parejas?')) return;
     const st = getState();
     const target = st.players.find(x=>x.id===pid);
-    const name = (target?.name||'').toLowerCase();
-    setState({ ...st, players: st.players.filter(p=>p.id!==pid), pairs: st.pairs.filter(pr=> (pr.player1||'').toLowerCase()!==name && (pr.player2||'').toLowerCase()!==name ) });
+    if (!target) return;
+    const name = (target.name||'').toLowerCase().trim();
+    const nextPlayers = st.players.filter(p=>p.id!==pid);
+    const nextPairs = st.pairs.filter(pr=> {
+      const a=(pr.player1||'').toLowerCase().trim();
+      const b=(pr.player2||'').toLowerCase().trim();
+      return a!==name && b!==name;
+    });
+    // also remove matches involving that player
+    const nextMatches = (st.matches||[]).filter(m=> {
+      const ids=[...(m.playerIds1||[]), ...(m.playerIds2||[])];
+      return !ids.includes(pid);
+    });
+    setState({ ...st, players: nextPlayers, pairs: nextPairs, matches: nextMatches });
   };
   const addPlayer = () => {
     if (!newPlayerName.trim()) return;
@@ -281,9 +292,10 @@ export default function TournamentPublic({ lang = 'es' }) {
     setNewPlayerName(''); setShowAddPlayer(false);
   };
   const deletePair = (pairId) => {
-    if (!confirm('¿Borrar pareja?')) return;
     const st = getState();
-    setState({ ...st, pairs: st.pairs.filter(p=>p.id!==pairId) });
+    const nextPairs = st.pairs.filter(p=>p.id!==pairId);
+    const nextMatches = (st.matches||[]).filter(m=> m.pair1Id!==pairId && m.pair2Id!==pairId);
+    setState({ ...st, pairs: nextPairs, matches: nextMatches });
   };
   const addPair = () => {
     if (!pairP1 || !pairP2 || pairP1===pairP2) return alert('Elige dos jugadores distintos');
