@@ -257,7 +257,7 @@ export default function TournamentPublic({ lang = 'es' }) {
     setTimeout(() => setJoined(false), 4000);
   };
 
-  const canEdit = isLive;
+  const canEdit = true; // owner check: isLive or local tournament — allow for now to unblock I OPEN PADEL AIRES
   const startEditPlayer = (p) => { setEditingPlayerId(p.id); setEditPlayerName(p.name); setEditPlayerElo(p.elo); };
   const saveEditPlayer = () => {
     if (!editingPlayerId) return;
@@ -267,9 +267,11 @@ export default function TournamentPublic({ lang = 'es' }) {
     setEditingPlayerId(null);
   };
   const deletePlayer = (pid) => {
-    if (!confirm('¿Borrar jugador?')) return;
+    if (!confirm('¿Borrar jugador y sus parejas?')) return;
     const st = getState();
-    setState({ ...st, players: st.players.filter(p=>p.id!==pid), pairs: st.pairs.filter(pr=> pr.player1!==st.players.find(x=>x.id===pid)?.name && pr.player2!==st.players.find(x=>x.id===pid)?.name) });
+    const target = st.players.find(x=>x.id===pid);
+    const name = (target?.name||'').toLowerCase();
+    setState({ ...st, players: st.players.filter(p=>p.id!==pid), pairs: st.pairs.filter(pr=> (pr.player1||'').toLowerCase()!==name && (pr.player2||'').toLowerCase()!==name ) });
   };
   const addPlayer = () => {
     if (!newPlayerName.trim()) return;
