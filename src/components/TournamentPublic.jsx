@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useStore, setState } from '../services/store';
+import { useStore, setState, getTournamentById, saveTournamentById } from '../services/store';
 import { pullState } from '../services/cloudService';
 import { COURT_STATUS } from '../services/padelEngine';
+import TournamentInscriptions from './TournamentInscriptions';
 import AnalyticsBoard from './AnalyticsBoard';
 import TournamentChat from './TournamentChat';
 import { listSponsorsSync, tierOf } from '../services/sponsorService';
@@ -199,7 +200,8 @@ export default function TournamentPublic({ lang = 'es' }) {
 
   const isLive = store.tournament?.id === id;
   const canEdit = true;
-  const state = canEdit ? store : (isLive ? store : remote);
+  const localMap = (()=>{ try{ const m=JSON.parse(localStorage.getItem('padelorganizers-tournaments')||'{}'); return m[id]||null; }catch{ return null; }})();
+  const state = localMap || (isLive ? store : remote) || store;
 
   useEffect(() => {
     if (isLive) return;
@@ -261,56 +263,68 @@ export default function TournamentPublic({ lang = 'es' }) {
   const startEditPlayer = (p) => { setEditingPlayerId(p.id); setEditPlayerName(p.name); setEditPlayerElo(p.elo); };
   const saveEditPlayer = () => {
     if (!editingPlayerId) return;
-    const st = getState();
-    const upd = st.players.map(pl => pl.id===editingPlayerId ? { ...pl, name: editPlayerName.trim()||pl.name, elo: Number(editPlayerElo)||pl.elo, level: Math.round((1 + (Number(editPlayerElo)-1200)/200)*10)/10 } : pl);
-    setState({ ...st, players: upd });
+    const updFn = (st) => {
+      const upd = st.players.map(pl => pl.id===editingPlayerId ? { ...pl, name: editPlayerName.trim()||pl.name, elo: Number(editPlayerElo)||pl.elo, level: Math.round((1 + (Number(editPlayerElo)-1200)/200)*10)/10 } : pl);
+      return { ...st, players: upd };
+    };
+    saveTournamentById(id, updFn);
+    if (getState().tournament?.id === id) setState(updFn(getState()));
     setEditingPlayerId(null);
   };
   const deletePlayer = (pid) => {
-    const st = getState();
-    const target = st.players.find(x=>x.id===pid);
-    if (!target) return;
-    const name = (target.name||'').toLowerCase().trim();
-    const nextPlayers = st.players.filter(p=>p.id!==pid);
-    const nextPairs = st.pairs.filter(pr=> {
-      const a=(pr.player1||'').toLowerCase().trim();
-      const b=(pr.player2||'').toLowerCase().trim();
-      return a!==name && b!==name;
-    });
-    // also remove matches involving that player
-    const nextMatches = (st.matches||[]).filter(m=> {
-      const ids=[...(m.playerIds1||[]), ...(m.playerIds2||[])];
-      return !ids.includes(pid);
-    });
-    setState({ ...st, players: nextPlayers, pairs: nextPairs, matches: nextMatches });
+    const updFn = (st) => {
+      const target = st.players.find(x=>x.id===pid);
+      if (!target) return st;
+      const name = (target.name||'').toLowerCase().trim();
+      const nextPlayers = st.players.filter(p=>p.id!==pid);
+      const nextPairs = st.pairs.filter(pr=> {
+        const a=(pr.player1||'').toLowerCase().trim();
+        const b=(pr.player2||'').toLowerCase().trim();
+        return a!==name && b!==name;
+      });
+      const nextMatches = (st.matches||[]).filter(m=> {
+        const ids=[...(m.playerIds1||[]), ...(m.playerIds2||[])];
+        return !ids.includes(pid);
+      });
+      return { ...st, players: nextPlayers, pairs: nextPairs, matches: nextMatches };
+    };
+    saveTournamentById(id, updFn);
+    if (getState().tournament?.id === id) setState(updFn(getState()));
   };
   const addPlayer = () => {
     if (!newPlayerName.trim()) return;
-    const st = getState();
-    const np = { id:`pl-${Date.now()}`, name: newPlayerName.trim(), elo: Number(newPlayerElo)||1500, level: Math.round((1 + (Number(newPlayerElo)-1200)/200)*10)/10, matchesPlayed:0, wins:0, losses:0 };
-    setState({ ...st, players: [...st.players, np] });
+    const updFn = (st) => {
+      const np = { id:`pl-${Date.now()}`, name: newPlayerName.trim(), elo: Number(newPlayerElo)||1500, level: Math.round((1 + (Number(newPlayerElo)-1200)/200)*10)/10, matchesPlayed:0, wins:0, losses:0 };
+      return { ...st, players: [...st.players, np] };
+    };
+    saveTournamentById(id, updFn);
+    if (getState().tournament?.id === id) setState(updFn(getState()));
     setNewPlayerName(''); setShowAddPlayer(false);
   };
   const deletePair = (pairId) => {
-    const st = getState();
-    // por ID directo
-    let nextPairs = st.pairs.filter(p=>p.id!==pairId);
-    // si no se borró nada (id no coincide), borra por ranking #6 como fallback
-    if (nextPairs.length===st.pairs.length) {
-      const target = st.pairs.find(p=>String(p.ranking)===String(pairId) || p.id===pairId);
-      if (target) nextPairs = st.pairs.filter(p=>p.id!==target.id);
-    }
-    const nextMatches = (st.matches||[]).filter(m=> m.pair1Id!==pairId && m.pair2Id!==pairId);
-    setState({ ...st, pairs: nextPairs, matches: nextMatches });
+    const updFn = (st) => {
+      let nextPairs = st.pairs.filter(p=>p.id!==pairId);
+      if (nextPairs.length===st.pairs.length) {
+        const target = st.pairs.find(p=>String(p.ranking)===String(pairId) || p.id===pairId);
+        if (target) nextPairs = st.pairs.filter(p=>p.id!==target.id);
+      }
+      const nextMatches = (st.matches||[]).filter(m=> m.pair1Id!==pairId && m.pair2Id!==pairId);
+      return { ...st, pairs: nextPairs, matches: nextMatches };
+    };
+    saveTournamentById(id, updFn);
+    if (getState().tournament?.id === id) setState(updFn(getState()));
   };
   const addPair = () => {
     if (!pairP1 || !pairP2 || pairP1===pairP2) return alert('Elige dos jugadores distintos');
-    const st = getState();
-    const p1 = st.players.find(p=>p.id===pairP1);
-    const p2 = st.players.find(p=>p.id===pairP2);
-    if (!p1 || !p2) return;
-    const np = { id:`p-${Date.now()}`, player1: p1.name, player2: p2.name, ranking: st.pairs.length+1, points:0, gamesWon:0, gamesLost:0, diff:0, matchesPlayed:0 };
-    setState({ ...st, pairs: [...st.pairs, np] });
+    const updFn = (st) => {
+      const p1 = st.players.find(p=>p.id===pairP1);
+      const p2 = st.players.find(p=>p.id===pairP2);
+      if (!p1 || !p2) return st;
+      const np = { id:`p-${Date.now()}`, player1: p1.name, player2: p2.name, ranking: st.pairs.length+1, points:0, gamesWon:0, gamesLost:0, diff:0, matchesPlayed:0 };
+      return { ...st, pairs: [...st.pairs, np] };
+    };
+    saveTournamentById(id, updFn);
+    if (getState().tournament?.id === id) setState(updFn(getState()));
     setShowAddPair(false); setPairP1(''); setPairP2('');
   };
 
@@ -334,6 +348,7 @@ export default function TournamentPublic({ lang = 'es' }) {
         <span style={{ fontSize: '13px', color: '#94a3b8' }}>🟢 {t.totalCourts}</span>
       </div>
       <p style={{ fontSize: '12px', color: '#64748b', margin: '0 0 20px' }}>✨ {T.sharedBy.replace('{club}', t.club)}</p>
+      <TournamentInscriptions tournamentId={id} lang={lang} />
 
       {/* INSCRIPCIÓN */}
       <div style={{ ...card, marginBottom: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '14px' }}>
