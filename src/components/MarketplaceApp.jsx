@@ -94,10 +94,13 @@ export default function MarketplaceApp({ lang = 'es' }) {
   const T = I18N[lang] || I18N.es;
   const [type, setType] = useState('all');
   const [city, setCity] = useState('');
+  const [cities, setCities] = useState([]);
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const cities = marketplaceCiudades();
+  useEffect(() => {
+    marketplaceCiudades().then(setCities).catch(()=>setCities([]));
+  }, []);
 
   useEffect(() => {
     let alive = true;
