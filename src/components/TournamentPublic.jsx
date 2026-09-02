@@ -293,7 +293,13 @@ export default function TournamentPublic({ lang = 'es' }) {
   };
   const deletePair = (pairId) => {
     const st = getState();
-    const nextPairs = st.pairs.filter(p=>p.id!==pairId);
+    // por ID directo
+    let nextPairs = st.pairs.filter(p=>p.id!==pairId);
+    // si no se borró nada (id no coincide), borra por ranking #6 como fallback
+    if (nextPairs.length===st.pairs.length) {
+      const target = st.pairs.find(p=>String(p.ranking)===String(pairId) || p.id===pairId);
+      if (target) nextPairs = st.pairs.filter(p=>p.id!==target.id);
+    }
     const nextMatches = (st.matches||[]).filter(m=> m.pair1Id!==pairId && m.pair2Id!==pairId);
     setState({ ...st, pairs: nextPairs, matches: nextMatches });
   };
