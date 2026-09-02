@@ -132,13 +132,14 @@ export default function CrearTorneoWizard({ lang = 'es' }) {
       matches: [],
     };
     buildTournament(data);
-    // persist checklist for control center manual tasks
     try {
       if (form.seed) localStorage.setItem('padelorganizers-wildcards','1');
       if (form.budget) localStorage.setItem('padelorganizers-cap','1');
     } catch {}
     setDone(true);
-    setTimeout(() => nav('/control'), 900);
+    // keep ID for share page
+    try { localStorage.setItem('padelorganizers-last-tournament-id', data.tournament.id); } catch {}
+    setTimeout(() => nav(`/tournament/${encodeURIComponent(data.tournament.id)}`), 900);
   };
 
   const inputStyle = { width: '100%', padding: '11px 14px', borderRadius: 10, border: '1px solid var(--padel-border)', background: 'var(--padel-input-bg)', color: 'var(--padel-text)', fontSize: 14, boxSizing: 'border-box' };
@@ -243,7 +244,16 @@ export default function CrearTorneoWizard({ lang = 'es' }) {
         )}
 
         {done ? (
-          <div style={{ marginTop: 18, padding: 14, borderRadius: 12, background: '#065f46', color: '#fff', fontWeight: 800, textAlign: 'center' }}>{T.success}</div>
+          <div style={{ marginTop: 18, padding: 16, borderRadius: 12, background: '#065f46', color: '#fff', textAlign: 'center' }}>
+            <div style={{ fontWeight: 800, marginBottom: 8 }}>{T.success}</div>
+            <div style={{ fontSize: 13, opacity: 0.9, marginBottom: 12, wordBreak: 'break-all' }}>ID: {(() => { try { return localStorage.getItem('padelorganizers-last-tournament-id'); } catch { return ''; } })()} · <a href={`/tournament/${encodeURIComponent((() => { try { return localStorage.getItem('padelorganizers-last-tournament-id')||''; } catch { return ''; } })())}`} style={{ color: '#a7f3d0', fontWeight: 700 }}>Abrir página del torneo →</a></div>
+            <div style={{ display: 'flex', gap: 8, justifyContent: 'center', flexWrap: 'wrap' }}>
+              <button onClick={() => nav('/control')} style={{ padding: '9px 14px', borderRadius: 10, border: '1px solid rgba(255,255,255,0.3)', background: 'rgba(255,255,255,0.12)', color: '#fff', fontWeight: 700, cursor: 'pointer' }}>🎛️ Central de Control</button>
+              <button onClick={() => nav('/importar')} style={{ padding: '9px 14px', borderRadius: 10, border: 'none', background: '#fff', color: '#065f46', fontWeight: 800, cursor: 'pointer' }}>📥 Importar parejas</button>
+              <button onClick={() => { const id = (() => { try { return localStorage.getItem('padelorganizers-last-tournament-id'); } catch { return ''; } })(); if (id) navigator.clipboard?.writeText(`${window.location.origin}/tournament/${encodeURIComponent(id)}`); }} style={{ padding: '9px 14px', borderRadius: 10, border: '1px solid rgba(255,255,255,0.3)', background: 'transparent', color: '#fff', fontWeight: 700, cursor: 'pointer' }}>🔗 Copiar enlace</button>
+            </div>
+            <div style={{ fontSize: 11, opacity: 0.8, marginTop: 10 }}>Gestionar, actualizar, compartir y exportar desde la página del torneo.</div>
+          </div>
         ) : (
           <div style={{ display: 'flex', gap: 10, marginTop: 18, justifyContent: 'space-between' }}>
             <button onClick={()=>setStep(s=>Math.max(0,s-1))} disabled={step===0} style={{ padding: '10px 16px', borderRadius: 10, border: '1px solid var(--padel-border)', background: 'transparent', color: 'var(--padel-text)', fontWeight: 700, opacity: step===0?0.4:1, cursor: step===0?'default':'pointer' }}>{T.prev}</button>
