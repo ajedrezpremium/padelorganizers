@@ -68,6 +68,7 @@ const GlobalRanking = lazy(() => import('./components/GlobalRanking'));
 const CoachDiscovery = lazy(() => import('./components/CoachDiscovery'));
 const TorneoOrganizer = lazy(() => import('./components/TorneoOrganizer'));
 const CrearTorneoWizard = lazy(() => import('./components/CrearTorneoWizard'));
+const AdminPanel = lazy(() => import('./components/AdminPanel'));
 const TorneoCalendario = lazy(() => import('./components/TorneoCalendario'));
 const TournamentPublic = lazy(() => import('./components/TournamentPublic'));
 const PlayerPublic = lazy(() => import('./components/PlayerPublic'));
@@ -149,6 +150,8 @@ export default function App() {
           <Route path="/escuela" element={<SchoolApp lang={lang} />} />
           <Route path="/torneo" element={<TorneoOrganizer lang={lang} />} />
           <Route path="/torneo/crear" element={<CrearTorneoWizard lang={lang} />} />
+          <Route path="/admin" element={<AdminPanel lang={lang} />} />
+          <Route path="/panel-admin" element={<AdminPanel lang={lang} />} />
           <Route path="/calendario" element={<TorneoCalendario lang={lang} />} />
           <Route path="/tournament/:id" element={<TournamentPublic lang={lang} />} />
           <Route path="/player/:name" element={<PlayerPublic lang={lang} />} />

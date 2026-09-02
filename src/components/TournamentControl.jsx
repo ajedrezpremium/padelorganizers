@@ -3,8 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import ProPaywall from './ProPaywall';
 import {
   buildTaskList, TASK_PHASES, taskStats, readManualTasks, toggleManualTask,
-  regenerateBracket, loadDemoTournament, tournamentName, currentSeason,
+  regenerateBracket, clearBracket, loadDemoTournament, tournamentName, currentSeason,
 } from '../services/tournamentTasks';
+import { getState } from '../services/store';
 
 const I18N = {
   es: {
@@ -147,10 +148,22 @@ export default function TournamentControl({ lang = 'es' }) {
               {T.tour}: <b style={{ color: 'var(--padel-lime)' }}>{tournamentName()}</b> · {T.season} {currentSeason()}
             </span>
             <button onClick={() => nav('/importar')} style={{ ...ghostBtn, color: 'var(--padel-lime)', borderColor: 'rgba(163,230,53,0.3)' }}>{T.importPlayers}</button>
+            <button onClick={() => { clearBracket(); refresh(); }} style={{ ...ghostBtn, color: '#fbbf24', borderColor: 'rgba(251,191,36,0.4)' }}>↺ Reiniciar cuadro</button>
             <button onClick={() => { loadDemoTournament(); refresh(); }} style={ghostBtn}>{T.reset}</button>
           </div>
         </div>
         <p style={{ fontSize: 11.5, color: 'var(--padel-muted)', margin: '0 0 18px' }}>ℹ️ {T.demoNote}</p>
+        <div style={{ ...card, padding: '12px 16px', marginBottom: 18, display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap', justifyContent: 'space-between' }}>
+          <div>
+            <div style={{ fontSize: 13, fontWeight: 800, color: 'var(--padel-text)' }}>ID: <span style={{ fontFamily: 'monospace', color: 'var(--padel-lime)' }}>{(() => { try { return getState().tournament?.id || ''; } catch { return ''; } })()}</span> · {tournamentName()}</div>
+            <div style={{ fontSize: 11, color: 'var(--padel-muted)' }}>Página propia para gestionar, actualizar, compartir y exportar</div>
+          </div>
+          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+            <button onClick={() => { const id = getState().tournament?.id; if (id) nav(`/tournament/${encodeURIComponent(id)}`); }} style={ghostBtn}>👁️ Ver página</button>
+            <button onClick={() => { const id = getState().tournament?.id; if (id) { const url = `${window.location.origin}/tournament/${encodeURIComponent(id)}`; navigator.clipboard?.writeText(url); alert('Enlace copiado: ' + url); } }} style={ghostBtn}>🔗 Compartir</button>
+            <button onClick={() => { const data = localStorage.getItem('padelorganizers-store-v1'); if (data) { const blob = new Blob([data], {type:'application/json'}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href=url; a.download=`torneo-${tournamentName().replace(/\s+/g,'-')}.json`; a.click(); URL.revokeObjectURL(url); } }} style={ghostBtn}>⬇️ Exportar</button>
+          </div>
+        </div>
         <div style={{ marginBottom: 18 }}><ProPaywall lang={lang} feature="Central de Control" cta="Desbloquear Pro" /></div>
 
         {/* KPI bar */}

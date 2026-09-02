@@ -42,6 +42,11 @@ export function regenerateBracket() {
   return matches.length;
 }
 
+export function clearBracket() {
+  const data = state();
+  buildTournament({ ...data, matches: [], pairs: data.pairs || [] });
+  return 0;
+}
 export function loadDemoTournament() { resetState(); return getState(); }
 
 export const TASK_PHASES = [
@@ -69,7 +74,7 @@ export function buildTaskList() {
 
     // ── Fase 2 · Inscripciones y difusión (10) ──
     { phase: 2, auto: true, key: 's-players', title: 'Jugadores inscritos (mínimo 4)', done: () => hasPlayers(4), action: { kind: 'navigate', href: '/importar', label: 'Añadir' } },
-    { phase: 2, auto: true, key: 's-nivels', title: 'Nivel / Elo asignado a cada jugador', done: () => (state().players || []).every(p => (p.elo || 0) > 0), action: { kind: 'navigate', href: '/importar', label: 'Ajustar' } },
+    { phase: 2, auto: true, key: 's-nivels', title: 'Nivel / Elo asignado a cada jugador', done: () => (state().players || []).length >= 4 && (state().players || []).every(p => (p.elo || 0) > 0), action: { kind: 'navigate', href: '/importar', label: 'Ajustar' } },
     { phase: 2, auto: false, key: 's-groups', title: 'Categorías o grupos por nivel creados', done: () => checkManual('s-groups'), action: { kind: 'none', label: 'Manual' } },
     { phase: 2, auto: false, key: 's-pay', title: 'Pago previo verificado (Stripe/PayPal)', done: () => checkManual('s-pay'), action: { kind: 'none', label: 'Manual' } },
     { phase: 2, auto: false, key: 's-flyer', title: 'Flyer digital generado y difundido', done: () => checkManual('s-flyer'), action: { kind: 'none', label: 'Manual' } },
