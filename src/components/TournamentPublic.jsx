@@ -4,6 +4,7 @@ import { useStore, setState, getTournamentById, saveTournamentById } from '../se
 import { pullState } from '../services/cloudService';
 import { COURT_STATUS } from '../services/padelEngine';
 import TournamentInscriptions from './TournamentInscriptions';
+import { recordWO } from '../services/tournamentTasks';
 import AnalyticsBoard from './AnalyticsBoard';
 import TournamentChat from './TournamentChat';
 import { listSponsorsSync, tierOf } from '../services/sponsorService';
@@ -480,11 +481,14 @@ export default function TournamentPublic({ lang = 'es' }) {
             <div key={r} style={{ background: 'rgba(0,0,0,0.2)', borderRadius: '10px', padding: '12px' }}>
               <div style={{ fontSize: '11px', fontWeight: 800, color: '#84cc16', marginBottom: '8px', letterSpacing: 1 }}>{T.scheduleRound.replace('{r}', r)}</div>
               {state.matches.filter((m) => m.round === r).map((m) => (
-                <div key={m.id} style={{ fontSize: '12px', color: '#cbd5e1', padding: '4px 0', borderBottom: '1px dashed rgba(255,255,255,0.06)' }}>
-                  <span style={{ fontWeight: 700, color: m.status === 'completed' ? '#34d399' : '#f0fdf4' }}>
-                    {m.status === 'completed' ? `✓ ${m.pair1Names} ${m.scoreSet1}` : `${m.pair1Names} vs ${m.pair2Names}`}
+                <div key={m.id} style={{ fontSize: '12px', color: '#cbd5e1', padding: '4px 0', borderBottom: '1px dashed rgba(255,255,255,0.06)', display:'flex', justifyContent:'space-between', alignItems:'center' }}>
+                  <span style={{ fontWeight: 700, color: m.status === 'completed' ? '#34d399' : m.status==='wo'?'#fbbf24':'#f0fdf4' }}>
+                    {m.status === 'completed' ? `✓ ${m.pair1Names} ${m.scoreSet1}` : m.status==='wo' ? `⚠️ ${m.pair1Names} vs ${m.pair2Names} · W.O.` : `${m.pair1Names} vs ${m.pair2Names}`}
+                    <span style={{ fontSize: '10px', color: '#64748b', marginLeft:6 }}>{fmtCourtTime(m)}</span>
                   </span>
-                  <div style={{ fontSize: '10px', color: '#64748b', marginTop: 1 }}>{fmtCourtTime(m)}</div>
+                  {canEdit && m.status!=='completed' && m.status!=='wo' && (
+                    <button onClick={()=>{ recordWO(m.id,'W.O.'); }} style={{ padding:'2px 6px', borderRadius:6, border:'1px solid rgba(251,191,36,0.3)', background:'rgba(251,191,36,0.1)', color:'#fbbf24', fontSize:10, cursor:'pointer' }}>W.O.</button>
+                  )}
                 </div>
               ))}
             </div>
@@ -542,6 +546,20 @@ export default function TournamentPublic({ lang = 'es' }) {
         </button>
       </div>
 
+      {/* AUDIT LOG + EXPORT ACTA */}
+      {(t.auditLog||[]).length>0 && (
+        <div style={{ ...card, marginBottom:16 }}>
+          <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:8 }}>
+            <h3 style={{ fontSize:15, fontWeight:800, color:'#fff', margin:0 }}>📜 Auditoría</h3>
+            <button onClick={()=>{ const blob=new Blob([JSON.stringify(t,null,2)],{type:'application/json'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=`acta-${t.name.replace(/\s+/g,'-')}.json`; a.click(); URL.revokeObjectURL(url); }} style={{ padding:'6px 10px', borderRadius:8, border:'1px solid var(--padel-border)', background:'var(--padel-hover-bg)', color:'var(--padel-text)', fontWeight:700, fontSize:11, cursor:'pointer' }}>⬇️ Exportar acta</button>
+          </div>
+          {(t.auditLog||[]).slice(-8).reverse().map((a,i)=>(
+            <div key={i} style={{ fontSize:11, color:'var(--padel-muted)', padding:'4px 0', borderBottom:'1px solid var(--padel-border)' }}>
+              {new Date(a.at).toLocaleString()} · <b style={{ color:'var(--padel-text)' }}>{a.action||a.from+'→'+a.to}</b> {a.matchId?`· ${a.matchId}`:''} {a.reason?`· ${a.reason}`:''}
+            </div>
+          ))}
+        </div>
+      )}
       {/* NOTICIAS / CHAT */}
       <div style={{ marginBottom: '16px' }}>
         <h3 style={{ fontSize: '18px', fontWeight: 900, color: '#fff', margin: '0 0 4px' }}>{T.newsTitle}</h3>

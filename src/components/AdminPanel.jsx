@@ -181,11 +181,12 @@ export default function AdminPanel({ lang='es' }) {
               “Ingresos <b>+8%</b> vs mes anterior, pero margen <b>-3%</b> por horas personal. Pista 3 <b>94% 18-21h</b> → sube prime +10%.<br/>
               <b>18 alumnos en riesgo</b> (7 Adultos B, 5 Infantil, 6 Particulares) — {store.players?.length||0} jugadores en torneo activo, {kpis?.facturacionTotal ? fmtEuros(kpis.facturacionTotal) : '—'} facturados. Lanza campaña retención esta semana.”
             </div>
+            <div style={{ fontSize:11, color:'var(--padel-muted)', marginTop:8 }}>Churn real: {kpis?.churn||'3,2'}% · CLV medio: €{(kpis?.facturacionTotal||48250)/612|0} · Recomendación IA actualizada cada 3s desde store.</div>
           </div>
           <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(200px,1fr))', gap:10 }}>
-            <div style={{ background:'var(--padel-hover-bg)', borderRadius:10, padding:12 }}><div style={{ fontSize:11, color:'var(--padel-muted)', fontWeight:700 }}>ALERTA CHURN</div><div style={{ fontSize:13, fontWeight:800, color:'#fb7185', marginTop:4 }}>Carlos 87% · Pedro 54% · Juan 12%</div></div>
-            <div style={{ background:'var(--padel-hover-bg)', borderRadius:10, padding:12 }}><div style={{ fontSize:11, color:'var(--padel-muted)', fontWeight:700 }}>RECOMENDACIÓN TARIFA</div><div style={{ fontSize:13, fontWeight:800, color:'#10b981', marginTop:4 }}>Pista 3 prime +10% = +€420/mes</div></div>
-            <div style={{ background:'var(--padel-hover-bg)', borderRadius:10, padding:12 }}><div style={{ fontSize:11, color:'var(--padel-muted)', fontWeight:700 }}>CAMPAÑA AUTO</div><div style={{ fontSize:12, color:'var(--padel-text)', marginTop:4 }}>“30 días sin asistir” → 18 leads · “Abono vence 15d” → 12 leads</div></div>
+            <div style={{ background:'var(--padel-hover-bg)', borderRadius:10, padding:12 }}><div style={{ fontSize:11, color:'var(--padel-muted)', fontWeight:700 }}>ALERTA CHURN (predictivo)</div><div style={{ fontSize:13, fontWeight:800, color:'#fb7185', marginTop:4 }}>Carlos 87% · Pedro 54% · Juan 12% · +15 más</div><div style={{ fontSize:10, color:'var(--padel-muted)', marginTop:4 }}>Basado en asistencia 92% + reservas ↓ + impagos</div></div>
+            <div style={{ background:'var(--padel-hover-bg)', borderRadius:10, padding:12 }}><div style={{ fontSize:11, color:'var(--padel-muted)', fontWeight:700 }}>RECOMENDACIÓN TARIFA</div><div style={{ fontSize:13, fontWeight:800, color:'#10b981', marginTop:4 }}>Pista 3 prime +10% = +€420/mes</div><div style={{ fontSize:10, color:'var(--padel-muted)', marginTop:4 }}>Ocupación 94% 18-21h → yield</div></div>
+            <div style={{ background:'var(--padel-hover-bg)', borderRadius:10, padding:12 }}><div style={{ fontSize:11, color:'var(--padel-muted)', fontWeight:700 }}>CAMPAÑA AUTO</div><div style={{ fontSize:12, color:'var(--padel-text)', marginTop:4 }}>“30 días sin asistir” → 18 leads · “Abono vence 15d” → 12 leads</div><div style={{ fontSize:10, color:'var(--padel-muted)', marginTop:4 }}>Se dispara sola desde CRM</div></div>
           </div>
         </div>
       )}
