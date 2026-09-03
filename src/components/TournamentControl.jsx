@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import ProPaywall from './ProPaywall';
 import {
   buildTaskList, TASK_PHASES, taskStats, readManualTasks, toggleManualTask,
-  regenerateBracket, clearBracket, generateSchedule, generateGroupsForControl, loadDemoTournament, tournamentName, currentSeason,
+  regenerateBracket, clearBracket, generateSchedule, generateGroupsForControl, generateCuadroBForControl, generateCuadroCForControl, loadDemoTournament, tournamentName, currentSeason,
 } from '../services/tournamentTasks';
 import { getState, transitionState } from '../services/store';
 import { explainSeeding } from '../services/padelEngine';
@@ -128,6 +128,8 @@ export default function TournamentControl({ lang = 'es' }) {
     if (t.action.kind === 'build') { regenerateBracket(); refresh(); }
     if (t.action.kind === 'schedule') { generateSchedule(); refresh(); }
     if (t.action.kind === 'groups') { generateGroupsForControl(); refresh(); }
+    if (t.action.kind === 'cuadroB') { generateCuadroBForControl(); refresh(); }
+    if (t.action.kind === 'cuadroC') { generateCuadroCForControl(); refresh(); }
     if (t.action.kind === 'none') { setManual(toggleManualTask(t.key)); refresh(); }
   };
 
