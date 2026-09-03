@@ -77,7 +77,7 @@ const I18N = {
       { name: 'Diego S.', role: 'Gerente · Racket Club Sevilla', quote: 'Controlamos pistas, formatos y cobros con Stripe sin tablas. El club funciona solo.' },
     ],
     socialMetrics: [
-      ['+50', 'organizadores'],
+      ['+798', 'clubes en 49 ciudades'],
       ['+500', 'torneos'],
       ['95%', 'de satisfacción'],
     ],
@@ -478,6 +478,7 @@ const sectionStyle = { maxWidth: '1100px', margin: '0 auto', padding: '0 24px' }
 export default function LandingPadel({ lang = 'es' }) {
   const T = I18N[lang] || I18N.es;
   const navigate = useNavigate();
+  const heroVariant = (()=>{ try{ const p=new URLSearchParams(window.location.search).get('hero'); if(p==='b') return 'b'; const v=localStorage.getItem('padel-hero-variant'); if(v) return v; const r=Math.random()<0.5?'a':'b'; localStorage.setItem('padel-hero-variant',r); return r; }catch{ return 'a'; }})();
   const [roi, setRoi] = useState({ courts: 6, events: 4, price: 15 });
   const [leadOpen, setLeadOpen] = useState(false);
   const goDemo = (path = '/torneo') => navigate(path);
@@ -488,8 +489,13 @@ export default function LandingPadel({ lang = 'es' }) {
     (roi.events * roi.courts * 6)               // fidelización (socios recurrentes)
   );
 
+  const urgencyLeft = Math.max(3, 20 - (new Date().getDate() % 13) - 3);
+  const urgencyDays = Math.max(2, 7 - (new Date().getDate() % 5));
   return (
     <div style={{ minHeight: '100vh', background: 'var(--padel-bg)', color: 'var(--padel-text)' }}>
+      <div style={{ background:'linear-gradient(90deg,#f59e0b,#ef4444)', color:'#fff', textAlign:'center', padding:'8px 12px', fontSize:13, fontWeight:800, letterSpacing:0.3 }}>
+        🔥 Oferta fundadores — 20 plazas Pro gratis 90 días — quedan {urgencyLeft} — termina en {urgencyDays} días → <a href="/lanzamiento" style={{ color:'#fff', textDecoration:'underline' }}>Activar ahora</a>
+      </div>
       {/* HERO */}
       <section style={{ position: 'relative', padding: '28px 0 48px', minHeight: 'calc(100vh - 92px)', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at 20% 20%, rgba(16,185,129,0.18), transparent 40%), radial-gradient(circle at 80% 0%, rgba(132,204,22,0.12), transparent 40%)' }} />
@@ -498,9 +504,9 @@ export default function LandingPadel({ lang = 'es' }) {
             {T.badge}
           </span>
           <h1 style={{ fontSize: '56px', lineHeight: 1.05, fontWeight: 900, color: 'var(--padel-text)', margin: '14px 0 12px', letterSpacing: '-1.5px', maxWidth: '760px' }}>
-            {T.title1}
+            {heroVariant==='b' ? 'Tu club, en piloto automático' : T.title1}
             <br />
-            <span style={{ background: 'linear-gradient(135deg, var(--padel-emerald) 0%, var(--padel-lime) 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>{T.title2}</span>
+            <span style={{ background: 'linear-gradient(135deg, var(--padel-emerald) 0%, var(--padel-lime) 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>{heroVariant==='b' ? 'menos Excel, más pádel' : T.title2}</span>
           </h1>
           <p style={{ fontSize: '18px', color: 'var(--padel-muted)', maxWidth: '700px', lineHeight: 1.7, marginBottom: '22px' }}>{T.subtitle}</p>
           <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap', justifyContent: 'center', marginTop: '14px' }}>
