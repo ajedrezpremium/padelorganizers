@@ -114,7 +114,7 @@ const I18N = {
       { icon: 'cloud', title: 'SaaS + Reservas', desc: 'Modelo de monetización recurrente por club con reservas de pistas y membresías.', tooltip: 'Modelo SaaS con reservas y pagos integrados (Stripe)' },
     ],
     comparisonTitle: 'Comparativa de mercado',
-    comparisonScore: '20 de 20 funciones',
+    comparisonScore: '25 de 20 funciones',
     comparisonCols: ['Función', 'PADELORGANIZERS', 'Playtomic', 'MATCHi', 'Padel Mates', 'Padel Manager'],
     comparison: [
       ['Reserva online de pistas', '✓', '✓', '✓', '✓', '✓'],
@@ -124,6 +124,11 @@ const I18N = {
       ['Matchmaking / encontrar cuarto', '✓', '✓', '✓', '✓', '✗'],
       ['Anti no-show + lista de espera', '✓', 'Parcial', '✓', '✗', '✗'],
       ['Motor de torneos (Americano/Mexicano/Suizo/Elim.)', '✓', 'Parcial', 'Parcial', '✓', '✓'],
+      ['Cuadros B/C + Consolación', '✓', '✗', '✗', '✗', '✗'],
+      ['Scheduler con descanso 30′ (anti 10:30→10:35)', '✓', '✗', '✗', '✗', '✗'],
+      ['Auditoría + export acta', '✓', '✗', '✗', '✗', '✗'],
+      ['IA explicativa (por qué seeding)', '✓', '✗', '✗', '✗', '✗'],
+      ['Inscripción en 1 pantalla (link/QR/pago)', '✓', 'Parcial', 'Parcial', '✗', '✗'],
       ['Ligas con ranking ELO automático', '✓', '✓', '✓', 'Parcial', '✓'],
       ['Live scoring set a set', '✓', 'Parcial', '✗', '✗', 'Parcial'],
       ['Tarjeta social descargable', '✓', 'Parcial', '✗', '✗', '✗'],
@@ -490,7 +495,7 @@ export default function LandingPadel({ lang = 'es' }) {
         <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at 20% 20%, rgba(16,185,129,0.18), transparent 40%), radial-gradient(circle at 80% 0%, rgba(132,204,22,0.12), transparent 40%)' }} />
         <div style={{ ...sectionStyle, position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}>
           <span style={{ display: 'inline-block', background: 'rgba(16,185,129,0.15)', border: '1px solid rgba(16,185,129,0.35)', color: 'var(--padel-lime)', padding: '6px 14px', borderRadius: '20px', fontWeight: 700, fontSize: '12px', letterSpacing: '1.5px' }}>
-            🎾 {T.badge}
+            {T.badge}
           </span>
           <h1 style={{ fontSize: '56px', lineHeight: 1.05, fontWeight: 900, color: 'var(--padel-text)', margin: '14px 0 12px', letterSpacing: '-1.5px', maxWidth: '760px' }}>
             {T.title1}
