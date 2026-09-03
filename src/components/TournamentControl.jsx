@@ -3,10 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import ProPaywall from './ProPaywall';
 import {
   buildTaskList, TASK_PHASES, taskStats, readManualTasks, toggleManualTask,
-  regenerateBracket, clearBracket, generateSchedule, generateGroupsForControl, generateCuadroBForControl, generateCuadroCForControl, loadDemoTournament, tournamentName, currentSeason,
+  regenerateBracket, clearBracket, generateSchedule, generateGroupsForControl, loadDemoTournament, tournamentName, currentSeason,
 } from '../services/tournamentTasks';
 import { getState, transitionState } from '../services/store';
 import { explainSeeding } from '../services/padelEngine';
+import OnboardingChecklist from './OnboardingChecklist';
 
 const I18N = {
   es: {
@@ -170,6 +171,7 @@ export default function TournamentControl({ lang = 'es' }) {
           </div>
         </div>
         <div style={{ marginBottom: 18 }}><ProPaywall lang={lang} feature="Central de Control" cta="Desbloquear Pro" /></div>
+        <OnboardingChecklist lang={lang} />
 
         {/* IA explicativa */}
         {(() => {
