@@ -59,11 +59,11 @@ const FeatureIcon = ({ name, size = 28, color = 'var(--padel-lime)' }) => {
 
 const I18N = {
   es: {
-    badge: 'LA PLATAFORMA PRO DE TORNEOS DE PÁDEL',
+    badge: 'LA PLATAFORMA INTELIGENTE DE PÁDEL',
     title1: 'Organiza torneos de pádel',
     title2: 'como un profesional',
     subtitle:
-      'La primera plataforma SaaS con IA para la gestión de torneos, control de pistas CourtManager, marcador digital con Punto de Oro, motor Americano/Mexicano/Suizo/Eliminatorio y analíticas en tiempo real.',
+      'Gestión de Club y Escuela · Organiza torneos pro. La primera plataforma SaaS con IA para la gestión integral, 24/7 multi idioma: agente IA con voz, panel admin pro, central de control, CourtManager con scheduler y descanso 30′, marcador digital con Punto de Oro, motor Americano/Mexicano/Suizo/Eliminatorio/Consolación (A/B/C), analíticas en tiempo real, ranking circuito 1000/700/500, auditoría y PWA instalable.',
     ctaDemo: 'Probar Demo Gratuita',
     ctaDemoStrong: 'Crea tu primer torneo en minutos',
     ctaDemoSub: 'Gratis para siempre · Sin tarjeta · Sin compromiso',
@@ -161,11 +161,11 @@ const I18N = {
     footer: 'PADELORGANIZERS.COM — El mejor software para el deporte de moda.'
   },
   en: {
-    badge: 'THE PRO PADEL TOURNAMENT PLATFORM',
+    badge: 'THE INTELLIGENT PADEL PLATFORM',
     title1: 'Organize padel tournaments',
     title2: 'like a professional',
     subtitle:
-      'The first AI SaaS platform for tournament management, CourtManager court control, digital scoreboard with Gold Point, Americano/Mexicano/Swiss/Knockout engine and real-time analytics.',
+      'Club & Academy Management · Organize pro tournaments. The first AI SaaS for integral management, 24/7 multilingual: voice AI agent, pro admin panel, control center, CourtManager with scheduler and 30′ rest, Gold Point scoreboard, American/Mexican/Swiss/Knockout/Consolation engine, real-time analytics, circuit ranking 1000/700/500, audit log and installable PWA.',
     ctaDemo: 'Try Free Demo',
     ctaDemoStrong: 'Launch your first tournament in minutes',
     ctaDemoSub: 'Free forever · No card · No commitment',
@@ -263,11 +263,11 @@ const I18N = {
     footer: 'PADELORGANIZERS.COM — The best software for the sport of the moment.',
   },
   fr: {
-    badge: 'LA PLATEFORME PRO DE TOURNOIS DE PADEL',
+    badge: 'LA PLATEFORME INTELLIGENTE DE PADEL',
     title1: 'Organisez des tournois de padel',
     title2: 'comme un professionnel',
     subtitle:
-      "La première plateforme SaaS avec IA pour la gestion de tournois, le contrôle des pistes CourtManager, le tableau de score avec Point d'Or, le moteur Américain/Mexicain/Suisse/Élimination et les analyses en temps réel.",
+      "Gestion Club & École · Organisez des tournois pro. La première plateforme SaaS avec IA pour la gestion intégrale, 24/7 multilingue : agent IA vocal, panel admin pro, centre de contrôle, CourtManager avec scheduler et repos 30′, tableau Point d'Or, moteur Américain/Mexicain/Suisse/Élimination/Consolation, analyses temps réel, classement circuit 1000/700/500, audit et PWA installable.",
     ctaDemo: 'Essayer la Démo Gratuite',
     ctaDemoStrong: 'Lancez votre premier tournoi en quelques minutes',
     ctaDemoSub: 'Gratuit pour toujours · Sans carte · Sans engagement',
@@ -365,11 +365,11 @@ const I18N = {
     footer: 'PADELORGANIZERS.COM — Le meilleur logiciel du sport à la mode.',
   },
   pt: {
-    badge: 'A PLATAFORMA PRO DE TORNEIOS DE PÁDEL',
+    badge: 'A PLATAFORMA INTELIGENTE DE PÁDEL',
     title1: 'Organize torneios de padel',
     title2: 'como um profissional',
     subtitle:
-      'A primeira plataforma SaaS com IA para gestão de torneios, controlo de pistas CourtManager, marcador digital com Ponto de Ouro, motor Americano/Mexicano/Suíço/Eliminatória e análises em tempo real.',
+      'Gestão de Clube e Escola · Organize torneios pro. A primeira plataforma SaaS com IA para gestão integral, 24/7 multi-idioma: agente IA com voz, painel admin pro, centro de controlo, CourtManager com scheduler e descanso 30′, marcador Ponto de Ouro, motor Americano/Mexicano/Suíço/Eliminatória/Consolação, análises tempo real, ranking circuito 1000/700/500, auditoria e PWA instalável.',
     ctaDemo: 'Experimentar Demo Grátis',
     ctaDemoStrong: 'Lance o seu primeiro torneio em minutos',
     ctaDemoSub: 'Grátis para sempre · Sem cartão · Sem compromisso',
