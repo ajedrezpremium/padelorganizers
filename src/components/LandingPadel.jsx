@@ -59,11 +59,11 @@ const FeatureIcon = ({ name, size = 28, color = 'var(--padel-lime)' }) => {
 
 const I18N = {
   es: {
-    badge: 'LA PLATAFORMA INTELIGENTE DE PÁDEL',
-    title1: 'Organiza torneos de pádel',
-    title2: 'como un profesional',
+    badge: '🎾 LA PLATAFORMA INTELIGENTE DE PÁDEL',
+    title1: 'Gestión de Club y Escuela',
+    title2: 'Organiza torneos pro',
     subtitle:
-      'Gestión de Club y Escuela · Organiza torneos pro. La primera plataforma SaaS con IA para la gestión integral, 24/7 multi idioma: agente IA con voz, panel admin pro, central de control, CourtManager con scheduler y descanso 30′, marcador digital con Punto de Oro, motor Americano/Mexicano/Suizo/Eliminatorio/Consolación (A/B/C), analíticas en tiempo real, ranking circuito 1000/700/500, auditoría y PWA instalable.',
+      'El primer SaaS con IA 24/7 y multi idioma para la gestión integral de torneos y clubes de pádel.',
     ctaDemo: 'Probar Demo Gratuita',
     ctaDemoStrong: 'Crea tu primer torneo en minutos',
     ctaDemoSub: 'Gratis para siempre · Sin tarjeta · Sin compromiso',
@@ -161,11 +161,11 @@ const I18N = {
     footer: 'PADELORGANIZERS.COM — El mejor software para el deporte de moda.'
   },
   en: {
-    badge: 'THE INTELLIGENT PADEL PLATFORM',
-    title1: 'Organize padel tournaments',
-    title2: 'like a professional',
+    badge: '🎾 THE INTELLIGENT PADEL PLATFORM',
+    title1: 'Club & Academy Management',
+    title2: 'Organize pro tournaments',
     subtitle:
-      'Club & Academy Management · Organize pro tournaments. The first AI SaaS for integral management, 24/7 multilingual: voice AI agent, pro admin panel, control center, CourtManager with scheduler and 30′ rest, Gold Point scoreboard, American/Mexican/Swiss/Knockout/Consolation engine, real-time analytics, circuit ranking 1000/700/500, audit log and installable PWA.',
+      'The first 24/7 multilingual AI SaaS for the integral management of padel tournaments and clubs.',
     ctaDemo: 'Try Free Demo',
     ctaDemoStrong: 'Launch your first tournament in minutes',
     ctaDemoSub: 'Free forever · No card · No commitment',
@@ -263,11 +263,11 @@ const I18N = {
     footer: 'PADELORGANIZERS.COM — The best software for the sport of the moment.',
   },
   fr: {
-    badge: 'LA PLATEFORME INTELLIGENTE DE PADEL',
-    title1: 'Organisez des tournois de padel',
-    title2: 'comme un professionnel',
+    badge: '🎾 LA PLATEFORME INTELLIGENTE DE PADEL',
+    title1: 'Gestion Club & École',
+    title2: 'Organisez des tournois pro',
     subtitle:
-      "Gestion Club & École · Organisez des tournois pro. La première plateforme SaaS avec IA pour la gestion intégrale, 24/7 multilingue : agent IA vocal, panel admin pro, centre de contrôle, CourtManager avec scheduler et repos 30′, tableau Point d'Or, moteur Américain/Mexicain/Suisse/Élimination/Consolation, analyses temps réel, classement circuit 1000/700/500, audit et PWA installable.",
+      "Le premier SaaS avec IA 24/7 et multilingue pour la gestion intégrale des tournois et clubs de padel.",
     ctaDemo: 'Essayer la Démo Gratuite',
     ctaDemoStrong: 'Lancez votre premier tournoi en quelques minutes',
     ctaDemoSub: 'Gratuit pour toujours · Sans carte · Sans engagement',
@@ -365,11 +365,11 @@ const I18N = {
     footer: 'PADELORGANIZERS.COM — Le meilleur logiciel du sport à la mode.',
   },
   pt: {
-    badge: 'A PLATAFORMA INTELIGENTE DE PÁDEL',
-    title1: 'Organize torneios de padel',
-    title2: 'como um profissional',
+    badge: '🎾 A PLATAFORMA INTELIGENTE DE PÁDEL',
+    title1: 'Gestão de Clube e Escola',
+    title2: 'Organize torneios pro',
     subtitle:
-      'Gestão de Clube e Escola · Organize torneios pro. A primeira plataforma SaaS com IA para gestão integral, 24/7 multi-idioma: agente IA com voz, painel admin pro, centro de controlo, CourtManager com scheduler e descanso 30′, marcador Ponto de Ouro, motor Americano/Mexicano/Suíço/Eliminatória/Consolação, análises tempo real, ranking circuito 1000/700/500, auditoria e PWA instalável.',
+      'O primeiro SaaS com IA 24/7 e multi-idioma para a gestão integral de torneios e clubes de padel.',
     ctaDemo: 'Experimentar Demo Grátis',
     ctaDemoStrong: 'Lance o seu primeiro torneio em minutos',
     ctaDemoSub: 'Grátis para sempre · Sem cartão · Sem compromisso',
