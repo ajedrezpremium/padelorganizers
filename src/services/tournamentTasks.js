@@ -6,7 +6,7 @@
  */
 
 import { getState, resetState, buildTournament } from './store';
-import { generatePredictivePairings, generatePredictiveMatches, generateKnockout, generateMexicanoPairings, scheduleWithRest, generateGroups } from './padelEngine';
+import { generatePredictivePairings, generatePredictiveMatches, generateKnockout, generateMexicanoPairings, scheduleWithRest, generateGroups, generateCuadroB, generateCuadroC } from './padelEngine';
 import { currentSeason } from './leagueService';
 
 function state() { return getState() || {}; }
@@ -61,6 +61,21 @@ export function generateGroupsForControl() {
   const groups = generateGroups(data, 4);
   buildTournament({ ...data, groups, tournament: { ...data.tournament, auditLog: [...(data.tournament.auditLog||[]), { at: new Date().toISOString(), action: 'groups', count: groups.length }] } });
   return groups.length;
+}
+export function generateCuadroBForControl() {
+  const data = state();
+  const b = generateCuadroB(data);
+  if (!b.length) return 0;
+  buildTournament({ ...data, matches: [...data.matches, ...b], tournament: { ...data.tournament, auditLog: [...(data.tournament.auditLog||[]), { at: new Date().toISOString(), action: 'cuadroB', count: b.length }] } });
+  return b.length;
+}
+export function generateCuadroCForControl() {
+  const data = state();
+  const bMatches = data.matches.filter(m=>m.bracket==='B');
+  const c = generateCuadroC(data, bMatches.length? bMatches : null);
+  if (!c.length) return 0;
+  buildTournament({ ...data, matches: [...data.matches, ...c], tournament: { ...data.tournament, auditLog: [...(data.tournament.auditLog||[]), { at: new Date().toISOString(), action: 'cuadroC', count: c.length }] } });
+  return c.length;
 }
 export function recordWO(matchId, reason='W.O.') {
   const data = state();
@@ -133,6 +148,8 @@ export function buildTaskList() {
     { phase: 5, auto: true, key: 'r-finished', title: 'Partidos finalizados registrados', done: () => hasFinishedMatches(), action: { kind: 'navigate', href: '/dashboard', label: 'Cerrar partidos' } },
     { phase: 5, auto: true, key: 'r-rating', title: 'Rating Elo actualizado tras cada partido', done: () => hasFinishedMatches(), action: { kind: 'navigate', href: '/analytics', label: 'Ver' } },
     { phase: 5, auto: true, key: 'r-league', title: 'Resultados publicados en la Ranked League', done: () => hasFinishedMatches(), action: { kind: 'navigate', href: '/league', label: 'Publicar' } },
+    { phase: 5, auto: true, key: 'r-cuadroB', title: 'Cuadro B (consolación) generado', done: () => (state().matches||[]).some(m=>m.bracket==='B'), action: { kind: 'cuadroB', label: 'Generar B' } },
+    { phase: 5, auto: true, key: 'r-cuadroC', title: 'Cuadro C (tercer cuadro) generado', done: () => (state().matches||[]).some(m=>m.bracket==='C'), action: { kind: 'cuadroC', label: 'Generar C' } },
     { phase: 5, auto: false, key: 'r-central', title: 'Finales en pista central disputadas', done: () => checkManual('r-central'), action: { kind: 'none', label: 'Manual' } },
     { phase: 5, auto: false, key: 'r-podium', title: 'Podio y premios / sorteos entregados', done: () => checkManual('r-podium'), action: { kind: 'none', label: 'Manual' } },
     { phase: 5, auto: false, key: 'r-gallery', title: 'Fotos, resultados y agradecimientos publicados', done: () => checkManual('r-gallery'), action: { kind: 'none', label: 'Manual' } },

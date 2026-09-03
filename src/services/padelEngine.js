@@ -533,6 +533,22 @@ export function generateCuadroB(data, mainMatches) {
   for (let i=0;i+1<losers.length;i+=2) teams.push([losers[i], losers[i+1]]);
   return teams.map((t,i)=>({ ...pairToMatch(data, t, teams[(i+1)%teams.length]||t), round: 900+i, bracket: 'B' }));
 }
+export function generateCuadroC(data, bMatches) {
+  const losers = (bMatches || []).filter(m => m.status === 'completed' && m.loserIds).map(m => m.loserIds).flat();
+  if (losers.length < 2) {
+    const mainLosers = (data.matches||[]).filter(m=>m.status==='completed'&&m.loserIds).map(m=>m.loserIds).flat();
+    if (mainLosers.length >= 8) {
+      const extra = mainLosers.slice(4);
+      const teams=[];
+      for(let i=0;i+1<extra.length;i+=2) teams.push([extra[i], extra[i+1]]);
+      return teams.map((t,i)=>({ ...pairToMatch(data, t, teams[(i+1)%teams.length]||t), round: 800+i, bracket: 'C' }));
+    }
+    return [];
+  }
+  const teams=[];
+  for(let i=0;i+1<losers.length;i+=2) teams.push([losers[i], losers[i+1]]);
+  return teams.map((t,i)=>({ ...pairToMatch(data, t, teams[(i+1)%teams.length]||t), round: 800+i, bracket: 'C' }));
+}
 
 // --- Grupos Round Robin ---
 export function generateGroups(data, groupSize=4) {
