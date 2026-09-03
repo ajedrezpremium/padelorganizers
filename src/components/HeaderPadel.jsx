@@ -208,18 +208,21 @@ const HeaderPadel = ({ lang = 'es', onLanguageChange }) => {
         <UserMenu lang={lang} />
         <ThemeToggle lang={lang} />
 
-        <div style={{ position: 'relative' }} onMouseLeave={() => setLangOpen(false)}>
+        <div style={{ position: 'relative' }}>
           <button onClick={() => setLangOpen(o=>!o)} title={LANG_LABELS[lang]?.tooltip} aria-label={LANG_LABELS[lang]?.tooltip} style={{ display:'flex', alignItems:'center', gap:6, background:'var(--padel-hover-bg)', color:'var(--padel-text)', border:'1px solid var(--padel-border)', padding:'6px 10px', borderRadius:8, fontSize:12, fontWeight:800, cursor:'pointer' }}>
-            {LANG_LABELS[lang]?.label} <span style={{ fontSize:10, opacity:0.6 }}>▼</span>
+            {LANG_LABELS[lang]?.label} <span style={{ fontSize:10, opacity:0.6, transform: langOpen?'rotate(180deg)':'none', display:'inline-block' }}>▼</span>
           </button>
           {langOpen && (
-            <div style={{ position:'absolute', top:36, right:0, zIndex:1200, background:'var(--padel-card-bg)', border:'1px solid var(--padel-border)', borderRadius:10, boxShadow:'0 12px 32px rgba(0,0,0,0.35)', padding:4, minWidth:120, display:'flex', flexDirection:'column', gap:2 }}>
-              {['es','en','fr','pt'].map(l=>(
-                <button key={l} onClick={()=>{ onLanguageChange && onLanguageChange(l); setLangOpen(false); }} style={{ display:'flex', alignItems:'center', gap:8, padding:'8px 10px', borderRadius:8, border:'none', background: lang===l?'rgba(16,185,129,0.15)':'transparent', color: lang===l?'#10b981':'var(--padel-text)', fontWeight:700, fontSize:13, cursor:'pointer', textAlign:'left' }}>
-                  {LANG_LABELS[l].label}
-                </button>
-              ))}
-            </div>
+            <>
+              <div onClick={()=>setLangOpen(false)} style={{ position:'fixed', inset:0, zIndex:1199 }} />
+              <div style={{ position:'absolute', top:36, right:0, zIndex:1200, background:'var(--padel-card-bg)', border:'1px solid var(--padel-border)', borderRadius:10, boxShadow:'0 12px 32px rgba(0,0,0,0.35)', padding:4, minWidth:120, display:'flex', flexDirection:'column', gap:2 }}>
+                {['es','en','fr','pt'].map(l=>(
+                  <button key={l} onClick={()=>{ onLanguageChange && onLanguageChange(l); setLangOpen(false); }} style={{ display:'flex', alignItems:'center', gap:8, padding:'8px 10px', borderRadius:8, border:'none', background: lang===l?'rgba(16,185,129,0.15)':'transparent', color: lang===l?'#10b981':'var(--padel-text)', fontWeight:700, fontSize:13, cursor:'pointer', textAlign:'left' }}>
+                    {LANG_LABELS[l].label}
+                  </button>
+                ))}
+              </div>
+            </>
           )}
         </div>
       </nav>
