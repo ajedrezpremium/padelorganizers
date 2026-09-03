@@ -5,7 +5,8 @@ import {
   buildTaskList, TASK_PHASES, taskStats, readManualTasks, toggleManualTask,
   regenerateBracket, clearBracket, generateSchedule, generateGroupsForControl, loadDemoTournament, tournamentName, currentSeason,
 } from '../services/tournamentTasks';
-import { getState } from '../services/store';
+import { getState, transitionState } from '../services/store';
+import { explainSeeding } from '../services/padelEngine';
 
 const I18N = {
   es: {
@@ -168,6 +169,38 @@ export default function TournamentControl({ lang = 'es' }) {
         </div>
         <div style={{ marginBottom: 18 }}><ProPaywall lang={lang} feature="Central de Control" cta="Desbloquear Pro" /></div>
 
+        {/* IA explicativa */}
+        {(() => {
+          const s = getState();
+          if((s.players||[]).length < 4) return null;
+          return (
+            <div style={{ background:'rgba(16,185,129,0.08)', border:'1px solid rgba(16,185,129,0.2)', borderRadius:12, padding:12, marginBottom:18 }}>
+              <div style={{ fontSize:11, fontWeight:800, color:'#10b981', letterSpacing:0.8 }}>🤖 IA EXPLICATIVA</div>
+              <div style={{ fontSize:12, color:'var(--padel-text)', marginTop:6, lineHeight:1.5 }}>{explainSeeding(s)}</div>
+            </div>
+          );
+        })()}
+        {(() => {
+          try{ if(localStorage.getItem('padelorganizers-dismiss-pair-prompt')==='1') return null; }catch{}
+          const s = getState();
+          const has8pairs = (s.pairs||[]).length >= 4 && (s.players||[]).length >= 8;
+          const noDraw = (s.matches||[]).length === 0;
+          const st = s.tournament?.state;
+          if (!has8pairs || !noDraw || !(st==='OPEN' || st==='DRAFT' || st==='active' || !st)) return null;
+          return (
+            <div style={{ background:'linear-gradient(135deg, rgba(16,185,129,0.12), rgba(251,191,36,0.12))', border:'1px solid #10b981', borderRadius:14, padding:16, marginBottom:18, display:'flex', gap:12, alignItems:'center', flexWrap:'wrap', justifyContent:'space-between' }}>
+              <div>
+                <div style={{ fontWeight:800, color:'var(--padel-text)', fontSize:14 }}>🎯 Tienes {s.pairs.length} parejas listas — ¿cerrar inscripción y emparejar?</div>
+                <div style={{ fontSize:12, color:'var(--padel-muted)' }}>Se generarán grupos/cuadro y horarios con descanso 30min. Podrás seguir añadiendo luego si hace falta.</div>
+              </div>
+              <div style={{ display:'flex', gap:8 }}>
+                <button onClick={()=>{ try{ transitionState('REGISTRATION_CLOSED'); }catch{}; generateGroupsForControl(); regenerateBracket(); generateSchedule(); refresh(); }} style={{ padding:'10px 16px', borderRadius:10, border:'none', background:'linear-gradient(135deg,#10b981,#059669)', color:'#fff', fontWeight:800, fontSize:13, cursor:'pointer' }}>✓ Cerrar y emparejar</button>
+                <button onClick={()=>{ try{ localStorage.setItem('padelorganizers-dismiss-pair-prompt','1'); }catch{}; refresh(); setTick(t=>t+1); }} style={{ padding:'10px 14px', borderRadius:10, border:'1px solid var(--padel-border)', background:'transparent', color:'var(--padel-muted)', fontWeight:700, fontSize:12, cursor:'pointer' }}>Seguir inscribiendo</button>
+              </div>
+            </div>
+          );
+        })()}
+
         {/* KPI bar */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px,1fr))', gap: 12, marginBottom: 20 }}>
           {[
@@ -182,6 +215,26 @@ export default function TournamentControl({ lang = 'es' }) {
               <div style={{ fontSize: 11, color: 'var(--padel-muted)', fontWeight: 600 }}>{l}</div>
             </div>
           ))}
+        </div>
+
+        {/* Flujo inscripción en 1 pantalla */}
+        <div style={{ ...card, padding:16, marginBottom:18 }}>
+          <div style={{ fontSize:13, fontWeight:800, color:'var(--padel-text)', marginBottom:8 }}>📝 Flujo inscripción en 1 pantalla</div>
+          <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(120px,1fr))', gap:8 }}>
+            {[
+              ['Planificación','Formato/precio/categorías',()=>{}],
+              ['Apertura','Activa link/QR',()=>{ const st=getState(); if(st.tournament) { const link=`${window.location.origin}/tournament/${st.tournament.id}`; navigator.clipboard?.writeText(link); alert('Link copiado: '+link); }}],
+              ['Inscripción','Jugadores pagan',()=>nav('/importar')],
+              ['Gestión','Pagos/lista espera',()=>nav('/importar')],
+              ['Cierre','Genera cuadros',()=>{ generateGroupsForControl(); regenerateBracket(); generateSchedule(); refresh(); }],
+              ['Comunicación','Publica cuadro',()=>{ const id=getState().tournament?.id; if(id) nav(`/tournament/${id}`); }],
+            ].map(([label,desc,fn])=>(
+              <button key={label} onClick={fn} style={{ padding:'10px 8px', borderRadius:10, border:'1px solid var(--padel-border)', background:'var(--padel-hover-bg)', color:'var(--padel-text)', fontWeight:700, fontSize:11, cursor:'pointer', textAlign:'center' }}>
+                <div style={{ fontSize:12, fontWeight:800 }}>{label}</div>
+                <div style={{ fontSize:10, color:'var(--padel-muted)', marginTop:2 }}>{desc}</div>
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Overall bar */}
