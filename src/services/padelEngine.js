@@ -572,6 +572,14 @@ export function scheduleWithRest(matches, courts, startHour=9, slotMin=75, restM
   return schedule;
 }
 
+export function explainSeeding(data) {
+  const sorted=[...data.players].sort((a,b)=>b.elo-a.elo);
+  if(!sorted.length) return 'Sin jugadores para explicar seeding.';
+  const top=sorted.slice(0,4).map(p=>`${p.name} (${p.elo})`).join(', ');
+  const fmt=data.tournament?.modality||'americano';
+  return `IA: Ordené por ELO (${top}) — cabezas 1-4. Formato ${fmt}: evito cruce 1vs2 hasta final (1vs16, 8vs9 en octavos). Balance medio ${(sorted.length>1? Math.round((1-Math.abs(sorted[0].elo-sorted[1].elo)/400)*100):0)}%. Si cambias nivel, recalcula.`;
+}
+
 // --- Points Engine ---
 export const POINTS_TABLE = { '1':1000, '2':700, '3-4':500, '5-8':350, '9-16':200, '17-32':100, '33-64':50 };
 export function pointsForPosition(pos, table=POINTS_TABLE){
