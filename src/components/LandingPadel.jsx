@@ -114,7 +114,7 @@ const I18N = {
       { icon: 'cloud', title: 'SaaS + Reservas', desc: 'Modelo de monetización recurrente por club con reservas de pistas y membresías.', tooltip: 'Modelo SaaS con reservas y pagos integrados (Stripe)' },
     ],
     comparisonTitle: 'Comparativa de mercado',
-    comparisonScore: '🏆 25 funciones',
+    comparisonScore: '25 funciones',
     comparisonCols: ['Función', 'PADELORGANIZERS', 'Playtomic', 'MATCHi', 'Padel Mates', 'Padel Manager'],
     comparison: [
       ['Reserva online de pistas', '✓', '✓', '✓', '✓', '✓'],
