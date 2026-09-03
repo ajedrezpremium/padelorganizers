@@ -204,6 +204,14 @@ export default function TournamentPublic({ lang = 'es' }) {
   const localMap = (()=>{ try{ const m=JSON.parse(localStorage.getItem('padelorganizers-tournaments')||'{}'); return m[id]||null; }catch{ return null; }})();
   const state = localMap || (isLive ? store : remote) || store;
 
+  React.useEffect(()=>{
+    const lastRound = Math.max(0, ...state.matches.map(m=>m.round));
+    const finalDone = state.matches.some(m=>m.round===lastRound && m.status==='completed' && lastRound>0);
+    if(finalDone && state.tournament?.state!=='FINAL' && state.tournament?.state!=='CLOSED'){
+      try{ saveTournamentById(id, (cur)=> ({ ...cur, tournament: { ...cur.tournament, state:'FINAL', status:'final', auditLog:[...(cur.tournament.auditLog||[]), {at:new Date().toISOString(), action:'FINAL', champ: state.matches.find(m=>m.round===lastRound)?.pair1Names }] } })); }catch{}
+    }
+  }, [state.matches.length, state.tournament?.state, id]);
+
   useEffect(() => {
     if (isLive) return;
     let mounted = true;
@@ -349,6 +357,23 @@ export default function TournamentPublic({ lang = 'es' }) {
         <span style={{ fontSize: '13px', color: '#94a3b8' }}>🟢 {t.totalCourts}</span>
       </div>
       <p style={{ fontSize: '12px', color: '#64748b', margin: '0 0 20px' }}>✨ {T.sharedBy.replace('{club}', t.club)}</p>
+      {(() => {
+        const lastRound = Math.max(0, ...state.matches.map(m=>m.round));
+        const final = state.matches.filter(m=>m.round===lastRound && m.status==='completed')[0];
+        const champ = final ? (final.winnerIds?.join(',') || final.pair1Names) : null;
+        const isFinal = t.state==='FINAL' || t.state==='CLOSED' || !!final;
+        if (!isFinal || !final) return null;
+        return (
+          <div style={{ background:'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)', color:'#1f2937', borderRadius:16, padding:18, marginBottom:16, display:'flex', gap:12, alignItems:'center', flexWrap:'wrap', justifyContent:'space-between' }}>
+            <div>
+              <div style={{ fontSize:11, fontWeight:800, letterSpacing:1 }}>🏆 CAMPEÓN</div>
+              <div style={{ fontSize:18, fontWeight:900 }}>{final.pair1Names && final.winnerIds ? final.pair1Names : champ} </div>
+              <div style={{ fontSize:12, opacity:0.8 }}>Final R{lastRound} · {final.scoreSet1} {final.scoreSet2?` / ${final.scoreSet2}`:''}</div>
+            </div>
+            <div style={{ fontSize:12, fontWeight:700, background:'rgba(0,0,0,0.12)', padding:'6px 10px', borderRadius:999 }}>{t.state || 'FINAL'}</div>
+          </div>
+        );
+      })()}
       <TournamentInscriptions tournamentId={id} lang={lang} />
 
       {/* INSCRIPCIÓN */}
@@ -567,6 +592,25 @@ export default function TournamentPublic({ lang = 'es' }) {
         <TournamentChat lang={lang} tournamentId={t.id || id} />
       </div>
 
+      {/* CLASIFICACIÓN FINAL 1º-32º */}
+      {(() => {
+        const lastRound = Math.max(0, ...state.matches.map(m=>m.round));
+        const hasFinal = state.matches.some(m=>m.round===lastRound && m.status==='completed');
+        if (!hasFinal) return null;
+        const order = state.pairs.slice().sort((a,b)=> b.points - a.points || b.diff - a.diff);
+        const label = (idx) => idx===0 ? '1º Campeón' : idx===1 ? '2º Finalista' : idx<4 ? '3º-4º Semifinal' : idx<8 ? '5º-8º Cuartos' : idx<16 ? '9º-16º Octavos' : `${idx+1}º`;
+        return (
+          <div style={{ ...card, marginBottom:16 }}>
+            <h3 style={{ fontSize:15, fontWeight:800, color:'#fff', margin:'0 0 8px' }}>🏁 Clasificación final</h3>
+            {order.slice(0,16).map((p,i)=>(
+              <div key={p.id} style={{ display:'flex', justifyContent:'space-between', padding:'6px 0', borderBottom:'1px solid var(--padel-border)', fontSize:13 }}>
+                <span style={{ fontWeight: i<3?'800':'600', color: i===0?'#fbbf24': i===1?'#cbd5e1': i<4?'#d6a26a':'var(--padel-text)' }}>{label(i)} · {p.player1.split(' ')[0]} / {p.player2.split(' ')[0]}</span>
+                <span style={{ fontSize:11, color:'var(--padel-muted)' }}>{p.points} pts</span>
+              </div>
+            ))}
+          </div>
+        );
+      })()}
       {/* ANALYTICS */}
       <div style={{ marginTop: '16px' }}>
         <h3 style={{ fontSize: '18px', fontWeight: 900, color: '#fff', margin: '0 0 4px' }}>{T.analytics}</h3>
