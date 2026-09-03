@@ -136,8 +136,10 @@ export default function CrearTorneoWizard({ lang = 'es' }) {
       if (form.seed) localStorage.setItem('padelorganizers-wildcards','1');
       if (form.budget) localStorage.setItem('padelorganizers-cap','1');
     } catch {}
+    if (form.email) {
+      fetch('/api/welcome-email', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ email: form.email, name: form.name, tournament: form.name, club: form.club, lang }) }).catch(()=>{});
+    }
     setDone(true);
-    // keep ID for share page
     try { localStorage.setItem('padelorganizers-last-tournament-id', data.tournament.id); } catch {}
     setTimeout(() => nav(`/tournament/${encodeURIComponent(data.tournament.id)}`), 900);
   };
