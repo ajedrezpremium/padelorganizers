@@ -100,7 +100,7 @@ const I18N = {
     stats: [
       ['4+', 'Formatos de torneo'],
       ['100%', 'Automático & en vivo'],
-      ['4', 'Idiomas (ES · EN · FR · PT)'],
+      ['4', 'Idiomas'],
       ['24/7', 'Disponibilidad Cloud'],
     ],
     featuresTitle: 'Todo lo que tu club necesita',
@@ -207,7 +207,7 @@ const I18N = {
     stats: [
       ['4+', 'Tournament formats'],
       ['100%', 'Automatic & live'],
-      ['4', 'Languages (ES · EN · FR · PT)'],
+      ['4', 'Languages'],
       ['24/7', 'Cloud availability'],
     ],
     featuresTitle: 'Everything your club needs',
@@ -309,7 +309,7 @@ const I18N = {
     stats: [
       ['4+', 'Formats de tournoi'],
       ['100%', 'Automatique & en direct'],
-      ['4', 'Langues (ES · EN · FR · PT)'],
+      ['4', 'Langues'],
       ['24/7', 'Disponibilité cloud'],
     ],
     featuresTitle: 'Tout ce qu\'il faut à votre club',
@@ -411,7 +411,7 @@ const I18N = {
     stats: [
       ['4+', 'Formatos de torneio'],
       ['100%', 'Automático & ao vivo'],
-      ['4', 'Idiomas (ES · EN · FR · PT)'],
+      ['4', 'Idiomas'],
       ['24/7', 'Disponibilidade cloud'],
     ],
     featuresTitle: 'Tudo o que o seu clube precisa',
