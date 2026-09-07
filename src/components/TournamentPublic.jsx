@@ -246,6 +246,14 @@ export default function TournamentPublic({ lang = 'es' }) {
 
   const t = state.tournament;
   const isRunning = t.status === 'active' || t.status === 'in_game';
+  React.useEffect(()=>{
+    if(!t?.name) return;
+    const el=document.createElement('script'); el.type='application/ld+json';
+    el.text=JSON.stringify({"@context":"https://schema.org","@type":"SportsEvent","name":t.name,"location":{"@type":"SportsActivityLocation","name":t.club,"address":t.city||''},"startDate":t.date||undefined,"description":`Torneo ${t.modality} con ${state.players.length} jugadores`,"organizer":{"@type":"Organization","name":"PADELORGANIZERS","url":"https://padelorganizers.vercel.app"}});
+    document.head.appendChild(el);
+    const og=document.querySelector('meta[property=\"og:title\"]'); if(og) og.content=`${t.name} — ${t.club} | PADELORGANIZERS`;
+    return ()=>el.remove();
+  },[t.name,t.club,t.date,state.players.length]);
   const sortedPlayers = [...state.players].sort((a, b) => b.elo - a.elo);
   const sortedPairs = [...state.pairs].sort((a, b) => b.points - a.points || b.diff - a.diff);
   const rounds = [...new Set(state.matches.map((m) => m.round))].sort((a, b) => a - b);
@@ -350,6 +358,7 @@ export default function TournamentPublic({ lang = 'es' }) {
       <h1 style={{ fontSize: '30px', fontWeight: 900, color: '#fff', margin: '14px 0 4px' }}>
         {t.name}
       </h1>
+      {t.cartel && <img src={encodeURI(t.cartel)} alt="Cartel" style={{ width:'100%', maxWidth:600, borderRadius:12, margin:'12px 0', border:'1px solid var(--padel-border)' }} />}
       <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap', marginBottom: '22px' }}>
         <span style={{ fontSize: '13px', color: '#94a3b8' }}>🏟️ {t.club}</span>
         <span style={{ fontSize: '13px', color: '#94a3b8' }}>🎾 {t.modality}</span>

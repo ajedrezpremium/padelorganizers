@@ -155,6 +155,7 @@ export default function TournamentControl({ lang = 'es' }) {
             </span>
             <button onClick={() => nav('/importar')} style={{ ...ghostBtn, color: 'var(--padel-lime)', borderColor: 'rgba(163,230,53,0.3)' }}>{T.importPlayers}</button>
             <button onClick={() => { clearBracket(); refresh(); }} style={{ ...ghostBtn, color: '#fbbf24', borderColor: 'rgba(251,191,36,0.4)' }}>↺ Reiniciar cuadro</button>
+            <button onClick={async()=>{ try{ const r=await fetch('/torneo-aires-2026.json'); if(!r.ok) throw 0; const d=await r.json(); const { buildTournament } = await import('../services/store'); buildTournament(d); refresh(); alert('Torneo AIRES 2026 cargado — 2 categorías, 8 parejas'); }catch{ alert('No se pudo cargar AIRES 2026'); } }} style={{ ...ghostBtn, color:'#38bdf8', borderColor:'rgba(56,189,248,0.4)' }}>🏖️ Cargar AIRES 2026</button>
             <button onClick={() => { loadDemoTournament(); refresh(); }} style={ghostBtn}>{T.reset}</button>
           </div>
         </div>

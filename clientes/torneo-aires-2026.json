@@ -1,0 +1,407 @@
+{
+  "tournament": {
+    "id": "torneo-aires-2026",
+    "name": "XIII TORNEO PADEL AIRES 2026",
+    "club": "Urbanización Aires",
+    "city": "Vigo",
+    "modality": "grupos",
+    "categories": "PADRES/HIJOS, FEMENINO",
+    "categoryList": [
+      {
+        "id": "cat-padres-hijos",
+        "name": "PADRES/HIJOS",
+        "groups": [
+          {
+            "id": "g-ph-3",
+            "name": "GRUPO 3",
+            "pairs": [
+              {
+                "p1": "IRENE",
+                "p2": "JOSE ANTONIO"
+              },
+              {
+                "p1": "JANDRO",
+                "p2": "PEDRO"
+              },
+              {
+                "p1": "ANDRE",
+                "p2": "IAGO"
+              },
+              {
+                "p1": "NURIA",
+                "p2": "MARTIN"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "cat-femenino",
+        "name": "FEMENINO",
+        "groups": [
+          {
+            "id": "g-f-1",
+            "name": "GRUPO 1",
+            "pairs": [
+              {
+                "p1": "BEA",
+                "p2": "IRENA"
+              },
+              {
+                "p1": "LORENA",
+                "p2": "MONI"
+              },
+              {
+                "p1": "MAYKA",
+                "p2": "BEGOÑA"
+              },
+              {
+                "p1": "CRIS",
+                "p2": "MERCEDES"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "totalCourts": 4,
+    "pointsPerMatch": 24,
+    "goldPoint": true,
+    "state": "OPEN",
+    "status": "open",
+    "cartel": "/images/PADEL AIRES 2026.jpeg",
+    "lang": "es",
+    "createdAt": "2026-09-07T14:49:17.233Z"
+  },
+  "courts": [
+    {
+      "id": 1,
+      "name": "Pista 1 — Central",
+      "status": "free",
+      "matchId": null,
+      "startTime": null
+    },
+    {
+      "id": 2,
+      "name": "Pista 2",
+      "status": "free",
+      "matchId": null,
+      "startTime": null
+    },
+    {
+      "id": 3,
+      "name": "Pista 3",
+      "status": "free",
+      "matchId": null,
+      "startTime": null
+    },
+    {
+      "id": 4,
+      "name": "Pista 4",
+      "status": "free",
+      "matchId": null,
+      "startTime": null
+    }
+  ],
+  "players": [
+    {
+      "id": "pl-1",
+      "name": "IRENE",
+      "elo": 1500,
+      "level": 3,
+      "pairId": "p-1",
+      "matchesPlayed": 0,
+      "wins": 0,
+      "losses": 0
+    },
+    {
+      "id": "pl-2",
+      "name": "JOSE ANTONIO",
+      "elo": 1500,
+      "level": 3,
+      "pairId": "p-1",
+      "matchesPlayed": 0,
+      "wins": 0,
+      "losses": 0
+    },
+    {
+      "id": "pl-3",
+      "name": "JANDRO",
+      "elo": 1500,
+      "level": 3,
+      "pairId": "p-2",
+      "matchesPlayed": 0,
+      "wins": 0,
+      "losses": 0
+    },
+    {
+      "id": "pl-4",
+      "name": "PEDRO",
+      "elo": 1500,
+      "level": 3,
+      "pairId": "p-2",
+      "matchesPlayed": 0,
+      "wins": 0,
+      "losses": 0
+    },
+    {
+      "id": "pl-5",
+      "name": "ANDRE",
+      "elo": 1500,
+      "level": 3,
+      "pairId": "p-3",
+      "matchesPlayed": 0,
+      "wins": 0,
+      "losses": 0
+    },
+    {
+      "id": "pl-6",
+      "name": "IAGO",
+      "elo": 1500,
+      "level": 3,
+      "pairId": "p-3",
+      "matchesPlayed": 0,
+      "wins": 0,
+      "losses": 0
+    },
+    {
+      "id": "pl-7",
+      "name": "NURIA",
+      "elo": 1500,
+      "level": 3,
+      "pairId": "p-4",
+      "matchesPlayed": 0,
+      "wins": 0,
+      "losses": 0
+    },
+    {
+      "id": "pl-8",
+      "name": "MARTIN",
+      "elo": 1500,
+      "level": 3,
+      "pairId": "p-4",
+      "matchesPlayed": 0,
+      "wins": 0,
+      "losses": 0
+    },
+    {
+      "id": "pl-9",
+      "name": "BEA",
+      "elo": 1500,
+      "level": 3,
+      "pairId": "p-5",
+      "matchesPlayed": 0,
+      "wins": 0,
+      "losses": 0
+    },
+    {
+      "id": "pl-10",
+      "name": "IRENA",
+      "elo": 1500,
+      "level": 3,
+      "pairId": "p-5",
+      "matchesPlayed": 0,
+      "wins": 0,
+      "losses": 0
+    },
+    {
+      "id": "pl-11",
+      "name": "LORENA",
+      "elo": 1500,
+      "level": 3,
+      "pairId": "p-6",
+      "matchesPlayed": 0,
+      "wins": 0,
+      "losses": 0
+    },
+    {
+      "id": "pl-12",
+      "name": "MONI",
+      "elo": 1500,
+      "level": 3,
+      "pairId": "p-6",
+      "matchesPlayed": 0,
+      "wins": 0,
+      "losses": 0
+    },
+    {
+      "id": "pl-13",
+      "name": "MAYKA",
+      "elo": 1500,
+      "level": 3,
+      "pairId": "p-7",
+      "matchesPlayed": 0,
+      "wins": 0,
+      "losses": 0
+    },
+    {
+      "id": "pl-14",
+      "name": "BEGOÑA",
+      "elo": 1500,
+      "level": 3,
+      "pairId": "p-7",
+      "matchesPlayed": 0,
+      "wins": 0,
+      "losses": 0
+    },
+    {
+      "id": "pl-15",
+      "name": "CRIS",
+      "elo": 1500,
+      "level": 3,
+      "pairId": "p-8",
+      "matchesPlayed": 0,
+      "wins": 0,
+      "losses": 0
+    },
+    {
+      "id": "pl-16",
+      "name": "MERCEDES",
+      "elo": 1500,
+      "level": 3,
+      "pairId": "p-8",
+      "matchesPlayed": 0,
+      "wins": 0,
+      "losses": 0
+    }
+  ],
+  "pairs": [
+    {
+      "id": "p-1",
+      "player1": "IRENE",
+      "player2": "JOSE ANTONIO",
+      "ranking": 1,
+      "points": 0,
+      "gamesWon": 0,
+      "gamesLost": 0,
+      "diff": 0,
+      "matchesPlayed": 0,
+      "category": "PADRES/HIJOS",
+      "group": "GRUPO 3"
+    },
+    {
+      "id": "p-2",
+      "player1": "JANDRO",
+      "player2": "PEDRO",
+      "ranking": 2,
+      "points": 0,
+      "gamesWon": 0,
+      "gamesLost": 0,
+      "diff": 0,
+      "matchesPlayed": 0,
+      "category": "PADRES/HIJOS",
+      "group": "GRUPO 3"
+    },
+    {
+      "id": "p-3",
+      "player1": "ANDRE",
+      "player2": "IAGO",
+      "ranking": 3,
+      "points": 0,
+      "gamesWon": 0,
+      "gamesLost": 0,
+      "diff": 0,
+      "matchesPlayed": 0,
+      "category": "PADRES/HIJOS",
+      "group": "GRUPO 3"
+    },
+    {
+      "id": "p-4",
+      "player1": "NURIA",
+      "player2": "MARTIN",
+      "ranking": 4,
+      "points": 0,
+      "gamesWon": 0,
+      "gamesLost": 0,
+      "diff": 0,
+      "matchesPlayed": 0,
+      "category": "PADRES/HIJOS",
+      "group": "GRUPO 3"
+    },
+    {
+      "id": "p-5",
+      "player1": "BEA",
+      "player2": "IRENA",
+      "ranking": 5,
+      "points": 0,
+      "gamesWon": 0,
+      "gamesLost": 0,
+      "diff": 0,
+      "matchesPlayed": 0,
+      "category": "FEMENINO",
+      "group": "GRUPO 1"
+    },
+    {
+      "id": "p-6",
+      "player1": "LORENA",
+      "player2": "MONI",
+      "ranking": 6,
+      "points": 0,
+      "gamesWon": 0,
+      "gamesLost": 0,
+      "diff": 0,
+      "matchesPlayed": 0,
+      "category": "FEMENINO",
+      "group": "GRUPO 1"
+    },
+    {
+      "id": "p-7",
+      "player1": "MAYKA",
+      "player2": "BEGOÑA",
+      "ranking": 7,
+      "points": 0,
+      "gamesWon": 0,
+      "gamesLost": 0,
+      "diff": 0,
+      "matchesPlayed": 0,
+      "category": "FEMENINO",
+      "group": "GRUPO 1"
+    },
+    {
+      "id": "p-8",
+      "player1": "CRIS",
+      "player2": "MERCEDES",
+      "ranking": 8,
+      "points": 0,
+      "gamesWon": 0,
+      "gamesLost": 0,
+      "diff": 0,
+      "matchesPlayed": 0,
+      "category": "FEMENINO",
+      "group": "GRUPO 1"
+    }
+  ],
+  "groups": [
+    {
+      "id": "g-ph-3",
+      "name": "PADRES/HIJOS — GRUPO 3",
+      "category": "PADRES/HIJOS",
+      "memberIds": [
+        "pl-1",
+        "pl-2",
+        "pl-3",
+        "pl-4",
+        "pl-5",
+        "pl-6",
+        "pl-7",
+        "pl-8"
+      ]
+    },
+    {
+      "id": "g-f-1",
+      "name": "FEMENINO — GRUPO 1",
+      "category": "FEMENINO",
+      "memberIds": [
+        "pl-9",
+        "pl-10",
+        "pl-11",
+        "pl-12",
+        "pl-13",
+        "pl-14",
+        "pl-15",
+        "pl-16"
+      ]
+    }
+  ],
+  "matches": []
+}
