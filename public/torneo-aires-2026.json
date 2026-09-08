@@ -403,5 +403,15 @@
       ]
     }
   ],
-  "matches": []
+  "matches": [],
+  "sponsors": [
+    {
+      "id": "s-dcm",
+      "brand": "DCM — Deportes Carlos Miguel",
+      "url": "https://www.deportescariosmiguel.com",
+      "tier": "gold",
+      "color": "#84cc16",
+      "logo": "/images/dcm-aires.png"
+    }
+  ]
 }
