@@ -86,6 +86,24 @@ export default function AdminPanel({ lang='es' }) {
               </div>
             ))}
           </div>
+          <div style={{ ...card, marginBottom:12, background:'linear-gradient(135deg, rgba(16,185,129,0.08), rgba(56,189,248,0.08))', border:'1px solid rgba(16,185,129,0.3)' }}>
+            {(() => {
+              let activos=0; try{ const m=JSON.parse(localStorage.getItem('padelorganizers-tournaments')||'{}'); activos=Object.values(m).filter(t=> (t.pairs||[]).length>=4).length; if((JSON.parse(localStorage.getItem('padelorganizers-store-v1')||'{}').pairs||[]).length>=4) activos=Math.max(1,activos); }catch{ activos= store.pairs?.length>=4?1:0; }
+              const pct=Math.min(100, Math.round(activos/100*100));
+              return (
+                <>
+                  <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:8 }}>
+                    <span style={{ fontSize:13, fontWeight:800, color:'var(--padel-text)' }}>🎯 Objetivo 100 clubes activos</span>
+                    <span style={{ fontSize:12, fontWeight:800, color: pct>=100?'#10b981':'#38bdf8' }}>{activos}/100</span>
+                  </div>
+                  <div style={{ height:10, background:'var(--padel-hover-bg)', borderRadius:999, overflow:'hidden' }}>
+                    <div style={{ width:`${pct}%`, height:'100%', background:'linear-gradient(90deg,#10b981,#38bdf8)', transition:'width 0.5s' }} />
+                  </div>
+                  <div style={{ fontSize:11, color:'var(--padel-muted)', marginTop:6 }}>Activos = torneos con ≥4 parejas. Hoy: I OPEN PADEL AIRES + AIRES 2026 = {activos}. Campaña 51 ok + 248 mañana → 20 nuevos = 21/100.</div>
+                </>
+              );
+            })()}
+          </div>
           <div style={{ ...card, marginBottom:12 }}>
             <h3 style={h2}>Alertas</h3>
             {CEO_MOCK.alertas.map(a=>(
