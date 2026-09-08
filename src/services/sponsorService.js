@@ -16,6 +16,7 @@ export const TIERS = [
 ];
 
 const SEED = [
+  { id: 'sp-dcm', name: 'Deportes Carlos Miguel', brand: 'DCM', color: '#84cc16', tier: 'oro', url: 'https://www.deportescariosmiguel.com', logo: '/images/dcm-aires.svg' },
   { id: 'sp1', name: 'Padel5.com', brand: 'Padel5', color: '#10b981', tier: 'oro', url: 'https://www.padel5.com' },
   { id: 'sp2', name: 'Bullpadel', brand: 'Bullpadel', color: '#f59e0b', tier: 'plata', url: 'https://www.bullpadel.com' },
   { id: 'sp3', name: 'Vibor-A', brand: 'Vibor-A', color: '#3b82f6', tier: 'bronce', url: 'https://www.vibor-a.com' },
