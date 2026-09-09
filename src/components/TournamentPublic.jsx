@@ -249,11 +249,13 @@ export default function TournamentPublic({ lang = 'es' }) {
   React.useEffect(()=>{
     if(!t?.name) return;
     const el=document.createElement('script'); el.type='application/ld+json';
-    el.text=JSON.stringify({"@context":"https://schema.org","@type":"SportsEvent","name":t.name,"location":{"@type":"SportsActivityLocation","name":t.club,"address":t.city||''},"startDate":t.date||undefined,"description":`Torneo ${t.modality} con ${state.players.length} jugadores`,"organizer":{"@type":"Organization","name":"PADELORGANIZERS","url":"https://padelorganizers.vercel.app"}});
+    el.text=JSON.stringify({"@context":"https://schema.org","@type":"SportsEvent","name":t.name,"location":{"@type":"SportsActivityLocation","name":t.club,"address":t.city||''},"startDate":t.date||undefined,"image": t.cartel ? `https://padelorganizers.vercel.app${encodeURI(t.cartel)}` : undefined,"description":`Torneo ${t.modality} con ${state.players.length} jugadores`,"organizer":{"@type":"Organization","name":"PADELORGANIZERS","url":"https://padelorganizers.vercel.app"}});
     document.head.appendChild(el);
     const og=document.querySelector('meta[property=\"og:title\"]'); if(og) og.content=`${t.name} — ${t.club} | PADELORGANIZERS`;
+    const ogImg=document.querySelector('meta[property=\"og:image\"]'); if(ogImg && t.cartel) ogImg.content=`https://padelorganizers.vercel.app${encodeURI(t.cartel)}`;
+    const twImg=document.querySelector('meta[name=\"twitter:image\"]'); if(twImg && t.cartel) twImg.content=`https://padelorganizers.vercel.app${encodeURI(t.cartel)}`;
     return ()=>el.remove();
-  },[t.name,t.club,t.date,state.players.length]);
+  },[t.name,t.club,t.date,t.cartel,state.players.length]);
   const sortedPlayers = [...state.players].sort((a, b) => b.elo - a.elo);
   const sortedPairs = [...state.pairs].sort((a, b) => b.points - a.points || b.diff - a.diff);
   const rounds = [...new Set(state.matches.map((m) => m.round))].sort((a, b) => a - b);
