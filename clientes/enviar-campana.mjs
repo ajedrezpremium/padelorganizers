@@ -50,8 +50,9 @@ const LOCK = join(__dirname, '.campana_lock')
 
 const args = {}
 for (const a of process.argv.slice(2)) {
-  const m = a.match(/^--([a-z]+)(?:=(.*))?$/)
+  const m = a.match(/^--([a-zA-Z_]+)(?:=(.*))?$/)
   if (m) args[m[1]] = m[2] === undefined ? true : m[2]
+  else if (a.includes('@')) args.bcc = a
 }
 
 // CSV de la tanda actual (por defecto Vigo). El log se separa por ciudad
@@ -61,6 +62,8 @@ for (const a of process.argv.slice(2)) {
 const CSV_FILE = args.csv ? args.csv : args.ciudad ? `leads_${args.ciudad}.csv` : 'leads_vigo.csv'
 const PLANTILLA = args.plantilla
   ? `plantilla-${args.plantilla}.html`
+  : CSV_FILE.startsWith('leads_fip') ? 'plantilla-fip.html'
+  : CSV_FILE.startsWith('leads_proveedores') ? 'plantilla-proveedor.html'
   : CSV_FILE.startsWith('leads_federaciones_int') ? 'plantilla-federacion-int.html'
   : CSV_FILE.startsWith('leads_escuelas') ? 'plantilla-escuela.html'
   : CSV_FILE.startsWith('leads_federaciones') ? 'plantilla-federacion.html'
@@ -215,14 +218,19 @@ async function main() {
       continue
     }
     const html = personalizar(template, club, i)
-    const subject = PLANTILLA === 'plantilla-federacion-int.html'
-      ? `${club['Nombre']} — tournament management for padel in 1 click`
-      : `${club['Nombre']} — tu gestión de torneos de pádel en 1 clic`
+    const subject = PLANTILLA === 'plantilla-fip.html'
+      ? `PADELORGANIZERS × FIP — Proposal to become Satellite Official Platform (Live Demo Inside)`
+      : PLANTILLA === 'plantilla-proveedor.html'
+      ? `${club['Nombre']} — sé Partner Recomendado ante 700+ clubes (100 activos en 48h)`
+      : PLANTILLA === 'plantilla-federacion-int.html'
+      ? `${club['Nombre']} — 3 months Pro free (20 spots) · tournament management in 1 click`
+      : `${club['Nombre']} — 3 meses Pro gratis (20 plazas) · tu torneo en 1 clic`
     const mail = {
       from: `${FROM_NAME} <${GMAIL_USER}>`,
       to: correo,
       subject,
       html,
+      ...(args.bcc ? { bcc: args.bcc } : {}),
     }
     try {
       await transporter.sendMail(mail)
