@@ -31,9 +31,18 @@ dist-ssr
 clientes/tokens_verificacion.json
 clientes/preview-verificacion.html
 clientes/preview-email.html
+clientes/preview-followup.html
+clientes/preview-premium.html
 clientes/tokens_verificacion.sql
 
 # Logs de campana (base del CRM, no versionar)
+clientes/campana_log.csv
 clientes/campana_log_*.csv
+clientes/followup_log.csv
+clientes/*.bak-*
+clientes/leads_*_ok.csv
 clientes/rebotes.csv
 clientes/informes/revision_*.md
+clientes/informes/validacion_*.md
+clientes/.demo_vistos.json
+clientes/.campana_lock
