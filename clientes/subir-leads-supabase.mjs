@@ -101,10 +101,29 @@ for (const f of readdirSync(__dirname).filter((f) => /^leads_.*_ok\.csv$/i.test(
 }
 
 const all = [...leads.values()]
-console.log(`Upsert de ${all.length} leads a commercial_leads…`)
+
+// No degradar: el panel (y los scripts) avanzan estados (seguimiento,
+// respondido, demo, ganado…) que el CSV ya no refleja. Se leen los estados
+// actuales y solo se sube si el nuevo es igual o más avanzado.
+const RANK = { nuevo: 1, sin_correo: 2, rebote: 2, pausado: 2, contactado: 3, seguimiento: 4, respondido: 5, demo_solicitada: 6, demo_hecha: 7, negociacion: 8, ganado: 9, perdido: 9 }
+let actuales = new Map()
+try {
+  const r = await fetch(`${URL}/rest/v1/commercial_leads?select=email,estado`, {
+    headers: { apikey: KEY, Authorization: `Bearer ${KEY}` },
+  })
+  if (r.ok) {
+    for (const row of await r.json()) actuales.set((row.email || '').toLowerCase(), row.estado)
+  }
+} catch { /* sin lectura previa: se sube todo */ }
+const utiles = all.filter((l) => {
+  const prev = actuales.get(l.email.toLowerCase())
+  if (!prev) return true
+  return (RANK[l.estado] || 0) >= (RANK[prev] || 0)
+})
+console.log(`Upsert de ${utiles.length}/${all.length} leads (se respetan ${all.length - utiles.length} estados avanzados del panel)…`)
 let ok = 0
-for (let i = 0; i < all.length; i += 200) {
-  const batch = all.slice(i, i + 200).map((l) => ({ ...l, updated_at: new Date().toISOString() }))
+for (let i = 0; i < utiles.length; i += 200) {
+  const batch = utiles.slice(i, i + 200).map((l) => ({ ...l, updated_at: new Date().toISOString() }))
   const r = await fetch(`${URL}/rest/v1/commercial_leads?on_conflict=email`, {
     method: 'POST',
     headers: { apikey: KEY, Authorization: `Bearer ${KEY}`, 'Content-Type': 'application/json', Prefer: 'resolution=merge-duplicates,return=minimal' },
@@ -112,6 +131,6 @@ for (let i = 0; i < all.length; i += 200) {
   })
   if (!r.ok) { console.error(`Batch ${i}: ${r.status} ${await r.text()}`); process.exit(1) }
   ok += batch.length
-  console.log(`  ${ok}/${all.length}`)
+  console.log(`  ${ok}/${utiles.length}`)
 }
 console.log(`Listo: ${ok} leads sincronizados.`)

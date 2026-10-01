@@ -66,6 +66,14 @@ async function registrarDemo({ email, nombre, snippet }) {
       headers: { apikey: SUPA_KEY, Authorization: `Bearer ${SUPA_KEY}`, 'Content-Type': 'application/json', Prefer: 'return=minimal' },
       body: JSON.stringify({ email, nombre, fuente: 'email', idioma: 'es' }),
     })
+    // El lead también avanza en el pipeline (el sync nunca lo degradará)
+    try {
+      await fetch(`${SUPA_URL}/rest/v1/commercial_leads?on_conflict=email`, {
+        method: 'POST',
+        headers: { apikey: SUPA_KEY, Authorization: `Bearer ${SUPA_KEY}`, 'Content-Type': 'application/json', Prefer: 'resolution=merge-duplicates,return=minimal' },
+        body: JSON.stringify([{ email: email.toLowerCase(), nombre, estado: 'demo_solicitada', fuente: 'email', updated_at: new Date().toISOString() }]),
+      })
+    } catch { /* noop */ }
     return r.ok
   } catch { return false }
 }

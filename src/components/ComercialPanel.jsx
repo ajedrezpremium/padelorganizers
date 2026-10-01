@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase, isSupabaseConfigured } from '../lib/supabaseClient';
 
-const ESTADOS = ['nuevo', 'contactado', 'respondido', 'demo_solicitada', 'demo_hecha', 'negociacion', 'ganado', 'perdido', 'rebote', 'sin_correo'];
+const ESTADOS = ['nuevo', 'contactado', 'seguimiento', 'respondido', 'demo_solicitada', 'demo_hecha', 'negociacion', 'ganado', 'perdido', 'rebote', 'sin_correo', 'pausado'];
 
 // Pestaña COMERCIAL del AdminPanel: pipeline + solicitudes de demo virtual.
 // Lee de Supabase (tablas commercial_leads y demo_requests).
@@ -26,7 +26,11 @@ export default function ComercialPanel() {
     }
   };
 
-  useEffect(() => { cargar(); }, []);
+  useEffect(() => {
+    cargar();
+    const id = setInterval(cargar, 60000); // refresco automático cada minuto
+    return () => clearInterval(id);
+  }, []);
 
   const marcarDemo = async (id, estado) => {
     await supabase.from('demo_requests').update({ estado }).eq('id', id);
@@ -65,7 +69,10 @@ export default function ComercialPanel() {
         </div>
       )}
       <div style={{ ...card, marginBottom: 12 }}>
-        <h3 style={{ fontSize: 15, fontWeight: 800, margin: '0 0 10px' }}>📊 Pipeline — {leads.length} leads</h3>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
+          <h3 style={{ fontSize: 15, fontWeight: 800, margin: 0 }}>📊 Pipeline — {leads.length} leads</h3>
+          <button onClick={cargar} style={{ fontSize: 11, fontWeight: 800, padding: '6px 10px', borderRadius: 8, border: '1px solid var(--padel-border)', background: 'var(--padel-hover-bg)', cursor: 'pointer' }}>↻ Actualizar</button>
+        </div>
         <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
           {ESTADOS.filter((e) => counts[e]).map((e) => (
             <div key={e} style={{ background: 'var(--padel-hover-bg)', borderRadius: 10, padding: '8px 12px', fontSize: 12 }}>
