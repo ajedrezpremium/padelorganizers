@@ -39,6 +39,8 @@ if (s1 !== 0) console.log('(!) Sync Supabase falló — sigo con el envío local
 run('enviar-campana.mjs', [`--csv=${CSV}`, `--max=${MAX}`])
 const s3 = run('detectar-demo.mjs', [`--dias=${DIAS}`])
 if (s3 === 2) demo = true
+// Sync final: deja en el panel lo enviado hoy (con guard anti-degradado)
+run('subir-leads-supabase.mjs')
 
 console.log('\n===== RESUMEN =====')
 console.log(`CSV: ${CSV} · máx: ${MAX}`)

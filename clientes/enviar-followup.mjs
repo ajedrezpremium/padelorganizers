@@ -159,6 +159,7 @@ const transporter = nodemailer.createTransport({
 
 if (!existsSync(FUP_LOG)) writeFileSync(FUP_LOG, 'email,nombre,fuente,fecha,plantilla\n', 'utf8')
 let enviados = 0
+const enviadosLista = []
 for (const c of lista) {
   if (enviados >= MAX) { console.log(`[*] Tope ${MAX} alcanzado.`); break }
   if (!await tieneMx(c.email)) { console.log(`- ${c.email}: sin MX, salto.`); continue }
@@ -175,12 +176,39 @@ for (const c of lista) {
       headers: { 'List-Unsubscribe': `<mailto:info@padelorganizers.com?subject=Unsubscribe%20${encodeURIComponent(c.email)}>` },
     })
     enviados++
+    enviadosLista.push(c)
     console.log(`- ENVIADO follow-up a ${c.email} (${c.nombre})`)
     const line = `"${c.email}","${c.nombre.replace(/"/g, '""')}","${c.fuente}","${new Date().toISOString()}","${c.intl ? 'followup-int' : 'followup'}"\n`
     writeFileSync(FUP_LOG, readFileSync(FUP_LOG, 'utf8') + line, 'utf8')
   } catch (e) {
-    console.error(`- FALLO ${c.email}: ${e.message}`)
+    const msg = String(e.message || e)
+    if (/Daily user sending limit exceeded/.test(msg)) {
+      console.log(`[!] Límite diario Gmail alcanzado tras ${enviados} envíos. Paro limpio: lo no registrado en followup_log.csv se reintenta mañana.`)
+      break
+    }
+    console.error(`- FALLO ${c.email}: ${msg.split('\n')[0]}`)
   }
   await new Promise((r) => setTimeout(r, 4500))
 }
 console.log(`\nListo: ${enviados} follow-ups. Registro en clientes/followup_log.csv`)
+
+// Reflejo en el panel: los contactados pasan a 'seguimiento' en Supabase.
+// Best-effort en un solo batch (el sync diario lo consolidaría igualmente).
+if (enviadosLista.length) {
+  const SUPA_URL = env.VITE_SUPABASE_URL
+  const SUPA_KEY = env.VITE_SUPABASE_ANON_KEY
+  if (SUPA_URL && SUPA_KEY) {
+    try {
+      const batch = enviadosLista.map((c) => ({
+        email: c.email.toLowerCase(), nombre: c.nombre, ciudad: c.fuente,
+        fuente: c.fuente, estado: 'seguimiento', updated_at: new Date().toISOString(),
+      }))
+      const r = await fetch(`${SUPA_URL}/rest/v1/commercial_leads?on_conflict=email`, {
+        method: 'POST',
+        headers: { apikey: SUPA_KEY, Authorization: `Bearer ${SUPA_KEY}`, 'Content-Type': 'application/json', Prefer: 'resolution=merge-duplicates,return=minimal' },
+        body: JSON.stringify(batch),
+      })
+      console.log(r.ok ? `Panel actualizado: ${batch.length} en 'seguimiento'.` : `(!) Panel no actualizado (${r.status}); lo hará el próximo sync.`)
+    } catch { console.log('(!) Sin conexión a Supabase; lo hará el próximo sync.') }
+  }
+}

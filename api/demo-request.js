@@ -26,6 +26,16 @@ export default async function handler(req, res) {
         body: JSON.stringify({ email: email.trim(), nombre: name, perfil: profile, idioma: lang, fuente: source }),
       });
       saved = r.ok;
+      // El lead también avanza en el pipeline del panel (sin pisar nombre existente)
+      try {
+        const lead = { email: email.trim().toLowerCase(), estado: 'demo_solicitada', fuente: source, updated_at: new Date().toISOString() };
+        if (name) lead.nombre = name;
+        await fetch(`${SUPA_URL}/rest/v1/commercial_leads?on_conflict=email`, {
+          method: 'POST',
+          headers: { apikey: SUPA_KEY, Authorization: `Bearer ${SUPA_KEY}`, 'Content-Type': 'application/json', Prefer: 'resolution=merge-duplicates,return=minimal' },
+          body: JSON.stringify([lead]),
+        });
+      } catch { /* noop */ }
     } catch { /* noop */ }
   }
 
