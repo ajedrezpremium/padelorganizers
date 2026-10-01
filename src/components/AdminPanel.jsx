@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { getState } from '../services/store';
 import { ownerDashboard, fmtEuros } from '../services/clubCrmService';
+import ComercialPanel from './ComercialPanel';
 
-const TABS = ['CEO','NEGOCIO','CLIENTES','EQUIPO','ESCUELA','CLUB','COMPETICIÓN','FINANZAS','MARKETING','COMUNIDAD','INTELIGENCIA'];
+const TABS = ['CEO','COMERCIAL','NEGOCIO','CLIENTES','EQUIPO','ESCUELA','CLUB','COMPETICIÓN','FINANZAS','MARKETING','COMUNIDAD','INTELIGENCIA'];
 
 const CEO_MOCK = {
   ingresos: 48250, beneficio: 14820, alumnos: 384, socios: 612, ocupacion: 78, churn: 3.2,
@@ -125,6 +126,8 @@ export default function AdminPanel({ lang='es' }) {
           </div>
         </>
       )}
+
+      {tab==='COMERCIAL' && <ComercialPanel />}
 
       {tab==='NEGOCIO' && <div style={card}><h3 style={h2}>Ingresos vs Gastos</h3><p style={{ fontSize:13, color:'var(--padel-muted)' }}>Escuela, cuotas, reservas, torneos, eventos, patrocinios, tienda vs profesores, pistas, alquiler, marketing. Margen = ingresos − costes.</p><div style={{ fontSize:22, fontWeight:900, color:'#10b981' }}>{fmtEuros(CEO_MOCK.ingresos - 33430)} margen</div></div>}
       {tab==='CLIENTES' && (

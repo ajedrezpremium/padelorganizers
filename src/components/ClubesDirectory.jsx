@@ -200,6 +200,9 @@ export default function ClubesDirectory({ lang = 'es' }) {
       if (!mounted) return;
       setClubes(data);
       setLoading(false);
+      const el=document.createElement('script'); el.type='application/ld+json';
+      el.text=JSON.stringify({"@context":"https://schema.org","@type":"ItemList","name":"Directorio de clubes de pádel","itemListElement": data.slice(0,20).map((c,i)=>({"@type":"ListItem","position":i+1,"item":{"@type":"SportsActivityLocation","name":c.name,"address":c.city}}))});
+      document.head.appendChild(el);
     });
     return () => { mounted = false; };
   }, []);

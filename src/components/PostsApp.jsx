@@ -181,10 +181,27 @@ export default function PostsApp({ lang = 'es' }) {
     }
   };
 
+  const guides = lang==='es' ? [
+    { title:'Cómo organizar un torneo de pádel en 5 pasos', slug:'guia-organizar-torneo-padel', desc:'Desde la inscripción hasta el cuadro final. Plantilla incluida.' },
+    { title:'Reglas del pádel: punto de oro y desempates', slug:'reglas-padel-punto-de-oro', desc:'Todo sobre 40-40, tie-break y super tie-break.' },
+    { title:'Cómo elegir tu pala de pádel según nivel', slug:'elegir-pala-padel-nivel', desc:'Control vs potencia, forma y peso. Guía 2025.' },
+  ] : [];
+
   return (
     <div style={{ maxWidth: 960, margin: '0 auto', padding: '28px 16px 60px' }}>
       <h1 style={{ fontSize: 26, color: '#0f172a', margin: '0 0 4px' }}>{T.badge}</h1>
       <p style={{ color: '#64748b', margin: '0 0 22px' }}>{T.sub}</p>
+      {guides.length>0 && (
+        <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(240px,1fr))', gap:12, marginBottom:22 }}>
+          {guides.map(g=>(
+            <a key={g.slug} href={`/posts#${g.slug}`} style={{ background:'#f0fdf4', border:'1px solid #bbf7d0', borderRadius:12, padding:16, textDecoration:'none', display:'block' }}>
+              <div style={{ fontSize:13, fontWeight:800, color:'#065f46' }}>📘 Guía SEO</div>
+              <div style={{ fontSize:15, fontWeight:800, color:'#0f172a', margin:'4px 0' }}>{g.title}</div>
+              <div style={{ fontSize:12, color:'#64748b' }}>{g.desc}</div>
+            </a>
+          ))}
+        </div>
+      )}
 
       {/* Generador crónica IA */}
       <div style={{ ...cardStyle, border: '2px solid #bbf7d0' }}>

@@ -116,6 +116,11 @@ export default function App() {
   }, [lang]);
 
   usePageTitle(lang);
+  React.useEffect(()=>{
+    ['/torneo/crear','/admin','/control','/tournament/torneo-1788336507130'].forEach(h=>{
+      const l=document.createElement('link'); l.rel='prefetch'; l.href=h; document.head.appendChild(l);
+    });
+  },[]);
 
   const handleLanguageChange = useCallback((next) => {
     if (['es', 'en', 'fr', 'pt'].includes(next)) setLang(next);

@@ -19,6 +19,7 @@ import nodemailer from 'nodemailer'
 import { readFileSync, writeFileSync, existsSync } from 'node:fs'
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { promises as dns } from 'node:dns'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const ROOT = join(__dirname, '..')
@@ -65,8 +66,9 @@ const PLANTILLA = args.plantilla
   : CSV_FILE.startsWith('leads_fip') ? 'plantilla-fip.html'
   : CSV_FILE.startsWith('leads_proveedores') ? 'plantilla-proveedor.html'
   : CSV_FILE.startsWith('leads_federaciones_int') ? 'plantilla-federacion-int.html'
-  : CSV_FILE.startsWith('leads_escuelas') ? 'plantilla-escuela.html'
   : CSV_FILE.startsWith('leads_federaciones') ? 'plantilla-federacion.html'
+  : CSV_FILE.startsWith('leads_escuelas') ? 'plantilla-escuela.html'
+  : /leads_(italia|francia|portugal|brasil|uk|usa|mexico|argentina)/.test(CSV_FILE) ? 'plantilla-club-int.html'
   : 'plantilla-primer-contacto.html'
 const MAX_ENVIOS = args.max !== undefined ? Number(args.max) : 999999
 const LOG_FILE = join(__dirname, `campana_log_${CSV_FILE.replace(/\.csv$/i, '')}.csv`)
@@ -165,6 +167,36 @@ function personalizar(template, club, idx) {
     .replaceAll('{{DEMO_URL}}', `${DEMO_URL}&club=${encodeURIComponent(nombre)}`)
 }
 
+function htmlATexto(html) {
+  return html
+    .replace(/<br\s*\/?>/gi, '\n')
+    .replace(/<\/p>/gi, '\n\n')
+    .replace(/<[^>]+>/g, '')
+    .replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim()
+}
+
+// Detecta leads sintéticos (teléfonos 1111 2222 / dominios info@<club>.xx
+// generados en masa). Enviar a estos quema la reputación: se marcan sin
+// enviar para validar antes con datos reales.
+function esSintetico(club) {
+  const tel = (club['Teléfono'] || '').replace(/\D/g, '')
+  if (/^(1111|0000)/.test(tel) || /11112222|1112222/.test(tel)) return 'teléfono sintético (1111 2222)'
+  return null
+}
+
+async function tieneMx(correo) {
+  const dominio = (correo.split('@')[1] || '').toLowerCase().trim()
+  if (!dominio) return false
+  try {
+    const mx = await dns.resolveMx(dominio)
+    return Array.isArray(mx) && mx.length > 0
+  } catch {
+    return false
+  }
+}
+
 const transporter = nodemailer.createTransport({
   host: 'smtp.gmail.com',
   port: 465,
@@ -206,6 +238,10 @@ async function main() {
       console.log(`- [${i}] ${clubs[i]['Nombre']}: ${estado}, salto.`)
       continue
     }
+    if (estado === 'rebote' || estado === 'pausado') {
+      console.log(`- [${i}] ${clubs[i]['Nombre']}: ${estado}, salto (no reenviar sin revisión).`)
+      continue
+    }
     if (enviados >= MAX_ENVIOS) {
       console.log(`\n[*] Toca máx diario (${MAX_ENVIOS}). El resto queda 'pendiente' para la próxima tanda.`)
       break
@@ -217,19 +253,42 @@ async function main() {
       marcar(i, 'sin-correo', 'email inválido o vía web', club)
       continue
     }
+    // 1) Bloqueo de sintéticos: no quemar reputación con leads inventados
+    const sint = esSintetico(club)
+    if (!args.forzar && sint) {
+      console.log(`- [${i}] ${club['Nombre']}: BLOQUEADO (${sint}). Usa --forzar para enviar igual.`)
+      marcar(i, 'sin-correo', `sintético: ${sint} — validar dato real`, club)
+      continue
+    }
+    // 2) Sin MX = rebote seguro. Se marca y se salta sin gastar cuota.
+    if (!await tieneMx(correo)) {
+      console.log(`- [${i}] ${club['Nombre']}: sin MX (${correo}), registro como 'sin-correo'.`)
+      marcar(i, 'sin-correo', 'sin MX — dominio no recibe correo', club)
+      continue
+    }
     const html = personalizar(template, club, i)
+    // Asuntos cortos, sin GRATIS/FREE en mayúsculas ni emojis (anti-spam).
+    // EN fuera de ES/LATAM, ES dentro.
     const subject = PLANTILLA === 'plantilla-fip.html'
       ? `PADELORGANIZERS × FIP — Proposal to become Satellite Official Platform (Live Demo Inside)`
       : PLANTILLA === 'plantilla-proveedor.html'
       ? `${club['Nombre']} — sé Partner Recomendado ante 700+ clubes (100 activos en 48h)`
       : PLANTILLA === 'plantilla-federacion-int.html'
-      ? `${club['Nombre']} — 3 months Pro free (20 spots) · tournament management in 1 click`
-      : `${club['Nombre']} — 3 meses Pro gratis (20 plazas) · tu torneo en 1 clic`
+      ? `Quick idea for ${club['Nombre']} tournaments`
+      : PLANTILLA === 'plantilla-club-int.html'
+      ? `Quick question for ${club['Nombre']}`
+      : `${club['Nombre']} — tu torneo en 1 clic (demo 30 seg)`
     const mail = {
       from: `${FROM_NAME} <${GMAIL_USER}>`,
       to: correo,
+      replyTo: 'info@padelorganizers.com',
       subject,
+      text: htmlATexto(html),
       html,
+      headers: {
+        'List-Unsubscribe': `<mailto:info@padelorganizers.com?subject=Unsubscribe%20${encodeURIComponent(correo)}>`,
+        'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
+      },
       ...(args.bcc ? { bcc: args.bcc } : {}),
     }
     try {

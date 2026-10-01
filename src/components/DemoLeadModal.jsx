@@ -74,6 +74,13 @@ export default function DemoLeadModal({ lang = 'es', onClose, onSkip }) {
       addSubscriber({ email, name, lang, city: '' });
       // Intento no bloqueante de sync a la nube (si hay conexión)
       try { syncSubscribersToCloud?.().catch(() => {}); } catch { /* noop */ }
+      // Solicitud de demo virtual: guarda en CRM y avisa al dueño (único aviso comercial)
+      try {
+        fetch('/api/demo-request', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: email.trim(), name, profile: T.profiles[profile], lang, source: 'web' }),
+        }).catch(() => {});
+      } catch { /* noop */ }
     }
     setStatus('ok');
     setTimeout(() => navigate('/torneo'), 400);
