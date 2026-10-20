@@ -5,14 +5,21 @@
  */
 
 const PLANS = {
-  starter: { name: 'PADELORGANIZERS Starter', amount: 2900, trialDays: 90 },
+  // Free: sin pago (1 torneo activo, 4 pistas)
+  starter: { name: 'PADELORGANIZERS Starter', amount: 0, trialDays: 0, free: true },
+  // Plan de pago (90 dias gratis para clubes fundadores)
   pro: { name: 'PADELORGANIZERS Pro', amount: 4900, trialDays: 90 },
+  club: { name: 'PADELORGANIZERS Pro', amount: 4900, trialDays: 90 },
 };
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'method not allowed' });
   const { plan = 'pro', email } = req.body || {};
   const cfg = PLANS[plan] || PLANS.pro;
+
+  if (cfg.free) {
+    return res.status(200).json({ free: true, url: null, message: 'El plan Starter es gratuito. Crea tu cuenta y tu primer torneo.' });
+  }
 
   if (!process.env.STRIPE_SECRET_KEY) {
     return res.status(200).json({ demo: true, url: null, message: 'Modo demo: Stripe no configurado. Suscripción simulada.' });

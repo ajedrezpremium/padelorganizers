@@ -111,6 +111,7 @@ export default function LaunchPage({ lang = 'es' }) {
       const r = await fetch('/api/checkout-subscription', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ plan }) });
       const j = await r.json();
       if (j.url) window.location.href = j.url;
+      else if (j.free) { navigate('/torneo/crear'); }
       else if (j.demo) { alert(j.message || 'Modo demo: Stripe no configurado'); setCheckoutBusy(null); }
       else throw new Error(j.error || 'error');
     } catch (e) { alert(e.message || 'Error al iniciar el pago'); setCheckoutBusy(null); }

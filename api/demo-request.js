@@ -11,8 +11,23 @@ const GMAIL_USER = process.env.GMAIL_USER;
 const GMAIL_APP_PASS = (process.env.GMAIL_APP_PASS || process.env['GOOGLE-APP-KEY'] || '').replace(/\s+/g, '');
 const ALERT_EMAIL = process.env.ALERT_EMAIL || GMAIL_USER; // dueño: solo recibe esto
 
+// Rate limit simple por IP (por instancia) + honeypot anti-bots
+const RATE = new Map();
+function allowRequest(ip) {
+  const now = Date.now();
+  const e = RATE.get(ip) || { c: 0, t: now + 60000 };
+  if (now > e.t) { e.c = 0; e.t = now + 60000; }
+  e.c += 1;
+  RATE.set(ip, e);
+  if (RATE.size > 3000) { for (const [k, v] of RATE) if (now > v.t) RATE.delete(k); }
+  return e.c <= 8;
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'method not allowed' });
+  const ip = String((req.headers['x-forwarded-for'] || '').split(',')[0]).trim() || (req.socket && req.socket.remoteAddress) || 'unknown';
+  if (!allowRequest(ip)) return res.status(429).json({ error: 'too many requests' });
+  if (req.body && req.body.website) return res.status(200).json({ ok: true }); // honeypot
   const { email, name = '', profile = '', lang = 'es', source = 'web' } = req.body || {};
   if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return res.status(400).json({ error: 'email required' });
 
@@ -35,6 +50,14 @@ export default async function handler(req, res) {
           headers: { apikey: SUPA_KEY, Authorization: `Bearer ${SUPA_KEY}`, 'Content-Type': 'application/json', Prefer: 'resolution=merge-duplicates,return=minimal' },
           body: JSON.stringify([lead]),
         });
+        // Traza en el historial del lead
+        try {
+          await fetch(`${SUPA_URL}/rest/v1/commercial_events`, {
+            method: 'POST',
+            headers: { apikey: SUPA_KEY, Authorization: `Bearer ${SUPA_KEY}`, 'Content-Type': 'application/json', Prefer: 'return=minimal' },
+            body: JSON.stringify([{ email: email.trim().toLowerCase(), tipo: 'demo', detalle: `${name || ''} (${profile || source})`, fuente: source }]),
+          });
+        } catch { /* noop */ }
       } catch { /* noop */ }
     } catch { /* noop */ }
   }
