@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { addSubscriber, syncSubscribersToCloud } from '../services/subscribersService';
+import { setTrackingEmail, trackWebEvent } from '../services/comercialTracking';
 
 const I18N = {
   es: {
@@ -68,18 +69,28 @@ export default function DemoLeadModal({ lang = 'es', onClose, onSkip }) {
   const [name, setName] = useState('');
   const [profile, setProfile] = useState(0);
   const [status, setStatus] = useState('idle');
+  const [website, setWebsite] = useState('');
 
   const enterDemo = () => {
     if (email.trim()) {
-      addSubscriber({ email, name, lang, city: '' });
+      const em = email.trim();
+      setTrackingEmail(em);
+      trackWebEvent('demo_email', T.profiles[profile]);
+      addSubscriber({ email: em, name, lang, city: '' });
       // Intento no bloqueante de sync a la nube (si hay conexión)
       try { syncSubscribersToCloud?.().catch(() => {}); } catch { /* noop */ }
+      // Cuenta sin contraseña (magic link): crea identidad para activación y pago
+      try {
+        import('../lib/supabaseClient').then(({ supabase }) => {
+          supabase.auth.signInWithOtp({ email: em }).catch(() => {});
+        }).catch(() => {});
+      } catch { /* noop */ }
       // Solicitud de demo virtual: guarda en CRM y avisa al dueño (único aviso comercial)
       try {
         fetch('/api/demo-request', {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: email.trim(), name, profile: T.profiles[profile], lang, source: 'web' }),
-        }).catch(() => {});
+          body: JSON.stringify({ email: email.trim(), name, profile: T.profiles[profile], lang, source: 'web', website }),
+        }).then(() => trackWebEvent('demo_request', T.profiles[profile])).catch(() => {});
       } catch { /* noop */ }
     }
     setStatus('ok');
@@ -110,6 +121,10 @@ export default function DemoLeadModal({ lang = 'es', onClose, onSkip }) {
             <input
               type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder={T.email} required
               style={{ background: 'rgba(255,255,255,0.06)', border: status === 'err' ? '1px solid #f87171' : '1px solid rgba(16,185,129,0.4)', borderRadius: 10, padding: '12px 14px', color: '#fff', fontSize: 14, outline: 'none' }}
+            />
+            <input
+              type="text" name="website" value={website} onChange={(e) => setWebsite(e.target.value)} tabIndex={-1} autoComplete="off" aria-hidden="true"
+              style={{ position: 'absolute', left: '-9999px', width: 1, height: 1, opacity: 0 }}
             />
             <input
               type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder={T.name}
