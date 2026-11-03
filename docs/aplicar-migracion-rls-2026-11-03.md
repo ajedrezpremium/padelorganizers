@@ -4,10 +4,19 @@
 
 ## Paso 1 — Ejecutar el SQL
 
-1. Abre `supabase/migrations/20261103000000_seguridad_rls.sql`.
-2. Copia TODO el contenido.
-3. Supabase Dashboard → tu proyecto → **SQL Editor** → New query → pega → **Run**.
-4. No debe dar errores. Si da alguno, cópialo y reporta.
+> **CORRIENTE (2026-11-03)**: si al ejecutar una migración de octubre ves
+> `policy ... already exists` (p.ej. `20261001000000_commercial_events.sql`),
+> es porque esos archivos NO son idempotentes y ya se aplicaron en su día.
+> Usa el catch-up nuevo y el orden siguiente. No ejecutes los file de octubre
+> por su cuenta.
+
+**Orden de ejecución:**
+
+1. `supabase/migrations/20261103020000_octubre_catchup.sql` — crea (si no existen)
+   `commercial_events` y `web_events`, y fija sus policies finales (idempotente).
+2. `supabase/migrations/20261103000000_seguridad_rls.sql` (v2) — cierre de RLS del resto
+   (idempotente: se puede repetir). Salta los bloques de tables que no existan.
+3. Verificación (paso 3 de abajo).
 
 ## Paso 2 — Configurar el webhook de Stripe ( firma )
 
