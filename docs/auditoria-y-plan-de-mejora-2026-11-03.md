@@ -180,3 +180,16 @@ El producto funciona y está desplegado en producción con pagos reales (Stripe 
 2. Añadir en Vercel: `SUPABASE_SERVICE_ROLE_KEY`, `STRIPE_WEBHOOK_SECRET`, `GMAIL_USER`, `GMAIL_APP_PASS`, `ALERT_EMAIL` → deploy.
 3. Rotar credenciales (Stripe rk_live, Gmail, OpenRouter) si no se hizo en Sprint 0.
 4. Sprint 3-4 (refactor de monolitos + ownership completo + TypeScript) y Sprint 4-5 (E2E Playwright, Sentry, optimización de assets) quedan planificados.
+
+---
+
+## 8. Resultado del Sprint 3-4 (ejecutado 2026-11-03)
+
+**Refactor de monolitos:** LandingPadel.jsx (789 líneas) partido en 14 secciones extraídas a src/components/landing/ (LandingCore, LandingSecondBlock, LandingConversion, LandingClosing + landingI18n). LandingPadel.jsx ahora tiene 82 líneas y el build pasa. Tipografía/behavior intactos.
+
+**Fundación TypeScript:** 	ypescript 7 instalado con 	sconfig.json (allowJs, strict off para convivir; prepara migración gradual) + 
+pm run typecheck cubierto por tsc. padelEngine.js migrado a padelEngine.ts sin errores de tsc.
+
+**Safety net deportivo:** tests/padelEngine.test.js (11 tests) — Americano (n<4/impares → ∅, rondas/participantes), Mexicano, Knockout, grupos, scheduling, ELO. Suite total: 32 tests verdes (validate + signature + engine).
+
+**Pendiente Sprint 4-5 (refactor continuo):** trocear SchoolApp.jsx (735L), TournamentPublic.jsx (608L); TypeScript estricto en src/services/*; E2E con Playwright (Playwright no instalado aún — npm test no lo incluye); Sentry en api/; optimización de assets (2MB PNGs → WebP).
