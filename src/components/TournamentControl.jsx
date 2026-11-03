@@ -4,6 +4,7 @@ import ProPaywall from './ProPaywall';
 import {
   buildTaskList, TASK_PHASES, taskStats, readManualTasks, toggleManualTask,
   regenerateBracket, clearBracket, generateSchedule, generateGroupsForControl, loadDemoTournament, tournamentName, currentSeason,
+  generateCuadroBForControl, generateCuadroCForControl,
 } from '../services/tournamentTasks';
 import { getState, transitionState } from '../services/store';
 import { explainSeeding } from '../services/padelEngine';

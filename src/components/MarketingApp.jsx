@@ -160,8 +160,6 @@ const PB = PLAN_BENEFITS(lang);
     }, 200);
   };
 
-  const planName = (key) => PLANS && (PLANS.find?.(x => x.key === key)?.key || key);
-
   const genAi = async (regenerate) => {
     setAiBusy(true);
     await new Promise(r => setTimeout(r, 350));

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useStore, setState, getTournamentById, saveTournamentById } from '../services/store';
+import { useStore, setState, getState, getTournamentById, saveTournamentById } from '../services/store';
 import { pullState } from '../services/cloudService';
 import { COURT_STATUS } from '../services/padelEngine';
 import TournamentInscriptions from './TournamentInscriptions';
@@ -226,6 +226,21 @@ export default function TournamentPublic({ lang = 'es' }) {
     return () => { mounted = false; };
   }, [id, isLive]);
 
+  // JSON-LD + OG/Twitter para SEO del torneo (hook SIEMPRE ejecutado; nunca
+  // después de los returns tempranos de missing/loading).
+  React.useEffect(()=>{
+    if(!(state?.tournament)) return;
+    const t = state.tournament;
+    if(!t?.name) return;
+    const el=document.createElement('script'); el.type='application/ld+json';
+    el.text=JSON.stringify({"@context":"https://schema.org","@type":"SportsEvent","name":t.name,"location":{"@type":"SportsActivityLocation","name":t.club,"address":t.city||''},"startDate":t.date||undefined,"image": t.cartel ? `https://padelorganizers.vercel.app${encodeURI(t.cartel)}` : undefined,"description":`Torneo ${t.modality} con ${(state.players||[]).length} jugadores`,"organizer":{"@type":"Organization","name":"PADELORGANIZERS","url":"https://padelorganizers.vercel.app"}});
+    document.head.appendChild(el);
+    const og=document.querySelector('meta[property="og:title"]'); if(og) og.content=`${t.name} — ${t.club} | PADELORGANIZERS`;
+    const ogImg=document.querySelector('meta[property="og:image"]'); if(ogImg && t.cartel) ogImg.content=`https://padelorganizers.vercel.app${encodeURI(t.cartel)}`;
+    const twImg=document.querySelector('meta[name="twitter:image"]'); if(twImg && t.cartel) twImg.content=`https://padelorganizers.vercel.app${encodeURI(t.cartel)}`;
+    return ()=>el.remove();
+  },[state?.tournament?.name,state?.tournament?.club,state?.tournament?.date,state?.tournament?.cartel,(state.players||[]).length]);
+
   if (missing) {
     return (
       <div style={{ padding: '60px 24px', maxWidth: '640px', margin: '0 auto', textAlign: 'center' }}>
@@ -246,16 +261,6 @@ export default function TournamentPublic({ lang = 'es' }) {
 
   const t = state.tournament;
   const isRunning = t.status === 'active' || t.status === 'in_game';
-  React.useEffect(()=>{
-    if(!t?.name) return;
-    const el=document.createElement('script'); el.type='application/ld+json';
-    el.text=JSON.stringify({"@context":"https://schema.org","@type":"SportsEvent","name":t.name,"location":{"@type":"SportsActivityLocation","name":t.club,"address":t.city||''},"startDate":t.date||undefined,"image": t.cartel ? `https://padelorganizers.vercel.app${encodeURI(t.cartel)}` : undefined,"description":`Torneo ${t.modality} con ${state.players.length} jugadores`,"organizer":{"@type":"Organization","name":"PADELORGANIZERS","url":"https://padelorganizers.vercel.app"}});
-    document.head.appendChild(el);
-    const og=document.querySelector('meta[property=\"og:title\"]'); if(og) og.content=`${t.name} — ${t.club} | PADELORGANIZERS`;
-    const ogImg=document.querySelector('meta[property=\"og:image\"]'); if(ogImg && t.cartel) ogImg.content=`https://padelorganizers.vercel.app${encodeURI(t.cartel)}`;
-    const twImg=document.querySelector('meta[name=\"twitter:image\"]'); if(twImg && t.cartel) twImg.content=`https://padelorganizers.vercel.app${encodeURI(t.cartel)}`;
-    return ()=>el.remove();
-  },[t.name,t.club,t.date,t.cartel,state.players.length]);
   const sortedPlayers = [...state.players].sort((a, b) => b.elo - a.elo);
   const sortedPairs = [...state.pairs].sort((a, b) => b.points - a.points || b.diff - a.diff);
   const rounds = [...new Set(state.matches.map((m) => m.round))].sort((a, b) => a - b);

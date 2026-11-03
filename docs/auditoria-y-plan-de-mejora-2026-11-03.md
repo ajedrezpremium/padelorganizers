@@ -83,6 +83,8 @@ El producto funciona y está desplegado en producción con pagos reales (Stripe 
 4. En `agent-chat.js`: exigir JWT Bearer del usuario y validar `userId` contra el token.
 
 > **✅ Sprint 0 ejecutado (2026-11-03)** — ver sección "Resultado del Sprint 0" al final.
+> **✅ Sprint 1 ejecutado (2026-11-03)** — ver sección "Resultado del Sprint 1" al final.
+> **✅ Sprint 2 ejecutado (2026-11-03)** — ver sección "Resultado del Sprint 2" al final.
 
 ### Sprint 1 — Semana 1: blindar datos
 5. Nuevas migraciones RLS: `tournament_state` con columna `owner_id`, policies por `auth.uid()`; `commercial_leads`/`demo_requests` solo service_role; tablas de torneo con ownership. Probar con `anon` que todo falla.
@@ -146,3 +148,35 @@ El producto funciona y está desplegado en producción con pagos reales (Stripe 
 - **Los emails de demo nunca avisaron en producción**: `GMAIL_USER`/`GMAIL_APP_PASS` no existían como env vars en Vercel; `demo-request.js` las leía de `process.env` y saltaba el bloque. Con welcome-email la cosa era peor: leía el `.env` del disco, que Vercel empaquetaba con el CLI-deploy. Tras rotar + añadir vars, el aviso de demo por email empezará a funcionar por primera vez.
 - `OPENROUTER_API_KEY` de Development está visible en texto en el listado del CLI (es normal para Development), pero producción está como Secret — OK.
 - El dev-server de Vercel crashea (process exit) ante un body JSON inválido en local; en producción devuelve error controlado. No es un bug del proyecto.
+
+---
+
+## 6. Resultado del Sprint 1 (ejecutado 2026-11-03, commit `21ec8b9` + purga)
+
+**RLS**: `supabase/migrations/20261103000000_seguridad_rls.sql` (v2 idempotente, tolerante a tablas existentes o no). CRM comercial/demo_requests sin anon; `tournament_state` con `owner_id` (escritura solo con login, claim de filas legacy); UPDATE/DELETE del núcleo de torneos solo autenticado; DELETE anónimo de reservas/waitlist eliminado; splits UPDATE solo service_role. Pendiente de que el usuario ejecute el SQL (el primer intento falló por `web_events` inexistente — re-run con la v2).
+
+**Firma webhook**: `stripe-signature` verificada con HMAC-SHA256 timing-safe + anti-replay 5 min (`api/_lib/stripeSignature.js`, sin dependencias). Requiere `STRIPE_WEBHOOK_SECRET` en Vercel (ver `docs/aplicar-migracion-rls-2026-11-03.md`).
+
+**Validación**: `api/_lib/validate.js` — tope 500 €, min 0,50 €, emails con regex, saneo de longitud de campos, max 16 jugadores, floor para splits sumando exacto. `check-status` valida formato `cs_live_/cs_test_` + rate limit 30/min por IP.
+
+**RGPD**: 77 CSV/XLSX de leads eliminados del índice, `.gitignore` bloquea su vuelta, e **historial PURGADO** con `git-filter-repo` (212 commits reescritos) + force push a main + rama remota `agents/*` borrada. Pendiente usuario: escribir a GitHub Support si quiere garantía de purga de blobs huérfanos (repo con 0 forks).
+
+## 7. Resultado del Sprint 2 (ejecutado 2026-11-03)
+
+- **ESLint 9 instalado y configurado** (flat config `eslint.config.js`; `npm run lint`). Salida: **0 errores**, 131 warnings (deuda marcada: unused-vars, exhaustive-deps…).
+- **Vitest 2** con `npm test`: 20 tests sobre validación de pagos (`api/_lib/validate.js`) y verificación de firma (`api/_lib/stripeSignature.js` — válido, manipulado, otro secreto, replay, rotación, cabeceras malformadas).
+- **Latent bugs corregidos que el lint destapó** (ReferenceError reales):
+  - `MarketingApp.jsx`: `PLANS` global inexistente (línea muerta eliminada).
+  - `SchoolApp.jsx`: faltaba importar `listAttendanceByClass` (crash en carga de escuela).
+  - `TournamentControl.jsx`: sin importar `generateCuadroBForControl`/`C` (crash en acción de panel).
+  - `TournamentPublic.jsx`: `getState` sin importar (10 usos) + **hook después de returns tempranos** (crash React auto-SEO; movido al bloque superior).
+  - `ExitIntentPopup.jsx`/`NewsletterSignup.jsx`: `require()` en navegador (ESM) → `import()` dinámico.
+  - `clientes/scrape-padelizados.mjs`: reasignación de `const email`.
+- **CSP + HSTS** en `vercel.json`: CSP por allow-list (fonts, supabase, OSM tiles, qrserver/unpkg avatares; scripts/style self+inline) + `Strict-Transport-Security`.
+- Aviso: CSP estricta se valida con el primer despliegue; si algo falla en consola (descartado por allow-list razonable), ajustar la cabecera.
+
+### Pendiente manual del usuario tras Sprint 1/2
+1. Ejecutar la **migración SQL v2** en Supabase (SQL Editor) → verificación con la query del doc.
+2. Añadir en Vercel: `SUPABASE_SERVICE_ROLE_KEY`, `STRIPE_WEBHOOK_SECRET`, `GMAIL_USER`, `GMAIL_APP_PASS`, `ALERT_EMAIL` → deploy.
+3. Rotar credenciales (Stripe rk_live, Gmail, OpenRouter) si no se hizo en Sprint 0.
+4. Sprint 3-4 (refactor de monolitos + ownership completo + TypeScript) y Sprint 4-5 (E2E Playwright, Sentry, optimización de assets) quedan planificados.

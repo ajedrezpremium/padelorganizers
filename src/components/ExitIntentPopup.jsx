@@ -71,7 +71,8 @@ export default function ExitIntentPopup({ lang = 'es', enabled = true, delayMs =
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email.trim())) return;
     setStatus('loading');
     addSubscriber({ email: email.trim(), name: '', lang, city: '' });
-    try { require('../services/subscribersService').syncSubscribersToCloud?.().catch(() => {}); } catch {}
+    // Best-effort: sync opcional a la nube (ESM: nada de require en browser)
+    import('../services/subscribersService').then(m => m.syncSubscribersToCloud?.().catch(() => {})).catch(() => {});
     setStatus('success');
     setTimeout(() => { window.location.href = '/torneo'; }, 600);
   };

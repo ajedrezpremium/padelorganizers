@@ -5,7 +5,7 @@ import {
   listGroups, addGroup, deleteGroup,
   listMembers, addMember, removeMember,
   listClasses, addClass, updateClassStatus,
-  recordAttendance,
+  recordAttendance, listAttendanceByClass,
   listEvaluations, addEvaluation,
   listBonuses, addBonus, useBonus,
   listSubscriptions, addSubscription, updateSubscriptionStatus,

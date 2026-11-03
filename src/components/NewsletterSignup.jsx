@@ -18,7 +18,8 @@ export default function NewsletterSignup({ lang = 'es', variant = 'inline', onSu
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email.trim())) { setStatus('error'); return; }
     setStatus('loading');
     await addSubscriber({ email: email.trim(), name: '', lang, city: '' });
-    try { require('../services/subscribersService').syncSubscribersToCloud?.().catch(() => {}); } catch {}
+    // Best-effort: sync opcional a la nube (ESM: nada de require en browser)
+    import('../services/subscribersService').then(m => m.syncSubscribersToCloud?.().catch(() => {})).catch(() => {});
     setStatus('success');
     setEmail('');
     if (onSuccess) onSuccess();

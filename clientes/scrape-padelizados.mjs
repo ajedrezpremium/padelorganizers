@@ -140,7 +140,7 @@ function parseListado(page) {
 
 function parseFicha(page) {
   return page.evaluate(() => {
-    const email = (document.querySelector('a[href^="mailto:"]')?.getAttribute('href') || '').replace('mailto:', '')
+    let email = (document.querySelector('a[href^="mailto:"]')?.getAttribute('href') || '').replace('mailto:', '')
     const jsonld = Array.from(document.querySelectorAll('script[type="application/ld+json"]')).map(s => s.textContent)
     let name = '', street = '', locality = '', postal = '', phone = ''
     for (const j of jsonld) {
