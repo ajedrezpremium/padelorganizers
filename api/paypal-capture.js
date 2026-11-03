@@ -26,7 +26,8 @@ export default async function handler(req, res) {
   const clientId = process.env.PAYPAL_CLIENT_ID;
   const clientSecret = process.env.PAYPAL_CLIENT_SECRET;
   const supabaseUrl = process.env.VITE_SUPABASE_URL;
-  const supabaseAnon = process.env.VITE_SUPABASE_ANON_KEY;
+  // Solo service_role: escritura de servidor, sin depender de la anon key/RLS abiertas.
+  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SERVICE_ROLE;
 
   if (!clientId || !clientSecret) {
     return res.status(200).json({ demo: true, confirmed: false, message: 'PayPal no configurado' });
@@ -55,7 +56,7 @@ export default async function handler(req, res) {
       if (stJson.status !== 'COMPLETED') {
         return res.status(200).json({ ok: true, confirmed: false, status: stJson.status });
       }
-      return await confirmOrder({ orderId, stJson, supabaseUrl, supabaseAnon, res });
+      return await confirmOrder({ orderId, stJson, supabaseUrl, supabaseKey, res });
     }
 
     if (!capture.ok) {
@@ -66,15 +67,15 @@ export default async function handler(req, res) {
       return res.status(200).json({ ok: true, confirmed: false, status: capJson.status });
     }
 
-    return await confirmOrder({ orderId, capJson, supabaseUrl, supabaseAnon, res });
+    return await confirmOrder({ orderId, capJson, supabaseUrl, supabaseKey, res });
   } catch (err) {
     return res.status(500).json({ error: err && err.message ? err.message : 'paypal capture error' });
   }
 }
 
 // Marca la reserva/split como pagado en Supabase según la metadata de la orden.
-async function confirmOrder({ orderId, capJson, supabaseUrl, supabaseAnon, res }) {
-  if (!supabaseUrl || !supabaseAnon) {
+async function confirmOrder({ orderId, capJson, supabaseUrl, supabaseKey, res }) {
+  if (!supabaseUrl || !supabaseKey) {
     return res.status(500).json({ error: 'server misconfigured' });
   }
 
@@ -87,8 +88,8 @@ async function confirmOrder({ orderId, capJson, supabaseUrl, supabaseAnon, res }
 
   const isSplit = meta.split === '1';
   const h = {
-    apikey: supabaseAnon,
-    Authorization: `Bearer ${supabaseAnon}`,
+    apikey: supabaseKey,
+    Authorization: `Bearer ${supabaseKey}`,
     'Content-Type': 'application/json',
     Prefer: 'return=minimal',
   };

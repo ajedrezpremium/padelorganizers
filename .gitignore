@@ -24,6 +24,11 @@ dist-ssr
 *.sw?
 .env
 .env.local
+.env.*
+!.env.example
+
+# Estado local de supabase CLI (filtra proyecto/cuenta)
+supabase/.temp/
 
 .vercel
 
@@ -46,3 +51,5 @@ clientes/informes/revision_*.md
 clientes/informes/validacion_*.md
 clientes/.demo_vistos.json
 clientes/.campana_lock
+
+.env*

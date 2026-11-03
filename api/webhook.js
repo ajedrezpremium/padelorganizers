@@ -9,7 +9,7 @@
  *   - No requiere paquete 'stripe' ni firma del body.
  *
  * Cuando recibe el evento `checkout.session.completed`, marca la reserva cuyo
- * `stripe_session` coincide como `completed` en Supabase (vía REST + anon key).
+ * `stripe_session` coincide como `completed` en Supabase (vía REST + service_role).
  */
 
 export default async function handler(req, res) {
@@ -28,9 +28,11 @@ export default async function handler(req, res) {
 
   const secret = process.env.STRIPE_SECRET_KEY;
   const supabaseUrl = process.env.VITE_SUPABASE_URL;
-  const supabaseAnon = process.env.VITE_SUPABASE_ANON_KEY;
+  // Solo service_role: esta operación de servidor NO depende de la anon key
+  // (las RLS anon se cerrarán y las escrituras de pago deben seguir funcionando).
+  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SERVICE_ROLE;
 
-  if (!secret || !supabaseUrl || !supabaseAnon) {
+  if (!secret || !supabaseUrl || !supabaseKey) {
     return res.status(500).json({ error: 'server misconfigured' });
   }
 
@@ -52,7 +54,7 @@ export default async function handler(req, res) {
     //    si todos los splits de la reserva están pagados, completarla.
     const splitOf = session.metadata && session.metadata.split === '1';
     if (splitOf) {
-      return await handleSplitPayment({ supabaseUrl, supabaseAnon, sessionId, res, session });
+      return await handleSplitPayment({ supabaseUrl, supabaseKey, sessionId, res, session });
     }
 
     // 3) Pago normal: marcar la reserva con ese stripe_session como 'completed'.
@@ -61,8 +63,8 @@ export default async function handler(req, res) {
       {
         method: 'PATCH',
         headers: {
-          apikey: supabaseAnon,
-          Authorization: `Bearer ${supabaseAnon}`,
+          apikey: supabaseKey,
+          Authorization: `Bearer ${supabaseKey}`,
           'Content-Type': 'application/json',
           Prefer: 'return=minimal',
         },
@@ -83,12 +85,12 @@ export default async function handler(req, res) {
 
 // Pago dividido: 1 sesión = 1 jugador. Marca el split como 'paid' y, si ya
 // están todos los jugadores de la reserva, completa la reserva.
-async function handleSplitPayment({ supabaseUrl, supabaseAnon, sessionId, res }) {
+async function handleSplitPayment({ supabaseUrl, supabaseKey, sessionId, res }) {
   // 1) Buscar el split cuyo stripe_session coincide.
   const find = await fetch(
     `${supabaseUrl}/rest/v1/reservation_splits?stripe_session=eq.${encodeURIComponent(sessionId)}&select=id,reservation_id`,
     {
-      headers: { apikey: supabaseAnon, Authorization: `Bearer ${supabaseAnon}` },
+      headers: { apikey: supabaseKey, Authorization: `Bearer ${supabaseKey}` },
     }
   );
   if (!find.ok) {
@@ -107,8 +109,8 @@ async function handleSplitPayment({ supabaseUrl, supabaseAnon, sessionId, res })
     {
       method: 'PATCH',
       headers: {
-        apikey: supabaseAnon,
-        Authorization: `Bearer ${supabaseAnon}`,
+        apikey: supabaseKey,
+        Authorization: `Bearer ${supabaseKey}`,
         'Content-Type': 'application/json',
         Prefer: 'return=minimal',
       },
@@ -123,7 +125,7 @@ async function handleSplitPayment({ supabaseUrl, supabaseAnon, sessionId, res })
   const pendingSplits = await fetch(
     `${supabaseUrl}/rest/v1/reservation_splits?reservation_id=eq.${reservationId}&status=eq.pending&select=id`,
     {
-      headers: { apikey: supabaseAnon, Authorization: `Bearer ${supabaseAnon}` },
+      headers: { apikey: supabaseKey, Authorization: `Bearer ${supabaseKey}` },
     }
   );
   const pending = pendingSplits.ok ? await pendingSplits.json() : [];
@@ -138,8 +140,8 @@ async function handleSplitPayment({ supabaseUrl, supabaseAnon, sessionId, res })
     {
       method: 'PATCH',
       headers: {
-        apikey: supabaseAnon,
-        Authorization: `Bearer ${supabaseAnon}`,
+        apikey: supabaseKey,
+        Authorization: `Bearer ${supabaseKey}`,
         'Content-Type': 'application/json',
         Prefer: 'return=minimal',
       },

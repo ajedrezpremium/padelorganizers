@@ -6,9 +6,10 @@
 import nodemailer from 'nodemailer';
 
 const SUPA_URL = process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL;
-const SUPA_KEY = process.env.SUPABASE_SERVICE_ROLE || process.env.VITE_SUPABASE_ANON_KEY;
+// Service_role prioritario: escrituras de servidor (CRM) no deben pasar por la anon key/RLS abiertas.
+const SUPA_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SERVICE_ROLE;
 const GMAIL_USER = process.env.GMAIL_USER;
-const GMAIL_APP_PASS = (process.env.GMAIL_APP_PASS || process.env['GOOGLE-APP-KEY'] || '').replace(/\s+/g, '');
+const GMAIL_APP_PASS = (process.env.GMAIL_APP_PASS || '').replace(/\s+/g, '');
 const ALERT_EMAIL = process.env.ALERT_EMAIL || GMAIL_USER; // dueño: solo recibe esto
 
 // Rate limit simple por IP (por instancia) + honeypot anti-bots
