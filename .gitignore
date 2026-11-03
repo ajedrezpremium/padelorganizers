@@ -40,6 +40,12 @@ clientes/preview-followup.html
 clientes/preview-premium.html
 clientes/tokens_verificacion.sql
 
+# DATOS PERSONALES DE TERCEROS (RGPD): leads, campañas y métricas de email
+# NUNCA versionar. Los ficheros quedan en disco para los scripts de clientes/.
+clientes/*.csv
+clientes/*.xlsx
+clientes/generated_spreadsheet.xlsx
+
 # Logs de campana (base del CRM, no versionar)
 clientes/campana_log.csv
 clientes/campana_log_*.csv

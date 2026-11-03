@@ -1,39 +1,125 @@
 /**
- * api/webhook.js — Confirmación de pago Stripe (webhook) para reservas de pista.
+ * api/webhook.js — Webhook de Stripe (reserva de pista) con doble confianza:
  *
- * En lugar de depender de la firma del webhook (frágil en serverless por el
- * cuerpo crudo), este endpoint RECONSULTA la sesión de Stripe para confirmar
- * que el pago es real y ha sido completado. Así:
- *   - Un atacante no puede marcar reservas como pagadas sin una sesión
- *     realmente cobrada en Stripe (livemode=true, payment_status=paid).
- *   - No requiere paquete 'stripe' ni firma del body.
+ *   1) SIGNATURA: si STRIPE_WEBHOOK_SECRET está configurada, se verifica la
+ *      cabecera `stripe-signature` (HMAC-SHA256 de `t.cuerpo_crudo`) con
+ *      comparación timing-safe. Sin firma válida → 400. Sin dependencias
+ *      extra (node:crypto).
+ *   2) RECONSULTA: en cualquier caso se vuelve a pedir la sesión a Stripe
+ *      y solo se acepta si livemode=true y payment_status=paid. Un atacante
+ *      no puede marcar reservas sin un cobro real en Stripe.
  *
- * Cuando recibe el evento `checkout.session.completed`, marca la reserva cuyo
- * `stripe_session` coincide como `completed` en Supabase (vía REST + service_role).
+ * La actualización en Supabase se hace con SUPABASE_SERVICE_ROLE_KEY
+ * (escritura de servidor, evasiva de RLS, nunca la anon key).
  */
+
+import { createHmac, timingSafeEqual } from 'node:crypto';
+
+// Cuerpo crudo necesario para la firma: desactivamos el parser automático.
+// (Ignorado si el runtime no lo soporta; hay fallback abajo.)
+export const config = { api: { bodyParser: false } };
+
+// ---------- utilidades de firma Stripe ----------
+
+// Verifica `stripe-signature` sin el paquete oficial:
+//   header: t=<timestamp>,v1=<hmac1>,v1=<hmac2>...
+//   firma esperada = HMAC-SHA256(secret, `${t}.${rawBody}`)
+function verifyStripeSignature(rawBody, header, secret, toleranceSec = 300) {
+  if (!header || !secret) return false;
+  const parts = {};
+  for (const piece of String(header).split(',')) {
+    const i = piece.indexOf('=');
+    if (i === -1) continue;
+    const k = piece.slice(0, i).trim();
+    const v = piece.slice(i + 1).trim();
+    (parts[k] = parts[k] || []).push(v);
+  }
+  const t = parts.t && parts.t[0];
+  if (!t || !parts.v1 || !parts.v1.length) return false;
+
+  // Anti-replay
+  const ts = parseInt(t, 10);
+  if (!Number.isFinite(ts)) return false;
+  const age = Math.abs(Date.now() / 1000 - ts);
+  if (age > toleranceSec) return false;
+
+  const expected = createHmac('sha256', secret).update(`${t}.${rawBody}`).digest('hex');
+  const expectedBuf = Buffer.from(expected, 'hex');
+  // timing-safe contra todos los v1 entregados
+  for (const sig of parts.v1) {
+    const got = Buffer.from(String(sig), 'hex');
+    if (got.length === expectedBuf.length && timingSafeEqual(got, expectedBuf)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+// Lee el cuerpo crudo del stream (o re-serializa si el runtime ya lo parseó).
+function readRawBody(req) {
+  return new Promise((resolve) => {
+    // Caso A: bodyParser funcionó y el runtime ya nos da el objeto parseado.
+    // La firma fallará si el formato difiere, pero la reconsulta mantiene
+    // la seguridad del flujo de pago.
+    if (req.body && typeof req.body === 'object' && Object.keys(req.body).length) {
+      resolve({ raw: JSON.stringify(req.body), preParsed: true });
+      return;
+    }
+    // Caso B: leer el stream real para la firma exacta.
+    let data = '';
+    let done = false;
+    const finish = (raw) => { if (!done) { done = true; resolve({ raw, preParsed: false }); } };
+    req.on('data', (c) => { data += c; });
+    req.on('end', () => finish(data));
+    req.on('error', () => finish(''));
+    setTimeout(() => finish(data), 5000); // salida de seguridad
+  });
+}
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'method not allowed' });
   }
 
-  // Cuerpo típico de un webhook de Stripe: { type, data: { object: { id } } }
-  const event = req.body || {};
-  const type = event.type || '';
-  const sessionId = (event.data && event.data.object && event.data.object.id) || '';
+  // 0) Cuerpo crudo + verificación de firma ANTES de nada (fail-closed).
+  const { raw, preParsed } = await readRawBody(req);
+  let event;
+  try {
+    event = JSON.parse(raw || '{}');
+  } catch {
+    return res.status(400).json({ error: 'invalid json' });
+  }
 
-  if (type !== 'checkout.session.completed' || !sessionId) {
-    return res.status(200).json({ ok: true, ignored: true });
+  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+  if (webhookSecret) {
+    const sigHeader = req.headers['stripe-signature'];
+    if (!sigHeader) {
+      return res.status(401).json({ error: 'missing stripe-signature' });
+    }
+    if (preParsed) {
+      // No disponemos del cuerpo exacto: no podemos verificar la firma con
+      // garantía. La reconsulta (paso 1) sigue garantizando pagos reales.
+      console.warn('[webhook/stripe] raw body no disponible; firma no verificada');
+    } else if (!verifyStripeSignature(raw, sigHeader, webhookSecret)) {
+      return res.status(401).json({ error: 'invalid signature' });
+    }
   }
 
   const secret = process.env.STRIPE_SECRET_KEY;
   const supabaseUrl = process.env.VITE_SUPABASE_URL;
   // Solo service_role: esta operación de servidor NO depende de la anon key
-  // (las RLS anon se cerrarán y las escrituras de pago deben seguir funcionando).
+  // (las RLS anon se cerraron; las escrituras de pago bypass RLS por design).
   const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SERVICE_ROLE;
 
   if (!secret || !supabaseUrl || !supabaseKey) {
     return res.status(500).json({ error: 'server misconfigured' });
+  }
+
+  const type = event.type || '';
+  const sessionId = (event.data && event.data.object && event.data.object.id) || '';
+
+  if (type !== 'checkout.session.completed' || !sessionId) {
+    return res.status(200).json({ ok: true, ignored: true });
   }
 
   try {

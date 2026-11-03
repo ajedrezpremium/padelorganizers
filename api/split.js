@@ -10,7 +10,7 @@
  *  - Si NO -> devuelve { demo: true } con URLs nulas para probar sin Stripe.
  */
 
-const DEFAULT_PRICE = 8; // EUR total por hora
+import { amountToCents, saneStr, validPlayers } from './_lib/validate.js';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -18,12 +18,18 @@ export default async function handler(req, res) {
   }
 
   const { court_name, day, slot_time, amount, players } = req.body || {};
-  const list = Array.isArray(players) ? players.filter(p => p && p.email) : [];
-  const totalEur = Number(amount) || DEFAULT_PRICE;
-
-  if (list.length < 2) {
-    return res.status(400).json({ error: 'se necesitan al menos 2 jugadores' });
+  const totalEur = amountToCents(amount);
+  if (totalEur.error) {
+    return res.status(400).json({ error: totalEur.error });
   }
+  const pl = validPlayers(players);
+  if (pl.error) {
+    return res.status(400).json({ error: pl.error });
+  }
+  const list = pl.list;
+  const court = saneStr(court_name) || 'Pista';
+  const dayS = saneStr(day, 40);
+  const slot = saneStr(slot_time, 20);
 
   if (!process.env.STRIPE_SECRET_KEY) {
     return res.status(200).json({
@@ -33,7 +39,7 @@ export default async function handler(req, res) {
         index: i,
         name: p.name,
         email: p.email,
-        amount: Math.round((totalEur / list.length) * 100) / 100,
+        amount: Math.round((totalEur.cents / 100 / list.length) * 100) / 100,
         url: null,
         sessionId: null,
       })),
@@ -43,14 +49,14 @@ export default async function handler(req, res) {
 
   try {
     const payments = [];
-    const shareCent = Math.round((totalEur * 100) / list.length);
+    const shareCent = Math.floor((totalEur.cents) / list.length);
 
     for (let i = 0; i < list.length; i++) {
       const p = list[i];
       const session = await stripeSplitCreate({
         amountCent: shareCent,
-        label: `${(shareCent / 100).toFixed(2)} € · ${court_name || 'Pista'} · ${day || ''} ${slot_time || ''}`,
-        court_name, day, slot_time,
+        label: `${(shareCent / 100).toFixed(2)} € · ${court} · ${dayS} ${slot}`,
+        court_name: court, day: dayS, slot_time: slot,
         index: i, name: p.name, email: p.email,
       });
       payments.push({

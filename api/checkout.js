@@ -9,7 +9,7 @@
  * La clave secreta de Stripe NUNCA vive en el cliente; solo aquí (serverless).
  */
 
-const DEFAULT_PRICE = 8; // EUR por hora
+import { amountToCents, saneStr } from './_lib/validate.js';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -17,8 +17,15 @@ export default async function handler(req, res) {
   }
 
   const { court_name, day, slot_time, amount } = req.body || {};
-  const priceCh = Math.max(100, Math.round((Number(amount) || DEFAULT_PRICE) * 100));
-  const label = `${Number(amount) || DEFAULT_PRICE} € · ${court_name || 'Pista'} · ${day || ''} ${slot_time || ''}`;
+  const amt = amountToCents(amount);
+  if (amt.error) {
+    return res.status(400).json({ error: amt.error });
+  }
+  const priceCh = amt.cents;
+  const court = saneStr(court_name) || 'Pista';
+  const dayS = saneStr(day, 40);
+  const slot = saneStr(slot_time, 20);
+  const label = `Reserva · ${court} · ${dayS} ${slot}`;
 
   if (!process.env.STRIPE_SECRET_KEY) {
     return res.status(200).json({
@@ -30,7 +37,7 @@ export default async function handler(req, res) {
 
   try {
     const session = await stripeCheckoutCreate({
-      priceCh, label, court_name, day, slot_time,
+      priceCh, label, court_name: court, day: dayS, slot_time: slot,
     });
     return res.status(200).json({ demo: false, url: session.url, sessionId: session.id });
   } catch (err) {

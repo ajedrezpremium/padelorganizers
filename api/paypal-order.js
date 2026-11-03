@@ -10,7 +10,7 @@
  * PAYPAL_CLIENT_SECRET (solo Vercel). Sin claves → { demo: true } sin cargo.
  */
 
-const DEFAULT_PRICE = 8; // EUR por hora
+import { amountToCents, saneStr, validPlayers } from './_lib/validate.js';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -18,7 +18,11 @@ export default async function handler(req, res) {
   }
 
   const { court_name, day, slot_time, amount, players, split } = req.body || {};
-  const totalEur = Number(amount) || DEFAULT_PRICE;
+  const amt = amountToCents(amount);
+  if (amt.error) {
+    return res.status(400).json({ error: amt.error });
+  }
+  const totalEur = amt.cents / 100;
 
   if (!process.env.PAYPAL_CLIENT_ID || !process.env.PAYPAL_CLIENT_SECRET) {
     return res.status(200).json({ demo: true, message: 'Modo demostración: PayPal no configurado. Sin cargo.' });
@@ -29,17 +33,21 @@ export default async function handler(req, res) {
     const origin = process.env.SITE_URL || 'https://padelorganizers.vercel.app';
 
     if (split) {
-      const list = Array.isArray(players) ? players.filter(p => p && p.email) : [];
-      if (list.length < 2) {
-        return res.status(400).json({ error: 'se necesitan al menos 2 jugadores' });
+      const pl = validPlayers(players);
+      if (pl.error) {
+        return res.status(400).json({ error: pl.error });
       }
-      const shareEur = (Math.round((totalEur * 100) / list.length) / 100).toFixed(2);
+      const list = pl.list;
+      const court = saneStr(court_name) || 'Pista';
+      const dayS = saneStr(day, 40);
+      const slot = saneStr(slot_time, 20);
+      const shareEur = (Math.floor((totalEur * 100) / list.length) / 100).toFixed(2);
       const payments = [];
       for (let i = 0; i < list.length; i++) {
         const o = await paypalCreateOrder({
           token,
           amount: shareEur,
-          meta: { court_name, day, slot_time, split: '1', split_index: i },
+          meta: { court_name: court, day: dayS, slot_time: slot, split: '1', split_index: i },
           origin,
         });
         payments.push({ index: i, name: list[i].name, email: list[i].email, amount: Number(shareEur), id: o.id, url: o.approveUrl });
@@ -47,10 +55,13 @@ export default async function handler(req, res) {
       return res.status(200).json({ demo: false, split: true, payments });
     }
 
+    const court = saneStr(court_name) || 'Pista';
+    const dayS = saneStr(day, 40);
+    const slot = saneStr(slot_time, 20);
     const o = await paypalCreateOrder({
       token,
       amount: totalEur.toFixed(2),
-      meta: { court_name, day, slot_time },
+      meta: { court_name: court, day: dayS, slot_time: slot },
       origin,
     });
     return res.status(200).json({ demo: false, id: o.id, url: o.approveUrl });
