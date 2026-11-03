@@ -1,0 +1,17 @@
+# Nunca desplegar secretos ni peso muerto (el build de Vite solo necesita src/, public/, index.html)
+.env
+.env.*
+*.local
+tokens*.json
+
+docs/
+marketing/
+clientes/
+supabase/
+tests/
+
+*.log
+*.csv
+*.xlsx
+*.docx
+*.bak
