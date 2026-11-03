@@ -19,9 +19,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <ThemeProvider>
       <BrowserRouter>
-        <Sentry.ErrorBoundary fallback={<div style={{ padding: 24, textAlign: 'center' }}>Algo salió mal. Actualizando...</div>}>
-          <App />
-        </Sentry.ErrorBoundary>
+        <App />
       </BrowserRouter>
     </ThemeProvider>
   </React.StrictMode>
