@@ -48,6 +48,10 @@ export default defineConfig({
       devOptions: { enabled: true }
     })
   ],
+  test: {
+    include: ['tests/**/*.test.{js,ts}'],
+    coverage: { provider: 'v8', reporter: ['text', 'html'] }
+  },
   server: {
     port: 3000,
     open: true

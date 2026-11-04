@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import {
   listCoaches, saveCoach, deleteCoach,
   listStudents, addStudent, deleteStudent,
@@ -14,159 +14,7 @@ import {
   listDrills, saveDrill, deleteDrill, drillAxisLabels, drillSeed,
 } from '../services/schoolService';
 
-const I18N = {
-  es: {
-    title: '🏫 Escuela & Entrenadores',
-    subtitle: 'Grupos por nivel y edad · clases · asistencia · evaluación técnica · bonos de clases',
-    statsTitle: 'Panel de la escuela',
-    students: 'Alumnos', groups: 'Grupos activos', planned: 'Próximas', done: 'Realizadas',
-    attendanceRate: 'Asistencia', minors: 'Menores', bonusAvailable: 'Bonos disponibles',
-    tabStudents: '👥 Alumnos', tabGroups: '👨‍🏫 Grupos', tabClasses: '🗓️ Clases', tabCoaches: '👨‍🔧 Entrenadores',
-    overlap: 'Solapamientos detectados', noOverlap: 'No hay solapamientos entre clases.',
-    coachName: 'Nombre', coachEmail: 'Email', coachPhone: 'Teléfono', coachSpecialty: 'Especialidad',
-    addCoach: 'Añadir entrenador', saveCoach: 'Guardar entrenador',
-    addStudent: 'Añadir alumno', saveStudent: 'Guardar alumno',
-    name: 'Nombre', email: 'Email', phone: 'Teléfono', level: 'Nivel', category: 'Categoría',
-    guardian: 'Tutor legal', minorNote: 'Los menores requieren tutor legal autorizado.',
-    addGroup: 'Nuevo grupo', saveGroup: 'Guardar grupo', groupName: 'Nombre del grupo',
-    capacity: 'Capacidad', schedule: 'Horario', members: 'Componentes', addToGroup: 'Añadir al grupo',
-    addClass: 'Nueva clase', saveClass: 'Guardar clase', groupByClass: 'Grupo', coachForClass: 'Entrenador',
-    court: 'Pista', dateTime: 'Fecha y hora',
-    duration: 'Duración (min)', price: 'Precio (€)', attendance: 'Asistencia', present: 'Presente',
-    statusDone: 'Marcar realizada', statusCancelled: 'Cancelar', statusPlanned: 'Reabrir',
-    addScore: 'Evaluar', saveEval: 'Guardar evaluación', technical: 'Técnica', tactical: 'Táctica',
-    movement: 'Movimiento', mental: 'Mental', notes: 'Notas', score: 'Media',
-    addBonus: 'Añadir bono', saveBonus: 'Guardar bono', totalClasses: 'Nº de clases', useBonus: 'Usar clase',
-    online: '🟢 Nube', local: '🟡 Local', empty: 'Sin datos todavía.', noStudents: 'Sin alumnos. Añade el primero.',
-    loading: 'Cargando…', coachForGroup: 'Selecciona entrenador',
-     groupForClass: 'Grupo', assigned: 'grupos', active: 'Activo', inactive: 'Inactivo',
-    noGroups: 'Sin grupos creados.', bonusLeft: 'restantes', bonusTotal: 'clases',
-    tabProgress: '📈 Progresión', tabDrills: '🗂️ Drills',
-    progressSub: 'Evolución del alumno (scouting)', selectStudent: 'Selecciona alumno', lastEval: 'Última evaluación',
-    evalsCount: 'evaluaciones', progressTrend: 'Tendencia', trendUp: 'en mejora', trendDown: 'a reforzar', trendFlat: 'estable',
-    addDrill: 'Nuevo ejercicio', saveDrill: 'Guardar ejercicio', drillName: 'Nombre', drillAxis: 'Ámbito',
-    drillLevel: 'Nivel', drillMin: 'Duración (min)', drillFocus: 'Foco', drillSetup: 'Material / setup',
-    axisTechnical: 'Técnica', axisTactical: 'Táctica', axisMovement: 'Movimiento', axisMental: 'Mental',
-    noDrills: 'Sin ejercicios. Añade el primero.',
-    tabBilling: '💳 Cobros', billingSub: 'Suscripciones mensuales de alumnos y facturas fin de mes (ERP escuela)',
-    addSubscription: 'Nueva suscripción', saveSubscription: 'Guardar suscripción', planName: 'Plan', monthlyFee: 'Cuota mensual (€)',
-    subsActive: 'Suscripciones activas', pendingDue: 'Pendiente de cobro', income: 'Cobrado', statusActive: 'Activa', statusPaused: 'Pausada',
-    setPaused: 'Pausar', setActive: 'Activar', generateInvoices: '🧮 Generar cobros del mes', invoicesGenerated: 'Facturas generadas para el mes actual. Las pendientes se cobran al marcar como pagadas.',
-    markPaid: 'Marcar pagada', paidMarked: 'Factura marcada como pagada ✅', noSubscriptions: 'Sin suscripciones. Añade la primera.', noInvoices: 'Sin facturas para este mes. Pulsa "Generar cobros del mes".',
-    invoiceFor: 'Factura', student: 'Alumno', period: 'Periodo', amount: 'Importe',
-  },
-  en: {
-    title: '🏫 School & Coaches',
-    subtitle: 'Groups by level and age · classes · attendance · technical evaluation · class bonuses',
-    students: 'Students', groups: 'Active groups', planned: 'Upcoming', done: 'Completed',
-    attendanceRate: 'Attendance', minors: 'Minors', bonusAvailable: 'Bonuses available',
-    tabStudents: '👥 Students', tabGroups: '👨‍🏫 Groups', tabClasses: '🗓️ Classes', tabCoaches: '👨‍🔧 Coaches',
-    overlap: 'Overlaps detected', noOverlap: 'No class overlaps.',
-    coachName: 'Name', coachEmail: 'Email', coachPhone: 'Phone', coachSpecialty: 'Specialty',
-    addCoach: 'Add coach', saveCoach: 'Save coach',
-    addStudent: 'Add student', saveStudent: 'Save student',
-    name: 'Name', email: 'Email', phone: 'Phone', level: 'Level', category: 'Category',
-    guardian: 'Guardian', minorNote: 'Minors require an authorized legal guardian.',
-    addGroup: 'New group', saveGroup: 'Save group', groupName: 'Group name',
-    capacity: 'Capacity', schedule: 'Schedule', members: 'Members', addToGroup: 'Add to group',
-    addClass: 'New class', saveClass: 'Save class', groupByClass: 'Group', coachForClass: 'Coach',
-    court: 'Court', dateTime: 'Date & time',
-    duration: 'Duration (min)', price: 'Price (€)', attendance: 'Attendance', present: 'Present',
-    statusDone: 'Mark completed', statusCancelled: 'Cancel', statusPlanned: 'Reopen',
-    addScore: 'Rate', saveEval: 'Save evaluation', technical: 'Technical', tactical: 'Tactical',
-    movement: 'Movement', mental: 'Mental', notes: 'Notes', scoreBonus: 'Avg',
-    addBonus: 'Add bonus', saveBonus: 'Save bonus', totalClasses: 'Class count', useBonus: 'Use class',
-    online: '🟢 Cloud', local: '🟡 Local', empty: 'No data yet.', noStudents: 'No students. Add the first.',
-    loading: 'Loading…', coach: 'Coach',
-    coachByClass: 'Coach', attrCoach: 'Assigned coach', membersCount: 'members',
-    active: 'Active', inactive: 'Inactive', bonusLeft: 'left', totalCls: 'classes',
-    tabProgress: '📈 Progress', tabDrills: '🗂️ Drills',
-    progressSub: 'Student evolution (scouting)', selectStudent: 'Select student', lastEval: 'Last evaluation',
-    evalsCount: 'evaluations', progressTrend: 'Trend', trendUp: 'improving', trendDown: 'needs work', trendFlat: 'stable',
-    addDrill: 'New drill', saveDrill: 'Save drill', drillName: 'Name', drillAxis: 'Focus area',
-    drillLevel: 'Level', drillMin: 'Duration (min)', drillFocus: 'Focus', drillSetup: 'Equipment / setup',
-    axisTechnical: 'Technical', axisTactical: 'Tactical', axisMovement: 'Movement', axisMental: 'Mental',
-    noDrills: 'No drills. Add the first.',
-    tabBilling: '💳 Billing', billingSub: 'Monthly student subscriptions and end-of-month invoices (school ERP)',
-    addSubscription: 'New subscription', saveSubscription: 'Save subscription', planName: 'Plan', monthlyFee: 'Monthly fee (€)',
-    subsActive: 'Active subscriptions', pendingDue: 'Due', income: 'Collected', statusActive: 'Active', statusPaused: 'Paused',
-    setPaused: 'Pause', setActive: 'Activate', generateInvoices: '🧮 Generate month charges', invoicesGenerated: 'Invoices generated for the current month. Pending ones are collected when marked as paid.',
-    markPaid: 'Mark paid', paidMarked: 'Invoice marked as paid ✅', noSubscriptions: 'No subscriptions. Add the first.', noInvoices: 'No invoices for this month. Press "Generate month charges".',
-    invoiceFor: 'Invoice', student: 'Student', period: 'Period', amount: 'Amount',
-  },
-  fr: {
-    title: '🏫 École & Entraîneurs',
-    subtitle: 'Groupes par niveau et âge · cours · présence · évaluation · bons de cours',
-    students: 'Élèves', groups: 'Groupes actifs', planned: 'À venir', done: 'Réalisés',
-    attendanceRate: 'Présence', minors: 'Mineurs', bonusAvailable: 'Bons dispo',
-    tabStudents: '👥 Élèves', tabGroups: '👨‍🏫 Groupes', tabClasses: '🗓️ Cours', tabCoaches: '👨‍🔧 Entraîneurs',
-    overlap: 'Chevauchements détectés', noOverlap: 'Aucun chevauchement entre cours.',
-    coachName: 'Nom', coachEmail: 'Email', coachPhone: 'Téléphone', coachSpecialty: 'Spécialité',
-    addCoach: 'Ajouter entraîneur', saveCoach: 'Enregistrer',
-    addStudent: 'Ajouter élève', saveStudent: 'Enregistrer',
-    name: 'Nom', email: 'Email', phone: 'Téléphone', level: 'Niveau', category: 'Catégorie',
-    guardian: 'Tuteur', minorNote: 'Les mineurs nécessitent un tuteur légal autorisé.',
-    addGroup: 'Nouveau groupe', saveGroup: 'Enregistrer', groupName: 'Nom du groupe',
-    capacity: 'Capacité', schedule: 'Horaire', members: 'Composants', addToGroup: 'Ajouter au groupe',
-    addClass: 'Ajouter cours', saveClass: 'Enregistrer', groupByClass: 'Groupe', coachForClass: 'Entraîneur', court: 'Piste', dateTime: 'Date et heure',
-    duration: 'Durée (min)', price: 'Prix (€)', attendance: 'Présence', present: 'Présent',
-    statusDone: 'Terminé', statusCancelled: 'Annuler', statusPlanned: 'Rouvrir',
-    addScore: 'Évaluer', saveEval: 'Enregistrer', technical: 'Technique', tactical: 'Tactique',
-    movement: 'Déplacement', mental: 'Mental', notes: 'Notes', scoreBonus: 'Moyenne',
-    addBonus: 'Ajouter bon', saveBonus: 'Enregistrer', totalClasses: 'N séances', useBonus: 'Utiliser',
-    online: '🟢 Cloud', local: '🟡 Local', empty: 'Aucune donnée.', noStudents: 'Aucun élève. Ajoutez le premier.',
-    loading: 'Chargement…', coach: 'Entraîneur', noGroups: 'Aucun groupe.',
-    tabProgress: '📈 Progression', tabDrills: '🗂️ Drills',
-    progressSub: 'Évolution de l\'élève (scouting)', selectStudent: 'Sélectionner élève', lastEval: 'Dernière évaluation',
-    evalsCount: 'évaluations', progressTrend: 'Tendance', trendUp: 'en progrès', trendDown: 'à renforcer', trendFlat: 'stable',
-    addDrill: 'Nouvel exercice', saveDrill: 'Enregistrer', drillName: 'Nom', drillAxis: 'Domaine',
-    drillLevel: 'Niveau', drillMin: 'Durée (min)', drillFocus: 'Focus', drillSetup: 'Matériel / setup',
-    axisTechnical: 'Technique', axisTactical: 'Tactique', axisMovement: 'Déplacement', axisMental: 'Mental',
-    noDrills: 'Aucun exercice. Ajoutez le premier.',
-    tabBilling: '💳 Factures', billingSub: 'Abonnements mensuels des élèves et factures de fin de mois (ERP école)',
-    addSubscription: 'Nouvel abonnement', saveSubscription: 'Enregistrer', planName: 'Formule', monthlyFee: 'Frais mensuels (€)',
-    subsActive: 'Abonnements actifs', pendingDue: 'À encaisser', income: 'Encaissé', statusActive: 'Actif', statusPaused: 'Suspendu',
-    setPaused: 'Suspendre', setActive: 'Activer', generateInvoices: '🧮 Générer les frais du mois', invoicesGenerated: 'Factures générées pour le mois en cours. Les impayées sont encaissées quand marquées payées.',
-    markPaid: 'Marquer payée', paidMarked: 'Facture marquée payée ✅', noSubscriptions: 'Aucun abonnement. Ajoutez le premier.', noInvoices: 'Aucune facture ce mois-ci. Cliquez sur « Générer les frais du mois ».',
-    invoiceFor: 'Facture', student: 'Élève', period: 'Période', amount: 'Montant',
-  },
-  pt: {
-    title: '🏓 Escola & Treinadores',
-    subtitle: 'Grupos por nível e idade · aulas · presenças · avaliação · bônus de aulas',
-    students: 'Alunos', groups: 'Grupos ativos', planned: 'Próximas', done: 'Realizadas',
-    attendanceRate: 'Presenças', minors: 'Menores', bonusAvailable: 'Bônus disp.',
-    tabStudents: '👥 Alunos', tabGroups: '👨‍🏫 Grupos', tabClasses: '🗓️ Aulas', tabCoaches: '👨‍🔧 Treinadores',
-    overlap: 'Sobreposições detectadas', noOverlap: 'Sem sobreposição entre aulas.',
-    coachName: 'Nome', coachEmail: 'Email', coachPhone: 'Telefone', coachSpecialty: 'Especialidade',
-    addCoach: 'Adicionar treinador', saveCoach: 'Salvar',
-    addStudent: 'Adicionar aluno', saveStudent: 'Salvar',
-    name: 'Nome', email: 'Email', phone: 'Telefone', level: 'Nível', category: 'Categoria',
-    guardian: 'Responsável', minorNote: 'Menores exigem responsável legal autorizado.',
-    addGroup: 'Novo grupo', saveGroup: 'Salvar', groupName: 'Nome do grupo',
-    capacity: 'Capacidade', schedule: 'Horário', members: 'Componentes', addToGroup: 'Adicionar ao grupo',
-    addClass: 'Nova aula', saveClass: 'Salvar', groupByClass: 'Grupo', coachForClass: 'Treinador', court: 'Pista', dateTime: 'Data e hora',
-    duration: 'Duração (min)', price: 'Preço (€)', attendance: 'Presenças', present: 'Presente',
-    statusDone: 'Marcar realizada', statusCancelled: 'Cancelar', statusPlanned: 'Reabrir',
-    addScore: 'Avaliar', saveEval: 'Salvar avaliação', technical: 'Técnica', tactical: 'Tática',
-    movement: 'Movimento', mental: 'Mental', notes: 'Notas', scoreBonus: 'Média',
-    addBonus: 'Adicionar bônus', saveBonus: 'Salvar', totalClasses: 'N aulas', useBonus: 'Usar aula',
-    online: '🟢 Nuvem', local: '🟡 Local', empty: 'Sem dados.', noStudents: 'Sem alunos. Adicione o primeiro.',
-    loading: 'Carregando…', noGroups: 'Sem grupos.',
-    tabProgress: '📈 Progresso', tabDrills: '🗂️ Drills',
-    progressSub: 'Evolução do aluno (scouting)', selectStudent: 'Selecionar aluno', lastEval: 'Última avaliação',
-    evalsCount: 'avaliações', progressTrend: 'Tendência', trendUp: 'em progresso', trendDown: 'a reforçar', trendFlat: 'estável',
-    addDrill: 'Novo exercício', saveDrill: 'Salvar', drillName: 'Nome', drillAxis: 'Domínio',
-    drillLevel: 'Nível', drillMin: 'Duração (min)', drillFocus: 'Foco', drillSetup: 'Material / setup',
-    axisTechnical: 'Técnica', axisTactical: 'Tática', axisMovement: 'Movimento', axisMental: 'Mental',
-    noDrills: 'Sem exercícios. Adicione o primeiro.',
-    tabBilling: '💳 Cobranças', billingSub: 'Assinaturas mensais de alunos e faturas de fim de mês (ERP escola)',
-    addSubscription: 'Nova assinatura', saveSubscription: 'Salvar', planName: 'Plano', monthlyFee: 'Mensalidade (€)',
-    subsActive: 'Assinaturas ativas', pendingDue: 'A cobrar', income: 'Recebido', statusActive: 'Ativa', statusPaused: 'Pausada',
-    setPaused: 'Pausar', setActive: 'Ativar', generateInvoices: '🧮 Gerar cobranças do mês', invoicesGenerated: 'Faturas geradas para o mês atual. As pendentes são cobradas ao marcar como pagas.',
-    markPaid: 'Marcar paga', paidMarked: 'Fatura marcada como paga ✅', noSubscriptions: 'Sem assinaturas. Adicione a primeira.', noInvoices: 'Sem faturas este mês. Pressione "Gerar cobranças do mês".',
-    invoiceFor: 'Fatura', student: 'Aluno', period: 'Período', amount: 'Valor',
-  },
-};
+import { SCHOOL_I18N as I18N } from './school/schoolI18n';
 
 const sectionStyle = { maxWidth: '1100px', margin: '0 auto', padding: '0 24px' };
 const card = { background: 'var(--padel-card-bg)', border: '1px solid var(--padel-border)', borderRadius: 16, padding: 18 };
@@ -252,7 +100,7 @@ export default function SchoolApp({ lang = 'es' }) {
   useEffect(() => { loadAll(); }, []);
 
   const stats = schoolStats({ students, groups, classes, attendance, bonuses, invoices });
-  const nameOf = (id, list) => (list.find(x => x.id === id) || {}).name || '—';
+  const nameOf = (id, list) => (list.find(x => x.id === id) || {}).name || 'â€”';
   const membersOf = (groupId) => members.filter(m => m.groupId === groupId);
   const periodLabel = (() => {
     const d = new Date();
@@ -271,7 +119,7 @@ export default function SchoolApp({ lang = 'es' }) {
     return (sum / (list.length * 4)).toFixed(1);
   };
 
-  // Detección de solapamientos entre clases (calendario cruzado del profesor)
+  // DetecciÃ³n de solapamientos entre clases (calendario cruzado del profesor)
   const overlappedClasses = classes.filter(cl => {
     if (cl.status !== 'planned') return false;
     const start = new Date(cl.startsOn).getTime();
@@ -354,18 +202,18 @@ export default function SchoolApp({ lang = 'es' }) {
     <div style={{ padding: '30px 0 60px', minHeight: '80vh' }}>
       <div style={sectionStyle}>
         <h1 style={{ fontSize: 30, fontWeight: 900, color: 'var(--padel-text)', margin: '0 0 6px' }}>{T.title}</h1>
-        <p style={{ fontSize: 14, color: 'var(--padel-muted)', margin: '0 0 24px' }}>{T.subtitle} · {cloudOk ? T.online : T.local}</p>
+        <p style={{ fontSize: 14, color: 'var(--padel-muted)', margin: '0 0 24px' }}>{T.subtitle} Â· {cloudOk ? T.online : T.local}</p>
 
         {/* stats */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 12, marginBottom: 24 }}>
           {[
-            ['👥', stats.students, T.students],
-            ['👨‍🏫', stats.activeGroups, T.groups],
-            ['🗓️', stats.planned, T.planned],
-            ['✅', stats.done, T.done],
-            ['📈', `${stats.attendanceRate}%`, T.attendanceRate],
-            ['🧒', stats.minors, T.minors],
-            ['🎟️', stats.bonusAvailable, T.bonusAvailable],
+            ['ðŸ‘¥', stats.students, T.students],
+            ['ðŸ‘¨â€ðŸ«', stats.activeGroups, T.groups],
+            ['ðŸ—“ï¸', stats.planned, T.planned],
+            ['âœ…', stats.done, T.done],
+            ['ðŸ“ˆ', `${stats.attendanceRate}%`, T.attendanceRate],
+            ['ðŸ§’', stats.minors, T.minors],
+            ['ðŸŽŸï¸', stats.bonusAvailable, T.bonusAvailable],
           ].map(([ic, n, l], i) => (
             <div key={i} style={{ ...card, textAlign: 'center' }}>
               <div style={{ fontSize: 22 }}>{ic}</div>
@@ -397,7 +245,7 @@ export default function SchoolApp({ lang = 'es' }) {
                   {(studentForm.ageGroup === 'kids' || studentForm.ageGroup === 'teens') && (
                     <>
                       <Field label={T.guardian} value={studentForm.guardianName} onChange={e => setStudentForm({ ...studentForm, guardianName: e.target.value })} />
-                      <p style={{ fontSize: 11, color: '#fbbf24', margin: '0 0 8px' }}>⚠️ {T.minorNote}</p>
+                      <p style={{ fontSize: 11, color: '#fbbf24', margin: '0 0 8px' }}>âš ï¸ {T.minorNote}</p>
                     </>
                   )}
                   <button onClick={submitStudent} style={{ ...btnPrimary, width: '100%' }}>{T.saveStudent}</button>
@@ -409,14 +257,14 @@ export default function SchoolApp({ lang = 'es' }) {
                   ) : students.map(s => (
                     <div key={s.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: '1px solid var(--padel-border)' }}>
                       <div>
-                        <div style={{ fontWeight: 700, color: 'var(--padel-text)', fontSize: 14 }}>{s.name} {studentAvg(s.id) !== null && <span style={{ color: 'var(--padel-lime)' }}>⭐ {studentAvg(s.id)}</span>}</div>
-                        <div style={{ fontSize: 12, color: 'var(--padel-muted)' }}>{L[s.level] || s.level} · {C[s.ageGroup] || s.ageGroup} {s.guardianName ? `· ${s.guardianName}` : ''}</div>
+                        <div style={{ fontWeight: 700, color: 'var(--padel-text)', fontSize: 14 }}>{s.name} {studentAvg(s.id) !== null && <span style={{ color: 'var(--padel-lime)' }}>â­ {studentAvg(s.id)}</span>}</div>
+                        <div style={{ fontSize: 12, color: 'var(--padel-muted)' }}>{L[s.level] || s.level} Â· {C[s.ageGroup] || s.ageGroup} {s.guardianName ? `Â· ${s.guardianName}` : ''}</div>
                         <div style={{ display: 'flex', gap: 6, marginTop: 6 }}>
                           <button onClick={() => setEvalForm({ id: null, studentId: s.id, coachId: '', evaluatedOn: new Date().toISOString().slice(0, 10), technical: 0, tactical: 0, movement: 0, mental: 0, level: '', notes: '' })} style={btnGhost}>{T.addScore}</button>
                           <button onClick={() => setBonusForm({ ...emptyBonus(), studentId: s.id })} style={btnGhost}>{T.addBonus}</button>
                         </div>
                       </div>
-                      <button onClick={() => deleteStudent(s.id)} style={{ background: 'transparent', border: 'none', color: '#f87171', cursor: 'pointer', fontWeight: 700 }}>✕</button>
+                      <button onClick={() => deleteStudent(s.id)} style={{ background: 'transparent', border: 'none', color: '#f87171', cursor: 'pointer', fontWeight: 700 }}>âœ•</button>
                     </div>
                   ))}
                 </div>
@@ -436,22 +284,22 @@ export default function SchoolApp({ lang = 'es' }) {
                 </div>
 
                 <div style={{ ...card, maxHeight: 560, overflowY: 'auto' }}>
-                  {groups.length === 0 && <p style={{ fontSize: 13, color: 'var(--padel-muted)' }}>{T.empty} · {T.noGroups || ''}</p>}
+                  {groups.length === 0 && <p style={{ fontSize: 13, color: 'var(--padel-muted)' }}>{T.empty} Â· {T.noGroups || ''}</p>}
                   {groups.map(g => (
                     <div key={g.id} style={{ padding: '12px 0', borderBottom: '1px solid var(--padel-border)' }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <div style={{ fontWeight: 800, color: 'var(--padel-text)', fontSize: 15 }}>{g.name} <span style={{ color: 'var(--padel-lime)', fontWeight: 900 }}>{L[g.level]}</span></div>
-                        <button onClick={() => deleteGroup(g.id)} style={{ background: 'transparent', border: 'none', color: '#f87171', cursor: 'pointer', fontWeight: 700 }}>✕</button>
+                        <button onClick={() => deleteGroup(g.id)} style={{ background: 'transparent', border: 'none', color: '#f87171', cursor: 'pointer', fontWeight: 700 }}>âœ•</button>
                       </div>
                       <div style={{ fontSize: 12, color: 'var(--padel-muted)', margin: '4px 0 8px' }}>
-                        {C[g.category] || g.category} · {membersOf(g.id).length}/{g.capacity} {T.members}
-                        {g.schedule ? ` · ${g.schedule}` : ''}
+                        {C[g.category] || g.category} Â· {membersOf(g.id).length}/{g.capacity} {T.members}
+                        {g.schedule ? ` Â· ${g.schedule}` : ''}
                       </div>
                       <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
                         {studentsOfGroup(g.id).map(s => (
                           <span key={s.id} style={{ background: 'var(--padel-hover-bg)', padding: '4px 8px', borderRadius: 8, fontSize: 12 }}>
                             {s.name}{' '}
-                            <button onClick={() => removeMember(g.id, s.id)} style={{ background: 'none', border: 'none', color: '#f87171', cursor: 'pointer' }}>✕</button>
+                            <button onClick={() => removeMember(g.id, s.id)} style={{ background: 'none', border: 'none', color: '#f87171', cursor: 'pointer' }}>âœ•</button>
                           </span>
                         ))}
                         <select value="" onChange={e => { if (e.target.value) { addMember(g.id, e.target.value); loadAll(); } }} style={{ ...input, width: 'auto', maxWidth: 140 }}>
@@ -484,11 +332,11 @@ export default function SchoolApp({ lang = 'es' }) {
                 <div style={{ maxHeight: 560, overflowY: 'auto' }}>
                   {overlappedClasses.length > 0 && (
                     <div style={{ ...card, marginBottom: 12, borderColor: 'rgba(251,191,36,0.5)', background: 'rgba(251,191,36,0.06)' }}>
-                      <div style={{ fontSize: 13, fontWeight: 800, color: '#fbbf24', marginBottom: 6 }}>⚠️ {T.overlap}</div>
+                      <div style={{ fontSize: 13, fontWeight: 800, color: '#fbbf24', marginBottom: 6 }}>âš ï¸ {T.overlap}</div>
                       {overlappedClasses.map(cl => (
                         <div key={cl.id} style={{ fontSize: 12, color: 'var(--padel-text)', padding: '3px 0' }}>
-                          🗓️ {nameOf(cl.groupId, groups) || cl.courtName} · {new Date(cl.startsOn).toLocaleString(lang === 'es' ? 'es-ES' : lang === 'fr' ? 'fr-FR' : lang === 'pt' ? 'pt-PT' : 'en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
-                          {cl.coachId ? ` · 👨‍🏫 ${nameOf(cl.coachId, coaches)}` : ''} · 🏸 {cl.courtName}
+                          ðŸ—“ï¸ {nameOf(cl.groupId, groups) || cl.courtName} Â· {new Date(cl.startsOn).toLocaleString(lang === 'es' ? 'es-ES' : lang === 'fr' ? 'fr-FR' : lang === 'pt' ? 'pt-PT' : 'en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                          {cl.coachId ? ` Â· ðŸ‘¨â€ðŸ« ${nameOf(cl.coachId, coaches)}` : ''} Â· ðŸ¸ {cl.courtName}
                         </div>
                       ))}
                     </div>
@@ -498,7 +346,7 @@ export default function SchoolApp({ lang = 'es' }) {
                     <div key={cl.id} style={{ ...card, marginBottom: 10 }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <div style={{ fontWeight: 800, color: 'var(--padel-text)' }}>
-                          {nameOf(cl.groupId, groups) || cl.courtName || '—'}
+                          {nameOf(cl.groupId, groups) || cl.courtName || 'â€”'}
                           <span style={{ fontSize: 12, color: 'var(--padel-muted)', fontWeight: 500, marginLeft: 8 }}>
                             {new Date(cl.startsOn).toLocaleString(lang === 'es' ? 'es-ES' : lang === 'fr' ? 'fr-FR' : lang === 'pt' ? 'pt-PT' : 'en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
                           </span>
@@ -510,8 +358,8 @@ export default function SchoolApp({ lang = 'es' }) {
                         </div>
                       </div>
                       <div style={{ fontSize: 12, color: 'var(--padel-muted)', margin: '4px 0 8px' }}>
-                        {cl.courtName && `🏸 ${cl.courtName} · `}{cl.coachId ? nameOf(cl.coachId, coaches) : ''}
-                        {cl.price != null && ` · 💶 ${cl.price} €`}
+                        {cl.courtName && `ðŸ¸ ${cl.courtName} Â· `}{cl.coachId ? nameOf(cl.coachId, coaches) : ''}
+                        {cl.price != null && ` Â· ðŸ’¶ ${cl.price} â‚¬`}
                       </div>
                       {cl.status === 'planned' && (
                         <div style={{ fontSize: 12, color: 'var(--padel-muted)' }}>
@@ -524,7 +372,7 @@ export default function SchoolApp({ lang = 'es' }) {
                                 <span key={s.id}
                                   onClick={() => toggleAttend(cl, s.id, !(rec && rec.attended))}
                                   style={{ padding: '4px 10px', borderRadius: 8, fontWeight: 700, fontSize: 12, cursor: 'pointer', background: rec && rec.attended ? 'var(--padel-emerald)' : 'var(--padel-hover-bg)', color: rec && rec.attended ? '#fff' : 'var(--padel-muted)', border: '1px solid var(--padel-border)' }}>
-                                  {s.name} {rec && rec.attended ? '✓' : ''}
+                                  {s.name} {rec && rec.attended ? 'âœ“' : ''}
                                 </span>
                               );
                             })}
@@ -578,26 +426,26 @@ export default function SchoolApp({ lang = 'es' }) {
                     <div key={c.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: '1px solid var(--padel-border)' }}>
                       <div>
                         <div style={{ fontWeight: 700, color: 'var(--padel-text)' }}>{c.name} {c.active ? '' : `(${T.inactive})`}</div>
-                        <div style={{ fontSize: 12, color: 'var(--padel-muted)' }}>{c.specialty} · {c.email || c.phone}</div>
+                        <div style={{ fontSize: 12, color: 'var(--padel-muted)' }}>{c.specialty} Â· {c.email || c.phone}</div>
                         <div style={{ fontSize: 12, color: 'var(--padel-muted)' }}>
                           {groups.filter(g => g.coachId === c.id).length} {T.groups}
                         </div>
                       </div>
-                      <button onClick={() => deleteCoach(c.id)} style={{ background: 'transparent', border: 'none', color: '#f87171', cursor: 'pointer', fontWeight: 700 }}>✕</button>
+                      <button onClick={() => deleteCoach(c.id)} style={{ background: 'transparent', border: 'none', color: '#f87171', cursor: 'pointer', fontWeight: 700 }}>âœ•</button>
                     </div>
                   ))}
                 </div>
               </div>
             )}
 
-            {/* ===== PROGRESIÓN / SCOUTING ===== */}
+            {/* ===== PROGRESIÃ“N / SCOUTING ===== */}
             {tab === 'progress' && (
               <div>
                 <div style={card}>
                   <h3 style={{ fontSize: 16, fontWeight: 800, color: 'var(--padel-text)', marginBottom: 4 }}>{T.tabProgress}</h3>
                   <p style={{ fontSize: 12, color: 'var(--padel-muted)', margin: '0 0 14px' }}>{T.progressSub}</p>
                   <select value={progressStudent} onChange={e => setProgressStudent(e.target.value)} style={input}>
-                    <option value="">{T.selectStudent}…</option>
+                    <option value="">{T.selectStudent}â€¦</option>
                     {students.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
                   </select>
                 </div>
@@ -612,7 +460,7 @@ export default function SchoolApp({ lang = 'es' }) {
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 16, marginTop: 12 }}>
                     {/* radar */}
                     <div style={card}>
-                      <h4 style={{ fontSize: 14, fontWeight: 800, color: 'var(--padel-text)', margin: '0 0 10px' }}>🧭 {T.lastEval} · {lastEval.evaluatedOn}</h4>
+                      <h4 style={{ fontSize: 14, fontWeight: 800, color: 'var(--padel-text)', margin: '0 0 10px' }}>ðŸ§­ {T.lastEval} Â· {lastEval.evaluatedOn}</h4>
                       <svg viewBox="0 0 220 220" style={{ width: '100%', maxWidth: 280, display: 'block', margin: '0 auto' }}>
                         {[2, 4, 6, 8, 10].map(r => (
                           <polygon key={r} points={[
@@ -640,7 +488,7 @@ export default function SchoolApp({ lang = 'es' }) {
 
                     {/* tendencia */}
                     <div style={card}>
-                      <h4 style={{ fontSize: 14, fontWeight: 800, color: 'var(--padel-text)', margin: '0 0 12px' }}>📉 {T.progressTrend} · {progSeries.length} {T.evalsCount}</h4>
+                      <h4 style={{ fontSize: 14, fontWeight: 800, color: 'var(--padel-text)', margin: '0 0 12px' }}>ðŸ“‰ {T.progressTrend} Â· {progSeries.length} {T.evalsCount}</h4>
                       {progSeries.map(pt => (
                         <div key={pt.d} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
                           <span style={{ fontSize: 11, color: 'var(--padel-muted)', width: 74, flexShrink: 0 }}>{pt.d.slice(0, -3)}</span>
@@ -651,11 +499,11 @@ export default function SchoolApp({ lang = 'es' }) {
                         </div>
                       ))}
                       <div style={{ marginTop: 10, padding: '10px 12px', borderRadius: 10, background: trend === 'up' ? 'rgba(163,230,53,0.08)' : trend === 'down' ? 'rgba(248,113,113,0.08)' : 'var(--padel-hover-bg)', fontSize: 13, fontWeight: 700, color: trend === 'up' ? 'var(--padel-lime)' : trend === 'down' ? '#f87171' : 'var(--padel-muted)' }}>
-                        {trend === 'up' ? '📈 ' + T.trendUp : trend === 'down' ? '📉 ' + T.trendDown : '➡️ ' + T.trendFlat}
+                        {trend === 'up' ? 'ðŸ“ˆ ' + T.trendUp : trend === 'down' ? 'ðŸ“‰ ' + T.trendDown : 'âž¡ï¸ ' + T.trendFlat}
                       </div>
                       {progAttRate !== null && (
                         <div style={{ marginTop: 8, fontSize: 13, color: 'var(--padel-muted)' }}>
-                          🎯 {T.attendanceRate}: <b style={{ color: 'var(--padel-lime)' }}>{progAttRate}%</b>
+                          ðŸŽ¯ {T.attendanceRate}: <b style={{ color: 'var(--padel-lime)' }}>{progAttRate}%</b>
                         </div>
                       )}
                     </div>
@@ -691,9 +539,9 @@ export default function SchoolApp({ lang = 'es' }) {
                             {dr.name}
                           </div>
                           <div style={{ fontSize: 12, color: 'var(--padel-muted)', marginTop: 4 }}>{dr.focus}</div>
-                          <div style={{ fontSize: 11, color: 'var(--padel-muted)' }}>{L[dr.level] || dr.level} · ⏱ {dr.durationMin}m {dr.setup ? `· ${dr.setup}` : ''}</div>
+                          <div style={{ fontSize: 11, color: 'var(--padel-muted)' }}>{L[dr.level] || dr.level} Â· â± {dr.durationMin}m {dr.setup ? `Â· ${dr.setup}` : ''}</div>
                         </div>
-                        <button onClick={async () => { deleteDrill(dr.id); setDrills(await listDrills()); }} style={{ background: 'transparent', border: 'none', color: '#f87171', cursor: 'pointer', fontWeight: 700 }}>✕</button>
+                        <button onClick={async () => { deleteDrill(dr.id); setDrills(await listDrills()); }} style={{ background: 'transparent', border: 'none', color: '#f87171', cursor: 'pointer', fontWeight: 700 }}>âœ•</button>
                       </div>
                     );
                   })}
@@ -710,7 +558,7 @@ export default function SchoolApp({ lang = 'es' }) {
                     <label style={{ display: 'block', marginBottom: 10 }}>
                       <span style={{ fontSize: 12, color: 'var(--padel-muted)', fontWeight: 600, display: 'block', marginBottom: 4 }}>{T.student}</span>
                       <select value={subForm.studentId} onChange={e => setSubForm({ ...subForm, studentId: e.target.value })} style={input}>
-                        <option value="">…</option>
+                        <option value="">â€¦</option>
                         {students.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
                       </select>
                     </label>
@@ -728,7 +576,7 @@ export default function SchoolApp({ lang = 'es' }) {
                       <div key={s.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '9px 0', borderBottom: '1px solid var(--padel-border)' }}>
                         <div>
                           <div style={{ fontWeight: 700, color: 'var(--padel-text)' }}>{nameOf(s.studentId, students)}</div>
-                          <div style={{ fontSize: 12, color: 'var(--padel-muted)' }}>{s.planName} · {s.monthlyPrice} €/{periodLabel} · {s.status === 'active' ? '🟢 ' + T.statusActive : '⏸ ' + T.statusPaused}</div>
+                          <div style={{ fontSize: 12, color: 'var(--padel-muted)' }}>{s.planName} Â· {s.monthlyPrice} â‚¬/{periodLabel} Â· {s.status === 'active' ? 'ðŸŸ¢ ' + T.statusActive : 'â¸ ' + T.statusPaused}</div>
                         </div>
                         <button onClick={() => doToggleSub(s.id, s.status)} style={{ ...btnGhost, fontSize: 11, padding: '5px 10px' }}>
                           {s.status === 'active' ? T.setPaused : T.setActive}
@@ -739,21 +587,21 @@ export default function SchoolApp({ lang = 'es' }) {
                 </div>
 
                 <div style={{ ...card, marginTop: 16 }}>
-                  <h3 style={{ fontSize: 16, fontWeight: 800, color: 'var(--padel-text)', marginBottom: 6 }}>🧾 {T.invoiceFor} — {periodLabel}</h3>
+                  <h3 style={{ fontSize: 16, fontWeight: 800, color: 'var(--padel-text)', marginBottom: 6 }}>ðŸ§¾ {T.invoiceFor} â€” {periodLabel}</h3>
                   <div style={{ fontSize: 12, color: 'var(--padel-muted)', marginBottom: 12 }}>{T.billingSub}</div>
                   {invoices.length === 0 && <p style={{ fontSize: 13, color: 'var(--padel-muted)' }}>{T.noInvoices}</p>}
                   {invoices.map(inv => (
                     <div key={inv.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '9px 0', borderBottom: '1px solid var(--padel-border)' }}>
                       <div>
                         <div style={{ fontWeight: 700, color: 'var(--padel-text)' }}>{nameOf(inv.studentId, students)}</div>
-                        <div style={{ fontSize: 12, color: 'var(--padel-muted)' }}>{T.period}: {inv.period} · {inv.amount} €</div>
+                        <div style={{ fontSize: 12, color: 'var(--padel-muted)' }}>{T.period}: {inv.period} Â· {inv.amount} â‚¬</div>
                       </div>
                       {inv.status === 'pending' ? (
                         <button onClick={() => doMarkPaid(inv.id)} style={{ ...btnGhost, fontSize: 11, padding: '5px 10px', borderColor: 'rgba(16,185,129,0.4)', color: '#34d399' }}>
-                          {T.markPaid} · {inv.amount} €
+                          {T.markPaid} Â· {inv.amount} â‚¬
                         </button>
                       ) : (
-                        <span style={{ fontSize: 12, fontWeight: 800, color: '#34d399' }}>✅ {T.statusActive}</span>
+                        <span style={{ fontSize: 12, fontWeight: 800, color: '#34d399' }}>âœ… {T.statusActive}</span>
                       )}
                     </div>
                   ))}
