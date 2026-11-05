@@ -25,10 +25,10 @@ export function useAuth() {
     }
     boot();
 
-    const { subscription } = supabase.auth.onAuthStateChange((_event, ses) => {
+    const { data } = supabase.auth.onAuthStateChange((_event, ses) => {
       applySession(ses);
     });
-    return () => subscription.unsubscribe();
+    return () => data?.subscription?.unsubscribe?.();
   }, []);
 
   async function applySession(ses) {
