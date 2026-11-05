@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useStore, setState, getState, getTournamentById, saveTournamentById } from '../services/store';
 import { pullState } from '../services/cloudService';
@@ -62,7 +62,7 @@ export default function TournamentPublic({ lang = 'es' }) {
   }, [id, isLive]);
 
   // JSON-LD + OG/Twitter para SEO del torneo (hook SIEMPRE ejecutado; nunca
-  // despuÃ©s de los returns tempranos de missing/loading).
+  // después de los returns tempranos de missing/loading).
   React.useEffect(()=>{
     if(!(state?.tournament)) return;
     const t = state.tournament;
@@ -70,7 +70,7 @@ export default function TournamentPublic({ lang = 'es' }) {
     const el=document.createElement('script'); el.type='application/ld+json';
     el.text=JSON.stringify({"@context":"https://schema.org","@type":"SportsEvent","name":t.name,"location":{"@type":"SportsActivityLocation","name":t.club,"address":t.city||''},"startDate":t.date||undefined,"image": t.cartel ? `https://padelorganizers.vercel.app${encodeURI(t.cartel)}` : undefined,"description":`Torneo ${t.modality} con ${(state.players||[]).length} jugadores`,"organizer":{"@type":"Organization","name":"PADELORGANIZERS","url":"https://padelorganizers.vercel.app"}});
     document.head.appendChild(el);
-    const og=document.querySelector('meta[property="og:title"]'); if(og) og.content=`${t.name} â€” ${t.club} | PADELORGANIZERS`;
+    const og=document.querySelector('meta[property="og:title"]'); if(og) og.content=`${t.name} — ${t.club} | PADELORGANIZERS`;
     const ogImg=document.querySelector('meta[property="og:image"]'); if(ogImg && t.cartel) ogImg.content=`https://padelorganizers.vercel.app${encodeURI(t.cartel)}`;
     const twImg=document.querySelector('meta[name="twitter:image"]'); if(twImg && t.cartel) twImg.content=`https://padelorganizers.vercel.app${encodeURI(t.cartel)}`;
     return ()=>el.remove();
@@ -79,7 +79,7 @@ export default function TournamentPublic({ lang = 'es' }) {
   if (missing) {
     return (
       <div style={{ padding: '60px 24px', maxWidth: '640px', margin: '0 auto', textAlign: 'center' }}>
-        <div style={{ fontSize: '54px', marginBottom: '12px' }}>ðŸŽ«</div>
+        <div style={{ fontSize: '54px', marginBottom: '12px' }}>🎫</div>
         <h1 style={{ fontSize: '26px', fontWeight: 900, color: '#fff', margin: '0 0 10px' }}>{T.notFound}</h1>
         <p style={{ fontSize: '14px', color: '#94a3b8', lineHeight: 1.7 }}>{T.notFoundSub}</p>
       </div>
@@ -89,7 +89,7 @@ export default function TournamentPublic({ lang = 'es' }) {
   if (loading || !(state?.tournament && state?.players)) {
     return (
       <div style={{ padding: '60px 24px', textAlign: 'center', color: '#94a3b8', fontSize: '14px' }}>
-        <div style={{ fontSize: '34px', marginBottom: '10px' }}>â³</div>{T.loading}
+        <div style={{ fontSize: '34px', marginBottom: '10px' }}>⏳</div>{T.loading}
       </div>
     );
   }
@@ -111,7 +111,7 @@ export default function TournamentPublic({ lang = 'es' }) {
     const time = start
       ? new Date(start).toLocaleTimeString(lang === 'es' ? 'es-ES' : lang === 'fr' ? 'fr-FR' : lang === 'pt' ? 'pt-PT' : 'en-US', { hour: '2-digit', minute: '2-digit' })
       : '';
-    return T.scheduledTime.replace('{time}', time || 'â€”').replace('{court}', court?.name || 'â€”');
+    return T.scheduledTime.replace('{time}', time || '—').replace('{court}', court?.name || '—');
   };
 
   const signup = () => {
@@ -202,12 +202,12 @@ export default function TournamentPublic({ lang = 'es' }) {
       </h1>
       {t.cartel && <img src={encodeURI(t.cartel)} alt="Cartel" style={{ width:'100%', maxWidth:600, borderRadius:12, margin:'12px 0', border:'1px solid var(--padel-border)' }} />}
       <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap', marginBottom: '22px' }}>
-        <span style={{ fontSize: '13px', color: '#94a3b8' }}>ðŸŸï¸ {t.club}</span>
-        <span style={{ fontSize: '13px', color: '#94a3b8' }}>ðŸŽ¾ {t.modality}</span>
-        <span style={{ fontSize: '13px', color: '#94a3b8' }}>ðŸ‘¥ {state.players.length}</span>
-        <span style={{ fontSize: '13px', color: '#94a3b8' }}>ðŸŸ¢ {t.totalCourts}</span>
+        <span style={{ fontSize: '13px', color: '#94a3b8' }}>🏟️ {t.club}</span>
+        <span style={{ fontSize: '13px', color: '#94a3b8' }}>🎾 {t.modality}</span>
+        <span style={{ fontSize: '13px', color: '#94a3b8' }}>👥 {state.players.length}</span>
+        <span style={{ fontSize: '13px', color: '#94a3b8' }}>🟢 {t.totalCourts}</span>
       </div>
-      <p style={{ fontSize: '12px', color: '#64748b', margin: '0 0 20px' }}>âœ¨ {T.sharedBy.replace('{club}', t.club)}</p>
+      <p style={{ fontSize: '12px', color: '#64748b', margin: '0 0 20px' }}>✨ {T.sharedBy.replace('{club}', t.club)}</p>
       {(() => {
         const lastRound = Math.max(0, ...state.matches.map(m=>m.round));
         const final = state.matches.filter(m=>m.round===lastRound && m.status==='completed')[0];
@@ -217,9 +217,9 @@ export default function TournamentPublic({ lang = 'es' }) {
         return (
           <div style={{ background:'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)', color:'#1f2937', borderRadius:16, padding:18, marginBottom:16, display:'flex', gap:12, alignItems:'center', flexWrap:'wrap', justifyContent:'space-between' }}>
             <div>
-              <div style={{ fontSize:11, fontWeight:800, letterSpacing:1 }}>ðŸ† CAMPEÃ“N</div>
+              <div style={{ fontSize:11, fontWeight:800, letterSpacing:1 }}>🏆 CAMPEÓN</div>
               <div style={{ fontSize:18, fontWeight:900 }}>{final.pair1Names && final.winnerIds ? final.pair1Names : champ} </div>
-              <div style={{ fontSize:12, opacity:0.8 }}>Final R{lastRound} Â· {final.scoreSet1} {final.scoreSet2?` / ${final.scoreSet2}`:''}</div>
+              <div style={{ fontSize:12, opacity:0.8 }}>Final R{lastRound} · {final.scoreSet1} {final.scoreSet2?` / ${final.scoreSet2}`:''}</div>
             </div>
             <div style={{ fontSize:12, fontWeight:700, background:'rgba(0,0,0,0.12)', padding:'6px 10px', borderRadius:999 }}>{t.state || 'FINAL'}</div>
           </div>
@@ -227,7 +227,7 @@ export default function TournamentPublic({ lang = 'es' }) {
       })()}
       <TournamentInscriptions tournamentId={id} lang={lang} />
 
-      {/* INSCRIPCIÃ“N */}
+      {/* INSCRIPCIÓN */}
       <div style={{ ...card, marginBottom: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '14px' }}>
         <div>
           <h3 style={{ fontSize: '16px', fontWeight: 800, color: '#fff', margin: '0 0 4px' }}>{T.signupTitle}</h3>
@@ -250,7 +250,7 @@ export default function TournamentPublic({ lang = 'es' }) {
             <h3 style={{ fontSize: '16px', fontWeight: 800, color: '#fff', margin: '0 0 4px' }}>{T.streamingTitle}</h3>
             <div style={{ fontSize: '13px', color: '#94a3b8' }}>{T.streamingSub}</div>
             <div style={{ fontSize: '13px', fontWeight: 800, color: '#fb7185', marginTop: 6 }}>
-              âš”ï¸ {currentMatch.pair1Names} vs {currentMatch.pair2Names} Â· ðŸ”´ {T.round}{currentMatch.round}
+              ⚔️ {currentMatch.pair1Names} vs {currentMatch.pair2Names} · 🔴 {T.round}{currentMatch.round}
             </div>
           </div>
           <button onClick={() => navigate('/live')} className="pulse-glow" style={{ background: 'rgba(251,113,133,0.15)', color: '#fb7185', border: '1px solid rgba(251,113,133,0.5)', padding: '12px 20px', borderRadius: '12px', fontWeight: 800, fontSize: '14px', cursor: 'pointer' }}>
@@ -270,7 +270,7 @@ export default function TournamentPublic({ lang = 'es' }) {
             <div style={{ display:'flex', gap:8, marginBottom:10, flexWrap:'wrap' }}>
               <input value={newPlayerName} onChange={e=>setNewPlayerName(e.target.value)} placeholder="Nombre" style={{ flex:'1 1 120px', padding:'8px 10px', borderRadius:8, border:'1px solid var(--padel-border)', background:'var(--padel-hover-bg)', color:'#fff', fontSize:12 }} />
               <input type="number" value={newPlayerElo} onChange={e=>setNewPlayerElo(e.target.value)} placeholder="Elo" style={{ width:90, padding:'8px 10px', borderRadius:8, border:'1px solid var(--padel-border)', background:'var(--padel-hover-bg)', color:'#fff', fontSize:12 }} />
-              <button onClick={addPlayer} style={{ padding:'8px 12px', borderRadius:8, border:'none', background:'#10b981', color:'#fff', fontWeight:800, fontSize:12, cursor:'pointer' }}>AÃ±adir</button>
+              <button onClick={addPlayer} style={{ padding:'8px 12px', borderRadius:8, border:'none', background:'#10b981', color:'#fff', fontWeight:800, fontSize:12, cursor:'pointer' }}>Añadir</button>
             </div>
           )}
           {sortedPlayers.map((p, i) => (
@@ -282,8 +282,8 @@ export default function TournamentPublic({ lang = 'es' }) {
                     <input type="number" value={editPlayerElo} onChange={e=>setEditPlayerElo(e.target.value)} style={{ width:80, padding:'6px 8px', borderRadius:6, border:'1px solid var(--padel-border)', background:'var(--padel-hover-bg)', color:'#fff', fontSize:12 }} />
                   </span>
                   <span style={{ display:'flex', gap:4 }}>
-                    <button onClick={saveEditPlayer} style={{ padding:'4px 8px', borderRadius:6, border:'none', background:'#10b981', color:'#fff', fontWeight:700, fontSize:11, cursor:'pointer' }}>âœ“</button>
-                    <button onClick={()=>setEditingPlayerId(null)} style={{ padding:'4px 8px', borderRadius:6, border:'1px solid var(--padel-border)', background:'transparent', color:'#94a3b8', fontSize:11, cursor:'pointer' }}>âœ•</button>
+                    <button onClick={saveEditPlayer} style={{ padding:'4px 8px', borderRadius:6, border:'none', background:'#10b981', color:'#fff', fontWeight:700, fontSize:11, cursor:'pointer' }}>✓</button>
+                    <button onClick={()=>setEditingPlayerId(null)} style={{ padding:'4px 8px', borderRadius:6, border:'1px solid var(--padel-border)', background:'transparent', color:'#94a3b8', fontSize:11, cursor:'pointer' }}>✕</button>
                   </span>
                 </>
               ) : (
@@ -293,11 +293,11 @@ export default function TournamentPublic({ lang = 'es' }) {
                     <button onClick={() => navigate(`/player/${encodeURIComponent(p.name)}?t=${encodeURIComponent(id)}`)} style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer', font: 'inherit', color: 'inherit', textAlign: 'left', textDecoration: 'underline', textDecorationColor: 'rgba(16,185,129,0.4)', textUnderlineOffset: '3px' }}>{p.name}</button>
                   </span>
                   <span style={{ display:'flex', alignItems:'center', gap:8 }}>
-                    <span style={{ fontSize: '12px', fontWeight: 800, color: '#cbd5e1' }}><span style={{ color: '#10b981' }}>{'â­'.repeat(Math.max(1, Math.round(p.level)))}</span> {p.level.toFixed(1)}</span>
+                    <span style={{ fontSize: '12px', fontWeight: 800, color: '#cbd5e1' }}><span style={{ color: '#10b981' }}>{'⭐'.repeat(Math.max(1, Math.round(p.level)))}</span> {p.level.toFixed(1)}</span>
                     {canEdit && (
                       <>
-                        <button onClick={()=>startEditPlayer(p)} style={{ background:'none', border:'1px solid var(--padel-border)', color:'#94a3b8', borderRadius:6, padding:'2px 6px', fontSize:10, cursor:'pointer' }}>âœŽ</button>
-                        <button onClick={()=>deletePlayer(p.id)} style={{ background:'none', border:'1px solid rgba(251,113,133,0.3)', color:'#fb7185', borderRadius:6, padding:'2px 6px', fontSize:10, cursor:'pointer' }}>ðŸ—‘</button>
+                        <button onClick={()=>startEditPlayer(p)} style={{ background:'none', border:'1px solid var(--padel-border)', color:'#94a3b8', borderRadius:6, padding:'2px 6px', fontSize:10, cursor:'pointer' }}>✎</button>
+                        <button onClick={()=>deletePlayer(p.id)} style={{ background:'none', border:'1px solid rgba(251,113,133,0.3)', color:'#fb7185', borderRadius:6, padding:'2px 6px', fontSize:10, cursor:'pointer' }}>🗑</button>
                       </>
                     )}
                   </span>
@@ -322,16 +322,16 @@ export default function TournamentPublic({ lang = 'es' }) {
                 <option value="">Jugador 2</option>
                 {sortedPlayers.map(pl=><option key={pl.id} value={pl.id}>{pl.name}</option>)}
               </select>
-              <button onClick={addPair} style={{ padding:'8px 12px', borderRadius:8, border:'none', background:'#fbbf24', color:'#1f2937', fontWeight:800, fontSize:12, cursor:'pointer' }}>AÃ±adir</button>
+              <button onClick={addPair} style={{ padding:'8px 12px', borderRadius:8, border:'none', background:'#fbbf24', color:'#1f2937', fontWeight:800, fontSize:12, cursor:'pointer' }}>Añadir</button>
             </div>
           )}
-          {sortedPairs.length === 0 && <div style={{ fontSize: '13px', color: '#64748b' }}>â€”</div>}
+          {sortedPairs.length === 0 && <div style={{ fontSize: '13px', color: '#64748b' }}>—</div>}
           {sortedPairs.map((p) => (
             <div key={p.id} style={rowCls}>
               <span style={{ fontWeight: 700, color: '#f0fdf4' }}>#{p.ranking} {p.player1.split(' ')[0]} / {p.player2.split(' ')[0]}</span>
               <span style={{ display:'flex', alignItems:'center', gap:8 }}>
                 <span style={{ fontSize: '12px', fontWeight: 800, color: '#84cc16' }}>{p.points} {T.points}</span>
-                {canEdit && <button onClick={()=>deletePair(p.id)} style={{ background:'none', border:'1px solid rgba(251,113,133,0.3)', color:'#fb7185', borderRadius:6, padding:'2px 6px', fontSize:10, cursor:'pointer' }}>ðŸ—‘</button>}
+                {canEdit && <button onClick={()=>deletePair(p.id)} style={{ background:'none', border:'1px solid rgba(251,113,133,0.3)', color:'#fb7185', borderRadius:6, padding:'2px 6px', fontSize:10, cursor:'pointer' }}>🗑</button>}
               </span>
             </div>
           ))}
@@ -359,7 +359,7 @@ export default function TournamentPublic({ lang = 'es' }) {
               {state.matches.filter((m) => m.round === r).map((m) => (
                 <div key={m.id} style={{ fontSize: '12px', color: '#cbd5e1', padding: '4px 0', borderBottom: '1px dashed rgba(255,255,255,0.06)', display:'flex', justifyContent:'space-between', alignItems:'center' }}>
                   <span style={{ fontWeight: 700, color: m.status === 'completed' ? '#34d399' : m.status==='wo'?'#fbbf24':'#f0fdf4' }}>
-                    {m.status === 'completed' ? `âœ“ ${m.pair1Names} ${m.scoreSet1}` : m.status==='wo' ? `âš ï¸ ${m.pair1Names} vs ${m.pair2Names} Â· W.O.` : `${m.pair1Names} vs ${m.pair2Names}`}
+                    {m.status === 'completed' ? `✓ ${m.pair1Names} ${m.scoreSet1}` : m.status==='wo' ? `⚠️ ${m.pair1Names} vs ${m.pair2Names} · W.O.` : `${m.pair1Names} vs ${m.pair2Names}`}
                     <span style={{ fontSize: '10px', color: '#64748b', marginLeft:6 }}>{fmtCourtTime(m)}</span>
                   </span>
                   {canEdit && m.status!=='completed' && m.status!=='wo' && (
@@ -404,7 +404,7 @@ export default function TournamentPublic({ lang = 'es' }) {
                   display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4,
                 }}>
                   <span>{s.brand}</span>
-                  <span style={{ fontSize: '10px', fontWeight: 700, opacity: 0.7 }}>{tt.emoji} {tt.label[lang] || tt.label.es} â†—</span>
+                  <span style={{ fontSize: '10px', fontWeight: 700, opacity: 0.7 }}>{tt.emoji} {tt.label[lang] || tt.label.es} ↗</span>
                 </a>
               );
             }) : [0, 1, 2].map((i) => (
@@ -415,7 +415,7 @@ export default function TournamentPublic({ lang = 'es' }) {
           })()}
         </div>
         <button onClick={() => navigate('/sponsors')} style={{ background: 'rgba(251,191,36,0.1)', color: '#fbbf24', border: '1px solid rgba(251,191,36,0.35)', padding: '10px 18px', borderRadius: '10px', fontWeight: 700, fontSize: '13px', cursor: 'pointer', marginRight: 8 }}>
-          ðŸ’° {T.sponsorContact}
+          💰 {T.sponsorContact}
         </button>
         <button onClick={() => navigate('/club')} style={{ background: 'rgba(255,255,255,0.08)', color: '#fff', border: '1px solid rgba(255,255,255,0.2)', padding: '10px 18px', borderRadius: '10px', fontWeight: 700, fontSize: '13px', cursor: 'pointer' }}>
           {T.sponsorSlot}
@@ -426,12 +426,12 @@ export default function TournamentPublic({ lang = 'es' }) {
       {(t.auditLog||[]).length>0 && (
         <div style={{ ...card, marginBottom:16 }}>
           <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:8 }}>
-            <h3 style={{ fontSize:15, fontWeight:800, color:'#fff', margin:0 }}>ðŸ“œ AuditorÃ­a</h3>
-            <button onClick={()=>{ const blob=new Blob([JSON.stringify(t,null,2)],{type:'application/json'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=`acta-${t.name.replace(/\s+/g,'-')}.json`; a.click(); URL.revokeObjectURL(url); }} style={{ padding:'6px 10px', borderRadius:8, border:'1px solid var(--padel-border)', background:'var(--padel-hover-bg)', color:'var(--padel-text)', fontWeight:700, fontSize:11, cursor:'pointer' }}>â¬‡ï¸ Exportar acta</button>
+            <h3 style={{ fontSize:15, fontWeight:800, color:'#fff', margin:0 }}>📜 Auditoría</h3>
+            <button onClick={()=>{ const blob=new Blob([JSON.stringify(t,null,2)],{type:'application/json'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=`acta-${t.name.replace(/\s+/g,'-')}.json`; a.click(); URL.revokeObjectURL(url); }} style={{ padding:'6px 10px', borderRadius:8, border:'1px solid var(--padel-border)', background:'var(--padel-hover-bg)', color:'var(--padel-text)', fontWeight:700, fontSize:11, cursor:'pointer' }}>⬇️ Exportar acta</button>
           </div>
           {(t.auditLog||[]).slice(-8).reverse().map((a,i)=>(
             <div key={i} style={{ fontSize:11, color:'var(--padel-muted)', padding:'4px 0', borderBottom:'1px solid var(--padel-border)' }}>
-              {new Date(a.at).toLocaleString()} Â· <b style={{ color:'var(--padel-text)' }}>{a.action||a.from+'â†’'+a.to}</b> {a.matchId?`Â· ${a.matchId}`:''} {a.reason?`Â· ${a.reason}`:''}
+              {new Date(a.at).toLocaleString()} · <b style={{ color:'var(--padel-text)' }}>{a.action||a.from+'→'+a.to}</b> {a.matchId?`· ${a.matchId}`:''} {a.reason?`· ${a.reason}`:''}
             </div>
           ))}
         </div>
@@ -443,19 +443,19 @@ export default function TournamentPublic({ lang = 'es' }) {
         <TournamentChat lang={lang} tournamentId={t.id || id} />
       </div>
 
-      {/* CLASIFICACIÃ“N FINAL 1Âº-32Âº */}
+      {/* CLASIFICACIÓN FINAL 1º-32º */}
       {(() => {
         const lastRound = Math.max(0, ...state.matches.map(m=>m.round));
         const hasFinal = state.matches.some(m=>m.round===lastRound && m.status==='completed');
         if (!hasFinal) return null;
         const order = state.pairs.slice().sort((a,b)=> b.points - a.points || b.diff - a.diff);
-        const label = (idx) => idx===0 ? '1Âº CampeÃ³n' : idx===1 ? '2Âº Finalista' : idx<4 ? '3Âº-4Âº Semifinal' : idx<8 ? '5Âº-8Âº Cuartos' : idx<16 ? '9Âº-16Âº Octavos' : `${idx+1}Âº`;
+        const label = (idx) => idx===0 ? '1º Campeón' : idx===1 ? '2º Finalista' : idx<4 ? '3º-4º Semifinal' : idx<8 ? '5º-8º Cuartos' : idx<16 ? '9º-16º Octavos' : `${idx+1}º`;
         return (
           <div style={{ ...card, marginBottom:16 }}>
-            <h3 style={{ fontSize:15, fontWeight:800, color:'#fff', margin:'0 0 8px' }}>ðŸ ClasificaciÃ³n final</h3>
+            <h3 style={{ fontSize:15, fontWeight:800, color:'#fff', margin:'0 0 8px' }}>🏁 Clasificación final</h3>
             {order.slice(0,16).map((p,i)=>(
               <div key={p.id} style={{ display:'flex', justifyContent:'space-between', padding:'6px 0', borderBottom:'1px solid var(--padel-border)', fontSize:13 }}>
-                <span style={{ fontWeight: i<3?'800':'600', color: i===0?'#fbbf24': i===1?'#cbd5e1': i<4?'#d6a26a':'var(--padel-text)' }}>{label(i)} Â· {p.player1.split(' ')[0]} / {p.player2.split(' ')[0]}</span>
+                <span style={{ fontWeight: i<3?'800':'600', color: i===0?'#fbbf24': i===1?'#cbd5e1': i<4?'#d6a26a':'var(--padel-text)' }}>{label(i)} · {p.player1.split(' ')[0]} / {p.player2.split(' ')[0]}</span>
                 <span style={{ fontSize:11, color:'var(--padel-muted)' }}>{p.points} pts</span>
               </div>
             ))}

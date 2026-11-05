@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   listCoaches, saveCoach, deleteCoach,
   listStudents, addStudent, deleteStudent,
@@ -100,7 +100,7 @@ export default function SchoolApp({ lang = 'es' }) {
   useEffect(() => { loadAll(); }, []);
 
   const stats = schoolStats({ students, groups, classes, attendance, bonuses, invoices });
-  const nameOf = (id, list) => (list.find(x => x.id === id) || {}).name || 'â€”';
+  const nameOf = (id, list) => (list.find(x => x.id === id) || {}).name || '—';
   const membersOf = (groupId) => members.filter(m => m.groupId === groupId);
   const periodLabel = (() => {
     const d = new Date();
@@ -119,7 +119,7 @@ export default function SchoolApp({ lang = 'es' }) {
     return (sum / (list.length * 4)).toFixed(1);
   };
 
-  // DetecciÃ³n de solapamientos entre clases (calendario cruzado del profesor)
+  // Detección de solapamientos entre clases (calendario cruzado del profesor)
   const overlappedClasses = classes.filter(cl => {
     if (cl.status !== 'planned') return false;
     const start = new Date(cl.startsOn).getTime();
@@ -202,18 +202,18 @@ export default function SchoolApp({ lang = 'es' }) {
     <div style={{ padding: '30px 0 60px', minHeight: '80vh' }}>
       <div style={sectionStyle}>
         <h1 style={{ fontSize: 30, fontWeight: 900, color: 'var(--padel-text)', margin: '0 0 6px' }}>{T.title}</h1>
-        <p style={{ fontSize: 14, color: 'var(--padel-muted)', margin: '0 0 24px' }}>{T.subtitle} Â· {cloudOk ? T.online : T.local}</p>
+        <p style={{ fontSize: 14, color: 'var(--padel-muted)', margin: '0 0 24px' }}>{T.subtitle} · {cloudOk ? T.online : T.local}</p>
 
         {/* stats */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 12, marginBottom: 24 }}>
           {[
-            ['ðŸ‘¥', stats.students, T.students],
-            ['ðŸ‘¨â€ðŸ«', stats.activeGroups, T.groups],
-            ['ðŸ—“ï¸', stats.planned, T.planned],
-            ['âœ…', stats.done, T.done],
-            ['ðŸ“ˆ', `${stats.attendanceRate}%`, T.attendanceRate],
-            ['ðŸ§’', stats.minors, T.minors],
-            ['ðŸŽŸï¸', stats.bonusAvailable, T.bonusAvailable],
+            ['👥', stats.students, T.students],
+            ['👨‍🏫', stats.activeGroups, T.groups],
+            ['🗓️', stats.planned, T.planned],
+            ['✅', stats.done, T.done],
+            ['📈', `${stats.attendanceRate}%`, T.attendanceRate],
+            ['🧒', stats.minors, T.minors],
+            ['🎟️', stats.bonusAvailable, T.bonusAvailable],
           ].map(([ic, n, l], i) => (
             <div key={i} style={{ ...card, textAlign: 'center' }}>
               <div style={{ fontSize: 22 }}>{ic}</div>
@@ -245,7 +245,7 @@ export default function SchoolApp({ lang = 'es' }) {
                   {(studentForm.ageGroup === 'kids' || studentForm.ageGroup === 'teens') && (
                     <>
                       <Field label={T.guardian} value={studentForm.guardianName} onChange={e => setStudentForm({ ...studentForm, guardianName: e.target.value })} />
-                      <p style={{ fontSize: 11, color: '#fbbf24', margin: '0 0 8px' }}>âš ï¸ {T.minorNote}</p>
+                      <p style={{ fontSize: 11, color: '#fbbf24', margin: '0 0 8px' }}>⚠️ {T.minorNote}</p>
                     </>
                   )}
                   <button onClick={submitStudent} style={{ ...btnPrimary, width: '100%' }}>{T.saveStudent}</button>
@@ -257,14 +257,14 @@ export default function SchoolApp({ lang = 'es' }) {
                   ) : students.map(s => (
                     <div key={s.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: '1px solid var(--padel-border)' }}>
                       <div>
-                        <div style={{ fontWeight: 700, color: 'var(--padel-text)', fontSize: 14 }}>{s.name} {studentAvg(s.id) !== null && <span style={{ color: 'var(--padel-lime)' }}>â­ {studentAvg(s.id)}</span>}</div>
-                        <div style={{ fontSize: 12, color: 'var(--padel-muted)' }}>{L[s.level] || s.level} Â· {C[s.ageGroup] || s.ageGroup} {s.guardianName ? `Â· ${s.guardianName}` : ''}</div>
+                        <div style={{ fontWeight: 700, color: 'var(--padel-text)', fontSize: 14 }}>{s.name} {studentAvg(s.id) !== null && <span style={{ color: 'var(--padel-lime)' }}>⭐ {studentAvg(s.id)}</span>}</div>
+                        <div style={{ fontSize: 12, color: 'var(--padel-muted)' }}>{L[s.level] || s.level} · {C[s.ageGroup] || s.ageGroup} {s.guardianName ? `· ${s.guardianName}` : ''}</div>
                         <div style={{ display: 'flex', gap: 6, marginTop: 6 }}>
                           <button onClick={() => setEvalForm({ id: null, studentId: s.id, coachId: '', evaluatedOn: new Date().toISOString().slice(0, 10), technical: 0, tactical: 0, movement: 0, mental: 0, level: '', notes: '' })} style={btnGhost}>{T.addScore}</button>
                           <button onClick={() => setBonusForm({ ...emptyBonus(), studentId: s.id })} style={btnGhost}>{T.addBonus}</button>
                         </div>
                       </div>
-                      <button onClick={() => deleteStudent(s.id)} style={{ background: 'transparent', border: 'none', color: '#f87171', cursor: 'pointer', fontWeight: 700 }}>âœ•</button>
+                      <button onClick={() => deleteStudent(s.id)} style={{ background: 'transparent', border: 'none', color: '#f87171', cursor: 'pointer', fontWeight: 700 }}>✕</button>
                     </div>
                   ))}
                 </div>
@@ -284,22 +284,22 @@ export default function SchoolApp({ lang = 'es' }) {
                 </div>
 
                 <div style={{ ...card, maxHeight: 560, overflowY: 'auto' }}>
-                  {groups.length === 0 && <p style={{ fontSize: 13, color: 'var(--padel-muted)' }}>{T.empty} Â· {T.noGroups || ''}</p>}
+                  {groups.length === 0 && <p style={{ fontSize: 13, color: 'var(--padel-muted)' }}>{T.empty} · {T.noGroups || ''}</p>}
                   {groups.map(g => (
                     <div key={g.id} style={{ padding: '12px 0', borderBottom: '1px solid var(--padel-border)' }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <div style={{ fontWeight: 800, color: 'var(--padel-text)', fontSize: 15 }}>{g.name} <span style={{ color: 'var(--padel-lime)', fontWeight: 900 }}>{L[g.level]}</span></div>
-                        <button onClick={() => deleteGroup(g.id)} style={{ background: 'transparent', border: 'none', color: '#f87171', cursor: 'pointer', fontWeight: 700 }}>âœ•</button>
+                        <button onClick={() => deleteGroup(g.id)} style={{ background: 'transparent', border: 'none', color: '#f87171', cursor: 'pointer', fontWeight: 700 }}>✕</button>
                       </div>
                       <div style={{ fontSize: 12, color: 'var(--padel-muted)', margin: '4px 0 8px' }}>
-                        {C[g.category] || g.category} Â· {membersOf(g.id).length}/{g.capacity} {T.members}
-                        {g.schedule ? ` Â· ${g.schedule}` : ''}
+                        {C[g.category] || g.category} · {membersOf(g.id).length}/{g.capacity} {T.members}
+                        {g.schedule ? ` · ${g.schedule}` : ''}
                       </div>
                       <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
                         {studentsOfGroup(g.id).map(s => (
                           <span key={s.id} style={{ background: 'var(--padel-hover-bg)', padding: '4px 8px', borderRadius: 8, fontSize: 12 }}>
                             {s.name}{' '}
-                            <button onClick={() => removeMember(g.id, s.id)} style={{ background: 'none', border: 'none', color: '#f87171', cursor: 'pointer' }}>âœ•</button>
+                            <button onClick={() => removeMember(g.id, s.id)} style={{ background: 'none', border: 'none', color: '#f87171', cursor: 'pointer' }}>✕</button>
                           </span>
                         ))}
                         <select value="" onChange={e => { if (e.target.value) { addMember(g.id, e.target.value); loadAll(); } }} style={{ ...input, width: 'auto', maxWidth: 140 }}>
@@ -332,11 +332,11 @@ export default function SchoolApp({ lang = 'es' }) {
                 <div style={{ maxHeight: 560, overflowY: 'auto' }}>
                   {overlappedClasses.length > 0 && (
                     <div style={{ ...card, marginBottom: 12, borderColor: 'rgba(251,191,36,0.5)', background: 'rgba(251,191,36,0.06)' }}>
-                      <div style={{ fontSize: 13, fontWeight: 800, color: '#fbbf24', marginBottom: 6 }}>âš ï¸ {T.overlap}</div>
+                      <div style={{ fontSize: 13, fontWeight: 800, color: '#fbbf24', marginBottom: 6 }}>⚠️ {T.overlap}</div>
                       {overlappedClasses.map(cl => (
                         <div key={cl.id} style={{ fontSize: 12, color: 'var(--padel-text)', padding: '3px 0' }}>
-                          ðŸ—“ï¸ {nameOf(cl.groupId, groups) || cl.courtName} Â· {new Date(cl.startsOn).toLocaleString(lang === 'es' ? 'es-ES' : lang === 'fr' ? 'fr-FR' : lang === 'pt' ? 'pt-PT' : 'en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
-                          {cl.coachId ? ` Â· ðŸ‘¨â€ðŸ« ${nameOf(cl.coachId, coaches)}` : ''} Â· ðŸ¸ {cl.courtName}
+                          🗓️ {nameOf(cl.groupId, groups) || cl.courtName} · {new Date(cl.startsOn).toLocaleString(lang === 'es' ? 'es-ES' : lang === 'fr' ? 'fr-FR' : lang === 'pt' ? 'pt-PT' : 'en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                          {cl.coachId ? ` · 👨‍🏫 ${nameOf(cl.coachId, coaches)}` : ''} · 🏸 {cl.courtName}
                         </div>
                       ))}
                     </div>
@@ -346,7 +346,7 @@ export default function SchoolApp({ lang = 'es' }) {
                     <div key={cl.id} style={{ ...card, marginBottom: 10 }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <div style={{ fontWeight: 800, color: 'var(--padel-text)' }}>
-                          {nameOf(cl.groupId, groups) || cl.courtName || 'â€”'}
+                          {nameOf(cl.groupId, groups) || cl.courtName || '—'}
                           <span style={{ fontSize: 12, color: 'var(--padel-muted)', fontWeight: 500, marginLeft: 8 }}>
                             {new Date(cl.startsOn).toLocaleString(lang === 'es' ? 'es-ES' : lang === 'fr' ? 'fr-FR' : lang === 'pt' ? 'pt-PT' : 'en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
                           </span>
@@ -358,8 +358,8 @@ export default function SchoolApp({ lang = 'es' }) {
                         </div>
                       </div>
                       <div style={{ fontSize: 12, color: 'var(--padel-muted)', margin: '4px 0 8px' }}>
-                        {cl.courtName && `ðŸ¸ ${cl.courtName} Â· `}{cl.coachId ? nameOf(cl.coachId, coaches) : ''}
-                        {cl.price != null && ` Â· ðŸ’¶ ${cl.price} â‚¬`}
+                        {cl.courtName && `🏸 ${cl.courtName} · `}{cl.coachId ? nameOf(cl.coachId, coaches) : ''}
+                        {cl.price != null && ` · 💶 ${cl.price} €`}
                       </div>
                       {cl.status === 'planned' && (
                         <div style={{ fontSize: 12, color: 'var(--padel-muted)' }}>
@@ -372,7 +372,7 @@ export default function SchoolApp({ lang = 'es' }) {
                                 <span key={s.id}
                                   onClick={() => toggleAttend(cl, s.id, !(rec && rec.attended))}
                                   style={{ padding: '4px 10px', borderRadius: 8, fontWeight: 700, fontSize: 12, cursor: 'pointer', background: rec && rec.attended ? 'var(--padel-emerald)' : 'var(--padel-hover-bg)', color: rec && rec.attended ? '#fff' : 'var(--padel-muted)', border: '1px solid var(--padel-border)' }}>
-                                  {s.name} {rec && rec.attended ? 'âœ“' : ''}
+                                  {s.name} {rec && rec.attended ? '✓' : ''}
                                 </span>
                               );
                             })}
@@ -426,26 +426,26 @@ export default function SchoolApp({ lang = 'es' }) {
                     <div key={c.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: '1px solid var(--padel-border)' }}>
                       <div>
                         <div style={{ fontWeight: 700, color: 'var(--padel-text)' }}>{c.name} {c.active ? '' : `(${T.inactive})`}</div>
-                        <div style={{ fontSize: 12, color: 'var(--padel-muted)' }}>{c.specialty} Â· {c.email || c.phone}</div>
+                        <div style={{ fontSize: 12, color: 'var(--padel-muted)' }}>{c.specialty} · {c.email || c.phone}</div>
                         <div style={{ fontSize: 12, color: 'var(--padel-muted)' }}>
                           {groups.filter(g => g.coachId === c.id).length} {T.groups}
                         </div>
                       </div>
-                      <button onClick={() => deleteCoach(c.id)} style={{ background: 'transparent', border: 'none', color: '#f87171', cursor: 'pointer', fontWeight: 700 }}>âœ•</button>
+                      <button onClick={() => deleteCoach(c.id)} style={{ background: 'transparent', border: 'none', color: '#f87171', cursor: 'pointer', fontWeight: 700 }}>✕</button>
                     </div>
                   ))}
                 </div>
               </div>
             )}
 
-            {/* ===== PROGRESIÃ“N / SCOUTING ===== */}
+            {/* ===== PROGRESIÓN / SCOUTING ===== */}
             {tab === 'progress' && (
               <div>
                 <div style={card}>
                   <h3 style={{ fontSize: 16, fontWeight: 800, color: 'var(--padel-text)', marginBottom: 4 }}>{T.tabProgress}</h3>
                   <p style={{ fontSize: 12, color: 'var(--padel-muted)', margin: '0 0 14px' }}>{T.progressSub}</p>
                   <select value={progressStudent} onChange={e => setProgressStudent(e.target.value)} style={input}>
-                    <option value="">{T.selectStudent}â€¦</option>
+                    <option value="">{T.selectStudent}…</option>
                     {students.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
                   </select>
                 </div>
@@ -460,7 +460,7 @@ export default function SchoolApp({ lang = 'es' }) {
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 16, marginTop: 12 }}>
                     {/* radar */}
                     <div style={card}>
-                      <h4 style={{ fontSize: 14, fontWeight: 800, color: 'var(--padel-text)', margin: '0 0 10px' }}>ðŸ§­ {T.lastEval} Â· {lastEval.evaluatedOn}</h4>
+                      <h4 style={{ fontSize: 14, fontWeight: 800, color: 'var(--padel-text)', margin: '0 0 10px' }}>🧭 {T.lastEval} · {lastEval.evaluatedOn}</h4>
                       <svg viewBox="0 0 220 220" style={{ width: '100%', maxWidth: 280, display: 'block', margin: '0 auto' }}>
                         {[2, 4, 6, 8, 10].map(r => (
                           <polygon key={r} points={[
@@ -488,7 +488,7 @@ export default function SchoolApp({ lang = 'es' }) {
 
                     {/* tendencia */}
                     <div style={card}>
-                      <h4 style={{ fontSize: 14, fontWeight: 800, color: 'var(--padel-text)', margin: '0 0 12px' }}>ðŸ“‰ {T.progressTrend} Â· {progSeries.length} {T.evalsCount}</h4>
+                      <h4 style={{ fontSize: 14, fontWeight: 800, color: 'var(--padel-text)', margin: '0 0 12px' }}>📉 {T.progressTrend} · {progSeries.length} {T.evalsCount}</h4>
                       {progSeries.map(pt => (
                         <div key={pt.d} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
                           <span style={{ fontSize: 11, color: 'var(--padel-muted)', width: 74, flexShrink: 0 }}>{pt.d.slice(0, -3)}</span>
@@ -499,11 +499,11 @@ export default function SchoolApp({ lang = 'es' }) {
                         </div>
                       ))}
                       <div style={{ marginTop: 10, padding: '10px 12px', borderRadius: 10, background: trend === 'up' ? 'rgba(163,230,53,0.08)' : trend === 'down' ? 'rgba(248,113,113,0.08)' : 'var(--padel-hover-bg)', fontSize: 13, fontWeight: 700, color: trend === 'up' ? 'var(--padel-lime)' : trend === 'down' ? '#f87171' : 'var(--padel-muted)' }}>
-                        {trend === 'up' ? 'ðŸ“ˆ ' + T.trendUp : trend === 'down' ? 'ðŸ“‰ ' + T.trendDown : 'âž¡ï¸ ' + T.trendFlat}
+                        {trend === 'up' ? '📈 ' + T.trendUp : trend === 'down' ? '📉 ' + T.trendDown : '➡️ ' + T.trendFlat}
                       </div>
                       {progAttRate !== null && (
                         <div style={{ marginTop: 8, fontSize: 13, color: 'var(--padel-muted)' }}>
-                          ðŸŽ¯ {T.attendanceRate}: <b style={{ color: 'var(--padel-lime)' }}>{progAttRate}%</b>
+                          🎯 {T.attendanceRate}: <b style={{ color: 'var(--padel-lime)' }}>{progAttRate}%</b>
                         </div>
                       )}
                     </div>
@@ -539,9 +539,9 @@ export default function SchoolApp({ lang = 'es' }) {
                             {dr.name}
                           </div>
                           <div style={{ fontSize: 12, color: 'var(--padel-muted)', marginTop: 4 }}>{dr.focus}</div>
-                          <div style={{ fontSize: 11, color: 'var(--padel-muted)' }}>{L[dr.level] || dr.level} Â· â± {dr.durationMin}m {dr.setup ? `Â· ${dr.setup}` : ''}</div>
+                          <div style={{ fontSize: 11, color: 'var(--padel-muted)' }}>{L[dr.level] || dr.level} · ⏱ {dr.durationMin}m {dr.setup ? `· ${dr.setup}` : ''}</div>
                         </div>
-                        <button onClick={async () => { deleteDrill(dr.id); setDrills(await listDrills()); }} style={{ background: 'transparent', border: 'none', color: '#f87171', cursor: 'pointer', fontWeight: 700 }}>âœ•</button>
+                        <button onClick={async () => { deleteDrill(dr.id); setDrills(await listDrills()); }} style={{ background: 'transparent', border: 'none', color: '#f87171', cursor: 'pointer', fontWeight: 700 }}>✕</button>
                       </div>
                     );
                   })}
@@ -558,7 +558,7 @@ export default function SchoolApp({ lang = 'es' }) {
                     <label style={{ display: 'block', marginBottom: 10 }}>
                       <span style={{ fontSize: 12, color: 'var(--padel-muted)', fontWeight: 600, display: 'block', marginBottom: 4 }}>{T.student}</span>
                       <select value={subForm.studentId} onChange={e => setSubForm({ ...subForm, studentId: e.target.value })} style={input}>
-                        <option value="">â€¦</option>
+                        <option value="">…</option>
                         {students.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
                       </select>
                     </label>
@@ -576,7 +576,7 @@ export default function SchoolApp({ lang = 'es' }) {
                       <div key={s.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '9px 0', borderBottom: '1px solid var(--padel-border)' }}>
                         <div>
                           <div style={{ fontWeight: 700, color: 'var(--padel-text)' }}>{nameOf(s.studentId, students)}</div>
-                          <div style={{ fontSize: 12, color: 'var(--padel-muted)' }}>{s.planName} Â· {s.monthlyPrice} â‚¬/{periodLabel} Â· {s.status === 'active' ? 'ðŸŸ¢ ' + T.statusActive : 'â¸ ' + T.statusPaused}</div>
+                          <div style={{ fontSize: 12, color: 'var(--padel-muted)' }}>{s.planName} · {s.monthlyPrice} €/{periodLabel} · {s.status === 'active' ? '🟢 ' + T.statusActive : '⏸ ' + T.statusPaused}</div>
                         </div>
                         <button onClick={() => doToggleSub(s.id, s.status)} style={{ ...btnGhost, fontSize: 11, padding: '5px 10px' }}>
                           {s.status === 'active' ? T.setPaused : T.setActive}
@@ -587,21 +587,21 @@ export default function SchoolApp({ lang = 'es' }) {
                 </div>
 
                 <div style={{ ...card, marginTop: 16 }}>
-                  <h3 style={{ fontSize: 16, fontWeight: 800, color: 'var(--padel-text)', marginBottom: 6 }}>ðŸ§¾ {T.invoiceFor} â€” {periodLabel}</h3>
+                  <h3 style={{ fontSize: 16, fontWeight: 800, color: 'var(--padel-text)', marginBottom: 6 }}>🧾 {T.invoiceFor} — {periodLabel}</h3>
                   <div style={{ fontSize: 12, color: 'var(--padel-muted)', marginBottom: 12 }}>{T.billingSub}</div>
                   {invoices.length === 0 && <p style={{ fontSize: 13, color: 'var(--padel-muted)' }}>{T.noInvoices}</p>}
                   {invoices.map(inv => (
                     <div key={inv.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '9px 0', borderBottom: '1px solid var(--padel-border)' }}>
                       <div>
                         <div style={{ fontWeight: 700, color: 'var(--padel-text)' }}>{nameOf(inv.studentId, students)}</div>
-                        <div style={{ fontSize: 12, color: 'var(--padel-muted)' }}>{T.period}: {inv.period} Â· {inv.amount} â‚¬</div>
+                        <div style={{ fontSize: 12, color: 'var(--padel-muted)' }}>{T.period}: {inv.period} · {inv.amount} €</div>
                       </div>
                       {inv.status === 'pending' ? (
                         <button onClick={() => doMarkPaid(inv.id)} style={{ ...btnGhost, fontSize: 11, padding: '5px 10px', borderColor: 'rgba(16,185,129,0.4)', color: '#34d399' }}>
-                          {T.markPaid} Â· {inv.amount} â‚¬
+                          {T.markPaid} · {inv.amount} €
                         </button>
                       ) : (
-                        <span style={{ fontSize: 12, fontWeight: 800, color: '#34d399' }}>âœ… {T.statusActive}</span>
+                        <span style={{ fontSize: 12, fontWeight: 800, color: '#34d399' }}>✅ {T.statusActive}</span>
                       )}
                     </div>
                   ))}
