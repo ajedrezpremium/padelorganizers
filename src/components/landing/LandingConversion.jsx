@@ -70,7 +70,7 @@ export const AudienceSection = ({ T }) => (
         ))}
       </div>
       <div style={{ borderRadius: '20px', overflow: 'hidden', border: '1px solid rgba(16,185,129,0.25)', boxShadow: '0 24px 60px rgba(0,0,0,0.45)', maxWidth: '980px', margin: '0 auto' }}>
-        <img src="/images/padel-perfil-clientes.png" alt={T.audienceTitle} style={{ width: '100%', display: 'block' }} loading="lazy" />
+        <img src="/images/padel-perfil-clientes.webp" alt={T.audienceTitle} style={{ width: '100%', display: 'block' }} loading="lazy" />
       </div>
     </div>
   </section>

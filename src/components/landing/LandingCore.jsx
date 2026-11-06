@@ -112,7 +112,7 @@ export const AppShowcaseSection = ({ T }) => (
         <p style={{ fontSize: '15px', color: 'var(--padel-muted)', maxWidth: '560px', margin: '0 auto' }}>{T.showDesc}</p>
       </div>
       <div style={{ position: 'relative', borderRadius: '20px', overflow: 'hidden', border: '1px solid rgba(16,185,129,0.25)', boxShadow: '0 24px 60px rgba(0,0,0,0.45)', maxWidth: '980px', margin: '0 auto' }}>
-        <img src="/images/padelorganizers.com.png" alt="PADELORGANIZERS.COM" style={{ width: '100%', display: 'block' }} loading="lazy" />
+        <img src="/images/padelorganizers.com.webp" alt="PADELORGANIZERS.COM" style={{ width: '100%', display: 'block' }} loading="lazy" />
         <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.06)' }} />
       </div>
     </div>
