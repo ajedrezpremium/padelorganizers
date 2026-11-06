@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { renderMd } from '../lib/markdown';
 
 const I18N = {
   es: {
@@ -59,7 +60,6 @@ const I18N = {
   },
 };
 
-const LANG_BCP47 = { es: 'es', en: 'en-US', fr: 'fr-FR', pt: 'pt-PT' };
 
 const miniBtn = {
   border: '1px solid rgba(250,204,21,0.4)', background: 'rgba(250,204,21,0.14)',
@@ -76,24 +76,7 @@ const bubble = (isUser, maximized) => ({
   borderTopLeftRadius: isUser ? '12px' : '3px',
 });
 
-function escapeHtml(s) {
-  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-}
 
-function renderMd(text) {
-  let out = escapeHtml(text || '');
-  // bold **x** y __x__
-  out = out.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-  out = out.replace(/__(.+?)__/g, '<strong>$1</strong>');
-  // italics *x* y _x_
-  out = out.replace(/\*(.+?)\*/g, '<em>$1</em>');
-  out = out.replace(/_(.+?)_/g, '<em>$1</em>');
-  // code inline `x`
-  out = out.replace(/`([^`]+)`/g, '<code style="background:rgba(255,255,255,0.15);padding:1px 4px;border-radius:4px">$1</code>');
-  // saltos de línea → br
-  out = out.replace(/\n/g, '<br />');
-  return out;
-}
 
 function fmtTime(lang) {
   try {
@@ -111,6 +94,8 @@ function guessVoiceBucket(v) {
   if (/male|hombre|homme|varon|masculino|man\b/i.test(t) && !/female/i.test(t)) return 'male';
   return 'other';
 }
+
+const LANG_BCP47 = { es: 'es', en: 'en-US', fr: 'fr-FR', pt: 'pt-PT' };
 
 export default function PadelAIAgent({ lang = 'es' }) {
   const T = I18N[lang] || I18N.es;
