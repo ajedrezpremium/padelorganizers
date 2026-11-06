@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { addSubscriber } from '../services/subscribersService';
+import { currentEdition } from '../services/newsletterService';
 
 const I18N = {
   es: {
     badge: '📧 PADELORGANIZERS Newsletter',
-    edition: 'Agosto 2026',
     tagline: 'Las 10 noticias que mueven tu club y tu escuela de pádel — de lo local a lo internacional.',
     ctaMarketing: '🎯 Marketing & Negocio',
     ctaAlliance: '🤝 Alianza con federaciones',
@@ -21,7 +21,6 @@ const I18N = {
   },
   en: {
     badge: '📧 PADELORGANIZERS Newsletter',
-    edition: 'August 2026',
     tagline: 'The 10 stories moving your padel club and school — from local to international.',
     ctaMarketing: '🎯 Marketing & Business',
     ctaAlliance: '🤝 Alliance with federations',
@@ -37,7 +36,6 @@ const I18N = {
   },
   fr: {
     badge: '📧 PADELORGANIZERS Newsletter',
-    edition: 'Août 2026',
     tagline: 'Les 10 actualités qui font bouger votre club et votre école de padel — du local à l\'international.',
     ctaMarketing: '🎯 Marketing & Business',
     ctaAlliance: '🤝 Alliance avec les fédérations',
@@ -53,7 +51,6 @@ const I18N = {
   },
   pt: {
     badge: '📧 PADELORGANIZERS Newsletter',
-    edition: 'Agosto 2026',
     tagline: 'As 10 notícias que movem o seu clube e a sua escola de pádel — do local ao internacional.',
     ctaMarketing: '🎯 Marketing & Negócio',
     ctaAlliance: '🤝 Aliança com federações',
@@ -125,6 +122,7 @@ const catColor = { local: '#10b981', national: '#38bdf8', international: '#fbbf2
 
 export default function NewsletterPublic({ lang = 'es' }) {
   const T = I18N[lang] || I18N.es;
+  const edition = currentEdition(lang);
   const navigate = useNavigate();
   const items = NEWS[lang] || NEWS.es;
   const [email, setEmail] = useState('');
@@ -144,7 +142,7 @@ export default function NewsletterPublic({ lang = 'es' }) {
         {/* Cabecera */}
         <div style={{ ...card, padding: 26, background: 'linear-gradient(135deg,#0c1f1a,#0e241f)', borderColor: 'rgba(132,204,22,0.35)', textAlign: 'center' }}>
           <span style={{ fontSize: 11, fontWeight: 800, letterSpacing: 1.5, color: '#a3e635', padding: '5px 14px', borderRadius: 99, background: 'rgba(132,204,22,0.12)', border: '1px solid rgba(132,204,22,0.3)' }}>{T.badge}</span>
-          <h1 style={{ fontSize: 32, fontWeight: 900, margin: '14px 0 6px', color: 'var(--padel-text)' }}>🗞️ {T.edition}</h1>
+          <h1 style={{ fontSize: 32, fontWeight: 900, margin: '14px 0 6px', color: 'var(--padel-text)' }}>🗞️ {edition}</h1>
           <p style={{ fontSize: 13.5, color: 'var(--padel-muted)', maxWidth: 620, margin: '0 auto', lineHeight: 1.6 }}>{T.tagline}</p>
           <div style={{ display: 'flex', justifyContent: 'center', gap: 10, marginTop: 16, flexWrap: 'wrap' }}>
             <span style={{ fontSize: 10.5, fontWeight: 800, padding: '4px 12px', borderRadius: 99, background: 'rgba(16,185,129,0.12)', color: '#10b981' }}>{T.local}</span>

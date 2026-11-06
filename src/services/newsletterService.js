@@ -193,11 +193,27 @@ function movementBadge(m) {
   return '<span style="color:#64748b">•</span>';
 }
 
+const EDITION_LOCALE = { es: 'es-ES', en: 'en-GB', fr: 'fr-FR', pt: 'pt-PT' };
+
+/**
+ * currentEdition — etiqueta de la edición en curso ("Noviembre de 2026").
+ * Derivada de la fecha real para que el newsletter no caduque en el código.
+ */
+export function currentEdition(lang = 'es', date = new Date()) {
+  const loc = EDITION_LOCALE[lang] || EDITION_LOCALE.es;
+  try {
+    const txt = new Intl.DateTimeFormat(loc, { month: 'long', year: 'numeric' }).format(date);
+    return txt.charAt(0).toUpperCase() + txt.slice(1);
+  } catch {
+    return date.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' });
+  }
+}
+
 /**
  * buildNewsletter — genera el HTML del newsletter a partir de datos reales.
  * @param {Object} opts
  * @param {string} opts.lang 'es'|'en'|'fr'|'pt'
- * @param {string} opts.edition  p.ej. 'Agosto 2026'
+ * @param {string} opts.edition  p.ej. 'Noviembre de 2026'
  * @param {Object} opts.tournament  torneo del store ({name, club, modality, totalCourts, players?, matches?, status})
  * @param {Array}  opts.ranking     salida de computeGlobalRanking (rows con rank/name/club/elo/movement/level)
  * @param {Array}  opts.sponsors    sponsors (listSponsorsSync)
@@ -205,9 +221,10 @@ function movementBadge(m) {
  * @param {Object} opts.urls        { tournament, ranking, marketing }
  * @returns {{ subject: string, html: string }}
  */
-export function buildNewsletter({ lang = 'es', edition = 'Agosto 2026', tournament = {}, ranking = [], sponsors = [], coaches = [], urls = {}, seed = 42 } = {}) {
+export function buildNewsletter({ lang = 'es', edition, tournament = {}, ranking = [], sponsors = [], coaches = [], urls = {}, seed = 42 } = {}) {
   const T = I18N[lang] || I18N.es;
   const MODS = MODALITY_TEXT[lang] || MODALITY_TEXT.es;
+  const ed = edition || currentEdition(lang);
 
   const name = tournament.name || 'Open Pádel Pro 2026';
   const club = tournament.club || 'Mi Club';
@@ -284,7 +301,7 @@ export function buildNewsletter({ lang = 'es', edition = 'Agosto 2026', tourname
         <!-- HERO -->
         <tr><td style="background:linear-gradient(135deg,#0c1f1a,#0e241f);border-bottom:1px solid #1c3a33;padding:28px 30px;text-align:center">
           <div style="display:inline-block;font-size:11px;font-weight:800;letter-spacing:1.5px;color:#a3e635;padding:5px 14px;border-radius:99px;background:#1a3a2a;border:1px solid #a3e63533">${esc(T.badge)}</div>
-          <h1 style="font-size:26px;font-weight:900;color:#f1f5f9;margin:14px 0 4px">🗞️ ${esc(T.heroPre)} ${esc(edition)}</h1>
+          <h1 style="font-size:26px;font-weight:900;color:#f1f5f9;margin:14px 0 4px">🗞️ ${esc(T.heroPre)} ${esc(ed)}</h1>
           <p style="font-size:13px;color:#94a3b8;line-height:1.6;margin:0 auto;max-width:480px">${esc(T.tagline)}</p>
         </td></tr>
 

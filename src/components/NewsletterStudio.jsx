@@ -5,7 +5,7 @@ import { computeGlobalRanking } from '../services/globalRankingService';
 import { listLeague } from '../services/leagueService';
 import { listSponsorsSync } from '../services/sponsorService';
 import { ensureCoachSeed } from '../services/coachDiscoveryService';
-import { buildNewsletter, downloadNewsletterHtml } from '../services/newsletterService';
+import { buildNewsletter, downloadNewsletterHtml, currentEdition } from '../services/newsletterService';
 
 const I18N = {
   es: {
@@ -113,7 +113,7 @@ export default function NewsletterStudio({ lang = 'es' }) {
   const store = useStore();
   const tournament = store.tournament || {};
 
-  const [edition, setEdition] = useState(lang === 'es' || lang === 'pt' ? 'Agosto 2026' : lang === 'fr' ? 'Août 2026' : 'August 2026');
+  const [edition, setEdition] = useState(currentEdition(lang));
   const [club, setClub] = useState(tournament.club || '');
   const [seed, setSeed] = useState(42);
   const [entries, setEntries] = useState([]);

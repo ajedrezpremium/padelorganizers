@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { listPlans, listPromos, PLAN_BENEFITS } from '../services/membershipService';
 import { generateMarketingContent, CONTENT_KEYS } from '../services/marketingAiService';
+import { currentEdition } from '../services/newsletterService';
 import { getState } from '../services/store';
 
 const I18N = {
@@ -25,7 +26,7 @@ const I18N = {
     aiTorName: 'Nombre del torneo', aiClub: 'Club', aiFormat: 'Formato', aiDate: 'Fecha', aiPlace: 'Lugar',
     aiFmtAmericano: 'Americano', aiFmtMexicano: 'Mexicano', aiFmtSuizo: 'Suizo', aiFmtKnockout: 'Eliminatorio',
     aiGen: '✨ Generar contenidos', aiLoading: 'Generando…', aiCopy: '📋 Copiar', aiCopied: '✓ Copiado', aiNew: '🔄 Regenerar (variante)',
-    openNewsletter: '📰 Newsletter agosto 2026',
+    openNewsletter: '📰 Newsletter {ED}',
   },
   en: {
     title: '📣 Marketing & Business',
@@ -47,7 +48,7 @@ const I18N = {
     aiTorName: 'Tournament name', aiClub: 'Club', aiFormat: 'Format', aiDate: 'Date', aiPlace: 'Venue',
     aiFmtAmericano: 'Americano', aiFmtMexicano: 'Mexicano', aiFmtSuizo: 'Swiss', aiFmtKnockout: 'Knockout',
     aiGen: '✨ Generate content', aiLoading: 'Generating…', aiCopy: '📋 Copy', aiCopied: '✓ Copied', aiNew: '🔄 Regenerate (variant)',
-    openNewsletter: '📰 August 2026 newsletter',
+    openNewsletter: '📰 {ED} newsletter',
   },
   fr: {
     title: '📣 Marketing & Business',
@@ -69,7 +70,7 @@ const I18N = {
     aiTorName: "Nom du tournoi", aiClub: 'Club', aiFormat: 'Format', aiDate: 'Date', aiPlace: 'Lieu',
     aiFmtAmericano: 'Américain', aiFmtMexicano: 'Mexicain', aiFmtSuizo: 'Suisse', aiFmtKnockout: 'Élimination',
     aiGen: '✨ Générer le contenu', aiLoading: 'Génération…', aiCopy: '📋 Copier', aiCopied: '✓ Copié', aiNew: '🔄 Régénérer (variante)',
-    openNewsletter: '📰 Newsletter août 2026',
+    openNewsletter: '📰 Newsletter {ED}',
   },
   pt: {
     title: '📣 Marketing & Negócio',
@@ -91,7 +92,7 @@ const I18N = {
     aiTorName: 'Nome do torneio', aiClub: 'Clube', aiFormat: 'Formato', aiDate: 'Data', aiPlace: 'Local',
     aiFmtAmericano: 'Americano', aiFmtMexicano: 'Mexicano', aiFmtSuizo: 'Suíço', aiFmtKnockout: 'Eliminação',
     aiGen: '✨ Gerar conteúdo', aiLoading: 'A gerar…', aiCopy: '📋 Copiar', aiCopied: '✓ Copiado', aiNew: '🔄 Regenerar (variante)',
-    openNewsletter: '📰 Newsletter agosto 2026',
+    openNewsletter: '📰 Newsletter {ED}',
   },
 };
 
@@ -192,7 +193,7 @@ const PB = PLAN_BENEFITS(lang);
             ))}
           </div>
           <button onClick={() => navigate('/newsletters')} style={{ background: 'rgba(251,191,36,0.12)', color: '#fbbf24', border: '1px solid rgba(251,191,36,0.4)', padding: '10px 18px', borderRadius: 12, fontWeight: 800, fontSize: 13, cursor: 'pointer' }}>
-            {T.openNewsletter}
+            {T.openNewsletter.replace('{ED}', currentEdition(lang))}
           </button>
         </div>
 
